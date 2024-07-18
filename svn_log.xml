@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<log>
+<logentry
+   revision="8602">
+<author>scriswellwsf</author>
+<date>2024-07-18T03:00:58.858869Z</date>
+<msg>CBECC 2025 (1350) executables and ruleset &amp; UI source w/ addition of NEM3 adjustments to LSC results for exports (of elec) to the grid
+- new inputs on PV/Battery tab of Project dialog to specify NEM type (none, NEM3-LSC or NEM3-ACC (latest Avoided Cost Calculator version)) - 2025 analysis only</msg>
+</logentry>
+<logentry
+   revision="8603">
+<author>scriswellwsf</author>
+<date>2024-08-05T23:29:36.657191Z</date>
+<msg>MFam user support fix - prevent activating StdDsgnSolarSysReqd (std design solar thermal system) for ResDHWSys systems that are NOT 'New' (such as Altered)</msg>
+</logentry>
+<logentry
+   revision="8604">
+<author>jireh360</author>
+<date>2024-08-26T17:35:27.556674Z</date>
+<msg>Ticket #3607 Optimum Start Behavior
+ - Stop modeling optimum start in EnergyPlus
+ - maintain the mandatory check and report of optimum start control</msg>
+</logentry>
+<logentry
+   revision="8605">
+<author>scriswellwsf</author>
+<date>2024-08-28T03:57:00.466651Z</date>
+<msg>CBECC 2022/25 (1352) executables with rules processor (2D interpolation lookup table) features and 2028 SSP2 &amp; SSP3 weather files and ruleset/UI updates enabling their test
+- addition of SSP2 and SSP3 2028 weather file sets, access to weather file set option on project dialog ('25 executable INI w/ EnableResearchMode toggled on to enable weather file set testing)
+- ability to use look-up tables for input range checking and 2D interpolation (of HtPumpV3 performance parameters) - other HtPumpV3 mods still in progress
+- ruleset fix: added checks to prevent rule eval errors when ResDistSys:HERSCheck is not created/assigned (happens when assigned flr area = 0)</msg>
+</logentry>
+</log>
