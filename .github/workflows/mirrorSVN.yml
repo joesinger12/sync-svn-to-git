@@ -58,4 +58,4 @@ jobs:
     - name: Push Git to GitHub
       run: |
         cd git-repo
-        git push https://${{ secrets.GIT_USERNAME }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ secrets.GIT_USERNAME }}/test-svn-to-git-mirror.git test-mirror --force
+        git push https://${{ secrets.GIT_USERNAME }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ secrets.GIT_USERNAME }}/test-svn-to-git-mirror.git test-mirror-dest --force
