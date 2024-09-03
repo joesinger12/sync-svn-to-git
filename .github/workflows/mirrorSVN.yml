@@ -3,6 +3,9 @@ name: Mirror SVN to Git
 on:
   workflow_dispatch: # Allows to run manually also
 
+env: 
+  BRANCH_NAME: "automation-branch-$(date +%Y%m%d%H%M%S)"
+
 jobs:
   mirrorSVN:
     runs-on: ubuntu-latest
@@ -29,7 +32,6 @@ jobs:
  
     - name: Set Branch Name
       run: |
-        echo "BRANCH_NAME=automation-branch-$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
         echo "Done Setting Name:"
         echo $BRANCH_NAME
 
