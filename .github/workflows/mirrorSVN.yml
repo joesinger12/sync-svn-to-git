@@ -59,6 +59,3 @@ jobs:
       with:
         path: git-repo
         branch: ${{ env.BRANCH_NAME }}
-        base: test3-mirror
-        title: "Mirror from SVN"
-        body: "This is an automated pull request created by GitHub Actions."
