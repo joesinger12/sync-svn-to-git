@@ -35,20 +35,6 @@ jobs:
       run: |
         cp -R svn-repo/* git-repo/
 
-    - name: Track Large Files with Git LFS
-      run: |
-        cd git-repo
-        git lfs track "*.bin"
-        git lfs track "*.dll"
-
-    - name: Add Pre-Push Hook for Tracking Large Files
-      run: |
-        cd svn-repo
-        echo '#!/bin/sh' > ../git-repo/.git/hooks/pre-push
-        echo 'find . -type f -size +50M | grep -v ".git" | xargs -I {} git lfs track "{}"' >> ../git-repo/.git/hooks/pre-push
-        echo 'git add .gitattributes' >> ../git-repo/.git/hooks/pre-push
-        chmod +x ../git-repo/.git/hooks/pre-push
-
     - name: Commit SVN to Git
       run: |
         cd git-repo
@@ -59,3 +45,4 @@ jobs:
       run: |
         cd git-repo
         git push https://${{ secrets.GIT_USERNAME }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ secrets.GIT_USERNAME }}/svn-to-git-mirror.git test-mirror-dest --force
+        git lfs push https://${{ secrets.GIT_USERNAME }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ secrets.GIT_USERNAME }}/svn-to-git-mirror.git test-mirror-dest --force
