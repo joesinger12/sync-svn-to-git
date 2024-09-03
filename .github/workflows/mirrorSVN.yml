@@ -6,8 +6,6 @@ on:
 jobs:
   mirrorSVN:
     runs-on: ubuntu-latest
-    env:
-      BRANCH_NAME: "automation-branch-$(date +'%Y%m%d%H%M%S')"
 
     steps:
     - name: Checkout this repository
@@ -31,6 +29,7 @@ jobs:
  
     - name: Set Branch Name
       run: |
+        echo "BRANCH_NAME=automation-branch-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
         echo "Done Setting Name:"
         echo "${{ env.BRANCH_NAME }}"
 
@@ -44,7 +43,7 @@ jobs:
     - name: Commit and push SVN to Git If Changes
       run: |
         cd git-repo
-        echo "${{ env.BRANCH_NAME }}"
+        echo "Branch Name: ${{ env.BRANCH_NAME }}"
         git checkout -b "${{ env.BRANCH_NAME }}"
         if [ -z "$(git status --porcelain)" ]; then
           echo "Nothing to commit"
