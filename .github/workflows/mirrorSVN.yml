@@ -31,32 +31,4 @@ jobs:
       run: |
         echo "BRANCH_NAME=automation-branch" >> "$GITHUB_ENV"
         echo "Done Setting Name:"
-        echo "${{ env.BRANCH_NAME }}"
-
-    - name: Clone SVN repository
-      run: svn checkout --username ${{ secrets.SVN_USERNAME }} --password ${{ secrets.SVN_PASSWORD }} https://svn.code.sf.net/p/cbecc-com/code/branches/CBECC-Com_MFamRestructure/ svn-repo
-  
-    - name: Copy files from SVN to Git
-      run: |
-        cp -R svn-repo/* git-repo/
-
-    - name: Commit and push SVN to Git If Changes
-      run: |
-        cd git-repo
-        echo "${{ env.BRANCH_NAME }}"
-        git checkout -b ${{ env.BRANCH_NAME }}
-        if git diff-index --quiet HEAD --; then
-          echo "Nothing to commit"
-        else
-          git add .
-          git commit -m "Mirror from SVN"
-          git push origin ${{ env.BRANCH_NAME }}
-        fi
-        
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v7
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ env.BRANCH_NAME }}
-        title: "Mirror from SVN"
-        body: "This is an automated pull request created by GitHub Actions. Pulled most recent Source Forve SVN Code to new branch."
+        echo "${{ env.BRANCH_NAME }} or $BRANCH_NAME"
