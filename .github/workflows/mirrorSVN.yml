@@ -6,6 +6,8 @@ on:
 jobs:
   mirrorSVN:
     runs-on: ubuntu-latest
+    env:
+      BRANCH_NAME: "automation-branch"
 
     steps:
     - name: Checkout this repository
@@ -29,6 +31,5 @@ jobs:
  
     - name: Set Branch Name
       run: |
-        echo "BRANCH_NAME=automation-branch" >> "$GITHUB_ENV"
         echo "Done Setting Name:"
         echo "${{ env.BRANCH_NAME }} or $BRANCH_NAME"
