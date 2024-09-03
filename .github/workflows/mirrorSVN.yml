@@ -46,7 +46,7 @@ jobs:
         cd git-repo
         echo "${{ env.BRANCH_NAME }}"
         git checkout -b ${{ env.BRANCH_NAME }}
-        if git diff-index --quiet HEAD --; then
+        if [ -z "$(git status --porcelain)" ]; then
           echo "Nothing to commit"
           exit 0
         else
