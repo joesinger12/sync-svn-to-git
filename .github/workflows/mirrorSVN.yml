@@ -45,4 +45,3 @@ jobs:
       run: |
         cd git-repo
         git push https://${{ secrets.GIT_USERNAME }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ secrets.GIT_USERNAME }}/svn-to-git-mirror.git test2-mirror-dest --force
-        git lfs push https://${{ secrets.GIT_USERNAME }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ secrets.GIT_USERNAME }}/svn-to-git-mirror.git test2-mirror-dest --force
