@@ -33,7 +33,7 @@ jobs:
     - name: Set Branch Name
       run: |
         echo "Done Setting Name:"
-        echo $BRANCH_NAME
+        echo "$BRANCH_NAME"
 
     - name: Clone SVN repository
       run: svn checkout --username ${{ secrets.SVN_USERNAME }} --password ${{ secrets.SVN_PASSWORD }} https://svn.code.sf.net/p/cbecc-com/code/branches/CBECC-Com_MFamRestructure/ svn-repo
