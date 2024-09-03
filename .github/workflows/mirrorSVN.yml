@@ -48,9 +48,11 @@ jobs:
         git checkout -b ${{ env.BRANCH_NAME }}
         if git diff-index --quiet HEAD --; then
           echo "Nothing to commit"
+          exit 0
         else
+          echo "Commits found"
           git add .
-          git commit -m "Mirror from SVN"
+          git commit -m "Automated Mirror from SVN"
           git push origin ${{ env.BRANCH_NAME }}
         fi
         
@@ -59,5 +61,5 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ env.BRANCH_NAME }}
-        title: "Mirror from SVN"
+        title: "Automated Mirror from SVN"
         body: "This is an automated pull request created by GitHub Actions. Pulled most recent Source Forve SVN Code to new branch."
