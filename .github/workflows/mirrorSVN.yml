@@ -29,7 +29,7 @@ jobs:
  
     - name: Set Branch Name
       run: |
-        echo "BRANCH_NAME=automation-branch" >> $GITHUB_ENV
+        echo "BRANCH_NAME=automation-branch" >> "$GITHUB_ENV"
         echo "Done Setting Name:"
         echo "${{ env.BRANCH_NAME }}"
 
