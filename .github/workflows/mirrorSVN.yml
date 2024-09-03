@@ -29,7 +29,7 @@ jobs:
  
     - name: Set Branch Name
       run: |
-        echo "BRANCH_NAME=automation-branch-$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        echo "BRANCH_NAME=automation-branch" >> $GITHUB_ENV
         echo "Done Setting Name:"
         echo "${{ env.BRANCH_NAME }}"
 
@@ -43,20 +43,20 @@ jobs:
     - name: Commit and push SVN to Git If Changes
       run: |
         cd git-repo
-        echo $BRANCH_NAME
-        git checkout -b $BRANCH_NAME
+        echo "${{ env.BRANCH_NAME }}"
+        git checkout -b ${{ env.BRANCH_NAME }}
         if git diff-index --quiet HEAD --; then
           echo "Nothing to commit"
         else
           git add .
           git commit -m "Mirror from SVN"
-          git push origin $BRANCH_NAME
+          git push origin ${{ env.BRANCH_NAME }}
         fi
         
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v7
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        branch: $BRANCH_NAME
+        branch: ${{ env.BRANCH_NAME }}
         title: "Mirror from SVN"
         body: "This is an automated pull request created by GitHub Actions. Pulled most recent Source Forve SVN Code to new branch."
