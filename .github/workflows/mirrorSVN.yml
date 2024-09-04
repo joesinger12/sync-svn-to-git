@@ -86,6 +86,8 @@ jobs:
               echo "Error: No mapping found for SVN author $SVN_AUTHOR"
               AUTHOR="Unknown <>"
             fi
+            AUTHOR_NAME=$(echo "$AUTHOR" | sed -E 's/(.*) <.*/\1/')
+            AUTHOR_EMAIL=$(echo "$AUTHOR" | sed -E 's/.*<(.*)>/\1/')
             echo "SET author: $AUTHOR"
           elif [[ $line == "<date>"* ]]; then
             COMMIT_DATE=$(echo $line | sed -e 's/<[^>]*>//g')
@@ -108,6 +110,8 @@ jobs:
             cp -R ../svn-repo/* ../git-repo/
             echo "Copied files to git-repo"
             cd ../git-repo
+            git config --global user.name "$AUTHOR_NAME"
+            git config --global user.email "$AUTHOR_EMAIL"
             git add .
             git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER
             $COMMIT_MSG"
