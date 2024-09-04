@@ -31,6 +31,7 @@ jobs:
       run: |
         echo "BRANCH_NAME=automation-branch-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
         echo "Done Setting Name As: ${{ env.BRANCH_NAME }} or $BRANCH_NAME"
+
     - name: Confirm Name
       run: |
         echo "Done Setting Name As: ${{ env.BRANCH_NAME }}"
@@ -67,4 +68,4 @@ jobs:
         path: git-repo
         branch: ${{ env.BRANCH_NAME }}
         title: "Automated Pull Request"
-        body: "This pull request was created automatically by GitHub Actions."
+        body: "This pull request was created automatically by GitHub Actions. It mirrors the SVN repository to Git with no history."
