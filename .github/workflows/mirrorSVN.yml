@@ -64,15 +64,16 @@ jobs:
     - name: Commit SVN Commits to Git
       if: ${{ env.HAS_UPDATES }} == 'yes'
       run: |
-        cd svn-repo
-        svn log -r {2024-08-01}:HEAD --xml > svn_log.xml
-
-        
         declare -A AUTHORS_MAP
         while IFS=: read -r svn_username name_email; do
           AUTHORS_MAP["$svn_username"]="$name_email"
         done < authors.txt
+        echo: "authors map array created"
 
+        cd svn-repo
+        svn log -r {2024-08-01}:HEAD --xml > svn_log.xml
+        echo: "svn log file created"
+        
         while read -r line; do
           if [[ $line == "<msg>"* ]]; then
             COMMIT_MSG=$(echo $line | sed -e 's/<[^>]*>//g')
@@ -80,6 +81,10 @@ jobs:
           elif [[ $line == "<author>"* ]]; then
             SVN_AUTHOR=$(echo $line | sed -e 's/<[^>]*>//g')
             AUTHOR=${AUTHORS_MAP[$SVN_AUTHOR]}
+            if [ -z "$AUTHOR" ]; then
+              echo "Error: No mapping found for SVN author $SVN_AUTHOR"
+              AUTHOR="Unknown <>"
+            fi
             echo "SET author: $AUTHOR"
           elif [[ $line == "<date>"* ]]; then
             COMMIT_DATE=$(echo $line | sed -e 's/<[^>]*>//g')
