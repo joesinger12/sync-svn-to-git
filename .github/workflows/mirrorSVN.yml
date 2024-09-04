@@ -66,12 +66,20 @@ jobs:
       run: |
         cd svn-repo
         svn log -r {2024-08-01}:HEAD --xml > svn_log.xml
+
+        
+        declare -A AUTHORS_MAP
+        while IFS=: read -r svn_username name_email; do
+          AUTHORS_MAP["$svn_username"]="$name_email"
+        done < authors.txt
+
         while read -r line; do
           if [[ $line == "<msg>"* ]]; then
             COMMIT_MSG=$(echo $line | sed -e 's/<[^>]*>//g')
             echo "SET Commit Message: $COMMIT_MSG"
           elif [[ $line == "<author>"* ]]; then
-            AUTHOR=$(echo $line | sed -e 's/<[^>]*>//g')
+            SVN_AUTHOR=$(echo $line | sed -e 's/<[^>]*>//g')
+            AUTHOR=${AUTHORS_MAP[$SVN_AUTHOR]}
             echo "SET author: $AUTHOR"
           elif [[ $line == "<date>"* ]]; then
             COMMIT_DATE=$(echo $line | sed -e 's/<[^>]*>//g')
