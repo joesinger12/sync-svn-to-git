@@ -104,10 +104,13 @@ jobs:
             echo "Commit Message: $COMMIT_MSG"
             svn update -r $REV_NUMBER
             echo "files updated for revision $REV_NUMBER"
-            cp -R . ../git-repo/
+            cp -R ../svn-repo ../git-repo/
+            echo "Copied files to git-repo"
             cd ../git-repo
             git add .
             git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "$COMMIT_MSG"
+            echo "successfully committed revision $REV_NUMBER"
+            echo ""
             cd ../svn-repo
           fi
         done < ../svn-repo/svn_log.xml
