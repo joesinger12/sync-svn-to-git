@@ -109,7 +109,8 @@ jobs:
             echo "Copied files to git-repo"
             cd ../git-repo
             git add .
-            git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "$COMMIT_MSG"
+            git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REVISION_NUMBER
+            $COMMIT_MSG" --reset-author
             echo "FINISHED: Successfully committed revision $REV_NUMBER"
             echo ""
             cd ../svn-repo
