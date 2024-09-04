@@ -73,7 +73,7 @@ jobs:
           elif [[ $line == "<author>"* ]]; then
             AUTHOR=$(echo $line | sed -e 's/<[^>]*>//g')
             echo "author: $AUTHOR"
-          elif [[ $line =~ "\s*revision=" ]]; then
+          elif [[ $line == *"revision="* ]]; then
             REV_NUMBER=$(echo $line | sed -n 's/.*revision="\([0-9]*\)".*/\1/p')
             echo "RevNumber: $REV_NUMBER"
           elif [[ $line == "</logentry>"* ]]; then
