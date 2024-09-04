@@ -74,13 +74,12 @@ jobs:
           elif [[ $line == "<revision>"* ]]; then
             REV_NUMBER=$(echo $line | sed -e 's/<[^>]*>//g')
           elif [[ $line == "</logentry>"* ]]; then
-            cd svn-repo
             svn update -r $REV_NUMBER
             cp -R svn-repo/* git-repo/
-            cd git-repo
+            cd ../git-repo
             git add .
             git commit --author="$AUTHOR" -m "$COMMIT_MSG"
-            cd svn-repo
+            cd ../svn-repo
           fi
         done < ../svn-repo/svn_log.xml
         
