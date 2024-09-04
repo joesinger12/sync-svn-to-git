@@ -39,24 +39,29 @@ jobs:
       run: |
         cp -R svn-repo/* git-repo/
 
-    - name: Commit and push SVN to Git If Changes
+    - name: Check to see if there are new commits
       run: |
         cd git-repo
-        echo "Branch Name: ${{ env.BRANCH_NAME }}"
-        git checkout -b "${{ env.BRANCH_NAME }}"
         if [ -z "$(git status --porcelain)" ]; then
-          echo "Nothing to commit"
-          exit 0
+          echo "HAS_UPDATES=yes" >> $GITHUB_ENV
         else
-          echo "Commits found"
-          git add .
-          git commit -m "Automated Mirror from SVN"
-          git push origin "${{ env.BRANCH_NAME }}"
+          echo "HAS_UPDATES=no" >> $GITHUB_ENV
         fi
+        echo "Does repo have updates: ${{ env.HAS_UPDATES }} or $HAS_UPDATES"
+
+    - name: Commit and push SVN to Git If Changes
+      if: ${{ env.HAS_UPDATES }} == 'yes'
+      run: |
+        cd git-repo
+        echo "Commits found"
+        git add .
+        git commit -m "Automated Mirror from SVN"
         
-    # - name: Create Pull Request
-    #   uses: peter-evans/create-pull-request@v7
-    #   with:
-    #     path: git-repo
-    #     base: test3-mirror
-    #     branch: ${{ env.BRANCH_NAME }}
+    - name: Create Pull Request
+      if: ${{ env.HAS_UPDATES }} == 'yes'
+      uses: peter-evans/create-pull-request@v7
+      with:
+        path: git-repo
+        branch: ${{ env.BRANCH_NAME }}
+        title: "Automated Pull Request"
+        body: "This pull request was created automatically by GitHub Actions."
