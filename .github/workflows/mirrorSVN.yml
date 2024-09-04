@@ -69,11 +69,21 @@ jobs:
         while read -r line; do
           if [[ $line == "<msg>"* ]]; then
             COMMIT_MSG=$(echo $line | sed -e 's/<[^>]*>//g')
+            echo "Commit Message: $COMMIT_MSG"
           elif [[ $line == "<author>"* ]]; then
             AUTHOR=$(echo $line | sed -e 's/<[^>]*>//g')
+            echo "author: $AUTHOR"
           elif [[ $line == "<revision>"* ]]; then
             REV_NUMBER=$(echo $line | sed -e 's/<[^>]*>//g')
+            echo "RevNumber: $REV_NUMBER"
           elif [[ $line == "</logentry>"* ]]; then
+            if [ -z "$REV_NUMBER" ]; then
+              echo "Error: Revision number is empty"  # Debugging statement
+              exit 1
+            fi
+            echo "RevNumber: $REV_NUMBER"
+            echo "author: $AUTHOR"
+            echo "Commit Message: $COMMIT_MSG"
             svn update -r $REV_NUMBER
             cp -R svn-repo/* git-repo/
             cd ../git-repo
