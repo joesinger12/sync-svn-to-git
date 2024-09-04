@@ -40,6 +40,17 @@ jobs:
       run: |
         svn checkout --username ${{ secrets.SVN_USERNAME }} --password ${{ secrets.SVN_PASSWORD }} https://svn.code.sf.net/p/cbecc-com/code/branches/CBECC-Com_MFamRestructure/ svn-repo
   
+    - name: Generate SVN log
+      run: |
+        cd svn-repo
+        svn log -r {2024-08-01}:HEAD --xml > svn_log.xml
+
+    - name: Upload SVN log artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: svn-log
+        path: svn-repo/svn_log.xml
+        
     - name: Check to see if there are new commits
       run: |
         cd git-repo
@@ -55,7 +66,6 @@ jobs:
       run: |
         cd svn-repo
         svn log -r {2024-08-01}:HEAD --xml > svn_log.xml
-        cd git-repo
         while read -r line; do
           if [[ $line == "<msg>"* ]]; then
             COMMIT_MSG=$(echo $line | sed -e 's/<[^>]*>//g')
@@ -70,6 +80,7 @@ jobs:
             cd git-repo
             git add .
             git commit --author="$AUTHOR" -m "$COMMIT_MSG"
+            cd svn-repo
           fi
         done < ../svn-repo/svn_log.xml
         
