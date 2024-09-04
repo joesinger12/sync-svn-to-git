@@ -37,12 +37,11 @@ jobs:
         echo "Done Setting Name As: ${{ env.BRANCH_NAME }}"
 
     - name: Clone SVN repository
-      run: svn checkout --username ${{ secrets.SVN_USERNAME }} --password ${{ secrets.SVN_PASSWORD }} https://svn.code.sf.net/p/cbecc-com/code/branches/CBECC-Com_MFamRestructure/ svn-repo
-  
-    - name: Copy files from SVN to Git
       run: |
-        cp -R svn-repo/* git-repo/
-
+        svn checkout --username ${{ secrets.SVN_USERNAME }} --password ${{ secrets.SVN_PASSWORD }} https://svn.code.sf.net/p/cbecc-com/code/branches/CBECC-Com_MFamRestructure/ svn-repo
+        svn log -r {`date -d "yesterday" +%Y-%m-%d`}:HEAD --xml > svn_log.xml
+        echo svn log -r {`date -d "yesterday" +%Y-%m-%d`}:HEAD
+  
     - name: Check to see if there are new commits
       run: |
         cd git-repo
@@ -53,13 +52,28 @@ jobs:
         fi
         echo "Does repo have updates: ${{ env.HAS_UPDATES }} or $HAS_UPDATES"
 
-    - name: Commit and push SVN to Git If Changes
+    - name: Commit SVN Commits to Git
       if: ${{ env.HAS_UPDATES }} == 'yes'
       run: |
+        cd svn-repo
+        svn log -r {2024-08-01}:HEAD --xml > svn_log.xml
         cd git-repo
-        echo "Commits found"
-        git add .
-        git commit -m "Automated Mirror from SVN"
+        while read -r line; do
+          if [[ $line == "<msg>"* ]]; then
+            COMMIT_MSG=$(echo $line | sed -e 's/<[^>]*>//g')
+          elif [[ $line == "<author>"* ]]; then
+            AUTHOR=$(echo $line | sed -e 's/<[^>]*>//g')
+          elif [[ $line == "<revision>"* ]]; then
+            REV_NUMBER=$(echo $line | sed -e 's/<[^>]*>//g')
+          elif [[ $line == "</logentry>"* ]]; then
+            cd svn-repo
+            svn update -r $REV_NUMBER
+            cp -R svn-repo/* git-repo/
+            cd git-repo
+            git add .
+            git commit --author="$AUTHOR" -m "$COMMIT_MSG"
+          fi
+        done < ../svn-repo/svn_log.xml
         
     - name: Create Pull Request
       if: ${{ env.HAS_UPDATES }} == 'yes'
