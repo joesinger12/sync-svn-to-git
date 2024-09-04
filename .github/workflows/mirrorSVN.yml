@@ -69,13 +69,16 @@ jobs:
         while read -r line; do
           if [[ $line == "<msg>"* ]]; then
             COMMIT_MSG=$(echo $line | sed -e 's/<[^>]*>//g')
-            echo "Commit Message: $COMMIT_MSG"
+            echo "SET Commit Message: $COMMIT_MSG"
           elif [[ $line == "<author>"* ]]; then
             AUTHOR=$(echo $line | sed -e 's/<[^>]*>//g')
-            echo "author: $AUTHOR"
+            echo "SET author: $AUTHOR"
+          elif [[ $line == "<date>"* ]]; then
+            COMMIT_DATE=$(echo $line | sed -e 's/<[^>]*>//g')
+            echo "SET Commit Date: $COMMIT_DATE"
           elif [[ $line == *"revision="* ]]; then
             REV_NUMBER=$(echo $line | sed -n 's/.*revision="\([0-9]*\)".*/\1/p')
-            echo "RevNumber: $REV_NUMBER"
+            echo "SET RevNumber: $REV_NUMBER"
           elif [[ $line == "</logentry>"* ]]; then
             if [ -z "$REV_NUMBER" ]; then
               echo "Error: Revision number is empty"  # Debugging statement
@@ -83,12 +86,14 @@ jobs:
             fi
             echo "RevNumber: $REV_NUMBER"
             echo "author: $AUTHOR"
+            echo "date: $COMMIT_DATE"
             echo "Commit Message: $COMMIT_MSG"
             svn update -r $REV_NUMBER
-            cp -R svn-repo/* git-repo/
+            echo "files updated for revision $REV_NUMBER"
+            cp -R . ../git-repo/
             cd ../git-repo
             git add .
-            git commit --author="$AUTHOR" -m "$COMMIT_MSG"
+            git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "$COMMIT_MSG"
             cd ../svn-repo
           fi
         done < ../svn-repo/svn_log.xml
