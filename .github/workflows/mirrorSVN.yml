@@ -31,6 +31,9 @@ jobs:
       run: |
         echo "BRANCH_NAME=automation-branch-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
         echo "Done Setting Name As: ${{ env.BRANCH_NAME }} or $BRANCH_NAME"
+    - name: Confirm Name
+      run: |
+        echo "Done Setting Name As: ${{ env.BRANCH_NAME }}"
 
     - name: Clone SVN repository
       run: svn checkout --username ${{ secrets.SVN_USERNAME }} --password ${{ secrets.SVN_PASSWORD }} https://svn.code.sf.net/p/cbecc-com/code/branches/CBECC-Com_MFamRestructure/ svn-repo
