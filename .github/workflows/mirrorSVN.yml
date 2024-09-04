@@ -69,11 +69,11 @@ jobs:
         while IFS=: read -r svn_username name_email; do
           AUTHORS_MAP["$svn_username"]="$name_email"
         done < authors.txt
-        echo: "authors map array created"
+        echo "authors map array created"
 
         cd ../svn-repo
         svn log -r {2024-08-01}:HEAD --xml > svn_log.xml
-        echo: "svn log file created"
+        echo "svn log file created"
         
         while read -r line; do
           if [[ $line == "<msg>"* ]]; then
