@@ -98,18 +98,19 @@ jobs:
               echo "Error: Revision number is empty"  # Debugging statement
               exit 1
             fi
+            cd ../svn-repo
             echo "RevNumber: $REV_NUMBER"
             echo "author: $AUTHOR"
             echo "date: $COMMIT_DATE"
             echo "Commit Message: $COMMIT_MSG"
             svn update -r $REV_NUMBER
             echo "files updated for revision $REV_NUMBER"
-            cp -R ../svn-repo ../git-repo/
+            cp -R ../svn-repo/* ../git-repo/
             echo "Copied files to git-repo"
             cd ../git-repo
             git add .
             git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "$COMMIT_MSG"
-            echo "successfully committed revision $REV_NUMBER"
+            echo "FINISHED: Successfully committed revision $REV_NUMBER"
             echo ""
             cd ../svn-repo
           fi
