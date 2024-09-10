@@ -127,14 +127,15 @@ jobs:
           fi
         done < ../svn_log.xml
 
+        cd ../git-repo
         git config --global user.name "${{ secrets.GIT_USERNAME }}"
         git config --global user.email "${{ secrets.GIT_EMAIL }}"
-        git add .
-        git commit -m "updating last_commit number #$REV_NUMBER in txt file."
         
         echo $REV_NUMBER > ../last_revision.txt
         echo "Last revision number saved as: $REV_NUMBER"
-                
+        
+        git add .
+        git commit -m "updating last_commit number #$REV_NUMBER in txt file."
         
     - name: Create Pull Request
       if: ${{ env.HAS_UPDATES }} == 'yes'
