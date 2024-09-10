@@ -43,7 +43,7 @@ jobs:
     - name: Generate SVN log
       run: |
         cd svn-repo
-        svn log -r {2024-08-01}:HEAD --xml > ../svn_log.xml
+        svn log -r {2024-09-01}:HEAD --xml > ../svn_log.xml
 
     - name: Upload SVN log artifact
       uses: actions/upload-artifact@v4
@@ -90,7 +90,7 @@ jobs:
             AUTHOR_EMAIL=$(echo "$AUTHOR" | sed -E 's/.*<(.*)>/\1/')
             echo "SET author: $AUTHOR"
           elif [[ $line == "<date>"* ]]; then
-            COMMIT_DATE=$(echo $line | sed -e 's/<[^>]*>//g')
+            COMMIT_DATE=$(date -d "$(echo $line | sed -e 's/<[^>]*>//g')" +'%Y-%m-%d %H:%M:%S')
             echo "SET Commit Date: $COMMIT_DATE"
           elif [[ $line == *"revision="* ]]; then
             REV_NUMBER=$(echo $line | sed -n 's/.*revision="\([0-9]*\)".*/\1/p')
