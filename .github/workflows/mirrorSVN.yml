@@ -26,36 +26,109 @@ jobs:
         cd git-repo
         git config --global user.name "${{ secrets.GIT_USERNAME }}"
         git config --global user.email "${{ secrets.GIT_EMAIL }}"
-        git checkout -b test-mirror-dest || git checkout test-mirror-dest
+ 
+    - name: Set Branch Name
+      run: |
+        echo "BRANCH_NAME=automation-branch-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+        echo "Done Setting Name As: ${{ env.BRANCH_NAME }} or $BRANCH_NAME"
+
+    - name: Confirm Name
+      run: |
+        echo "Done Setting Name As: ${{ env.BRANCH_NAME }}"
 
     - name: Clone SVN repository
-      run: svn checkout --username ${{ secrets.SVN_USERNAME }} --password ${{ secrets.SVN_PASSWORD }} https://svn.code.sf.net/p/cbecc-com/code/branches/CBECC-Com_MFamRestructure/ svn-repo
+      run: |
+        svn checkout --username ${{ secrets.SVN_USERNAME }} --password ${{ secrets.SVN_PASSWORD }} https://svn.code.sf.net/p/cbecc-com/code/branches/CBECC-Com_MFamRestructure/ svn-repo
   
-    - name: Copy files from SVN to Git
-      run: |
-        cp -R svn-repo/* git-repo/
-
-    - name: Track Large Files with Git LFS
-      run: |
-        cd git-repo
-        git lfs track "*.bin"
-        git lfs track "*.dll"
-
-    - name: Add Pre-Push Hook for Tracking Large Files
+    - name: Generate SVN log
       run: |
         cd svn-repo
-        echo '#!/bin/sh' > ../git-repo/.git/hooks/pre-push
-        echo 'find . -type f -size +50M | grep -v ".git" | xargs -I {} git lfs track "{}"' >> ../git-repo/.git/hooks/pre-push
-        echo 'git add .gitattributes' >> ../git-repo/.git/hooks/pre-push
-        chmod +x ../git-repo/.git/hooks/pre-push
+        svn log -r {2024-08-01}:HEAD --xml > ../svn_log.xml
 
-    - name: Commit SVN to Git
-      run: |
-        cd git-repo
-        git add .
-        git commit -m "Mirror from SVN"
+    - name: Upload SVN log artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: svn-log
+        path: svn_log.xml
         
-    - name: Push Git to GitHub
+    - name: Check to see if there are new commits
       run: |
         cd git-repo
-        git push https://${{ secrets.GIT_USERNAME }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ secrets.GIT_USERNAME }}/svn-to-git-mirror.git test-mirror-dest --force
+        if [ -z "$(git status --porcelain)" ]; then
+          echo "HAS_UPDATES=yes" >> $GITHUB_ENV
+        else
+          echo "HAS_UPDATES=no" >> $GITHUB_ENV
+        fi
+        echo "Does repo have updates: ${{ env.HAS_UPDATES }} or $HAS_UPDATES"
+
+    - name: Commit SVN Commits to Git
+      if: ${{ env.HAS_UPDATES }} == 'yes'
+      run: |
+        cd git-repo
+        declare -A AUTHORS_MAP
+        while IFS=: read -r svn_username name_email; do
+          AUTHORS_MAP["$svn_username"]="$name_email"
+        done < authors.txt
+        echo "authors map array created"
+
+        cd ../svn-repo
+        svn log -r {2024-08-01}:HEAD --xml > ../svn_log.xml
+        echo "svn log file created"
+        
+        while read -r line; do
+          if [[ $line == "<msg>"* ]]; then
+            COMMIT_MSG=$(echo $line | sed -e 's/<[^>]*>//g')
+            echo "SET Commit Message: $COMMIT_MSG"
+          elif [[ $line == "<author>"* ]]; then
+            SVN_AUTHOR=$(echo $line | sed -e 's/<[^>]*>//g')
+            AUTHOR=${AUTHORS_MAP[$SVN_AUTHOR]}
+            if [ -z "$AUTHOR" ]; then
+              echo "Error: No mapping found for SVN author $SVN_AUTHOR"
+              AUTHOR="Unknown <>"
+            fi
+            AUTHOR_NAME=$(echo "$AUTHOR" | sed -E 's/(.*) <.*/\1/')
+            AUTHOR_EMAIL=$(echo "$AUTHOR" | sed -E 's/.*<(.*)>/\1/')
+            echo "SET author: $AUTHOR"
+          elif [[ $line == "<date>"* ]]; then
+            COMMIT_DATE=$(echo $line | sed -e 's/<[^>]*>//g')
+            echo "SET Commit Date: $COMMIT_DATE"
+          elif [[ $line == *"revision="* ]]; then
+            REV_NUMBER=$(echo $line | sed -n 's/.*revision="\([0-9]*\)".*/\1/p')
+            echo "SET RevNumber: $REV_NUMBER"
+          elif [[ $line == "</logentry>"* ]]; then
+            if [ -z "$REV_NUMBER" ]; then
+              echo "Error: Revision number is empty"  # Debugging statement
+              exit 1
+            fi
+            cd ../svn-repo
+            echo "RevNumber: $REV_NUMBER"
+            echo "author: $AUTHOR"
+            echo "date: $COMMIT_DATE"
+            echo "Commit Message: $COMMIT_MSG"
+            svn update -r $REV_NUMBER
+            echo "files updated for revision $REV_NUMBER"
+            cp -R ../svn-repo/* ../git-repo/
+            echo "Copied files to git-repo"
+            cd ../git-repo
+            git config --global user.name "$AUTHOR_NAME"
+            git config --global user.email "$AUTHOR_EMAIL"
+            git add .
+            git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER
+            $COMMIT_MSG"
+            echo "FINISHED: Successfully committed revision $REV_NUMBER"
+            echo ""
+            cd ../svn-repo
+          fi
+        done < ../svn_log.xml
+        
+        git config --global user.name "${{ secrets.GIT_USERNAME }}"
+        git config --global user.email "${{ secrets.GIT_EMAIL }}"
+        
+    - name: Create Pull Request
+      if: ${{ env.HAS_UPDATES }} == 'yes'
+      uses: peter-evans/create-pull-request@v7
+      with:
+        path: git-repo
+        branch: ${{ env.BRANCH_NAME }}
+        title: "Automated Pull Request"
+        body: "This pull request was created automatically by GitHub Actions. It mirrors the SVN repository to Git with no history."
