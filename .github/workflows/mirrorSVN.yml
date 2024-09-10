@@ -135,7 +135,14 @@ jobs:
         echo "Last revision number saved as: $REV_NUMBER"
         
         git add .
-        git commit -m "updating last_commit number #$REV_NUMBER in txt file."
+        
+        if ! git diff-index --quiet HEAD --; then
+          git commit -m "updating last_revision.txt to #$REV_NUMBER to track automations."
+          echo "FINISHED: Successfully committed last revision number txt file"
+        else
+          echo "Last revision same as old one: Nothing to commit, working tree clean."
+        fi
+
         
     - name: Create Pull Request
       if: ${{ env.HAS_UPDATES }} == 'yes'
