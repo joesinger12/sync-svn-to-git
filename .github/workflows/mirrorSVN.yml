@@ -45,6 +45,8 @@ jobs:
         cd svn-repo
         LAST_REVISION=$(cat ../git-repo/last_revision.txt)
         echo "LAST_REVISION=$LAST_REVISION" >> $GITHUB_ENV
+        echo "Last revision number is: $LAST_REVISION"
+        
         svn log -r $LAST_REVISION:HEAD --xml > ../svn_log.xml
         echo "svn log file created"
 
