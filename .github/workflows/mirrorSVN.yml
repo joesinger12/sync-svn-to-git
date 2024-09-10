@@ -43,7 +43,7 @@ jobs:
     - name: Generate SVN log
       run: |
         cd svn-repo
-        svn log -r 8606:HEAD --xml > ../svn_log.xml
+        svn log -r 8605:HEAD --xml > ../svn_log.xml
         echo "svn log file created"
 
     - name: Upload SVN log artifact
@@ -112,7 +112,13 @@ jobs:
             git config --global user.name "$AUTHOR_NAME"
             git config --global user.email "$AUTHOR_EMAIL"
             git add .
-            git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER
+            if ! git diff-index --quiet HEAD --; then
+              git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER
+              $COMMIT_MSG"
+            else
+              echo "Skipping: Nothing to commit, working tree clean."
+            fi
+            #git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER
             $COMMIT_MSG"
             echo "FINISHED: Successfully committed revision $REV_NUMBER"
             echo ""
