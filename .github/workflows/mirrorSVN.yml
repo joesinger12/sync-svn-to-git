@@ -94,6 +94,7 @@ jobs:
             echo "SET author: $AUTHOR"
           elif [[ $line == "<date>"* ]]; then
             COMMIT_DATE=$(date -d "$(echo $line | sed -e 's/<[^>]*>//g')" +'%Y-%m-%d %H:%M:%S')
+            export GIT_COMMITTER_DATE="$COMMIT_DATE"
             echo "SET Commit Date: $COMMIT_DATE"
           elif [[ $line == *"revision="* ]]; then
             REV_NUMBER=$(echo $line | sed -n 's/.*revision="\([0-9]*\)".*/\1/p')
