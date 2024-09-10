@@ -93,7 +93,7 @@ jobs:
             AUTHOR_EMAIL=$(echo "$AUTHOR" | sed -E 's/.*<(.*)>/\1/')
             echo "SET author: $AUTHOR"
           elif [[ $line == "<date>"* ]]; then
-            COMMIT_DATE=$(date -d "$(echo $line | sed -e 's/<[^>]*>//g')" +'%Y-%m-%d %H:%M:%S')
+            COMMIT_DATE=$(echo $line | sed -e 's/<[^>]*>//g')
             export GIT_COMMITTER_DATE="$COMMIT_DATE"
             echo "SET Commit Date: $COMMIT_DATE"
           elif [[ $line == *"revision="* ]]; then
