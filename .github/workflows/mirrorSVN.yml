@@ -43,6 +43,8 @@ jobs:
     - name: Generate SVN log
       run: |
         cd svn-repo
+        LAST_REVISION=$(cat ../last_revision.txt)
+        echo "LAST_REVISION=$LAST_REVISION" >> $GITHUB_ENV
         svn log -r 8605:HEAD --xml > ../svn_log.xml
         echo "svn log file created"
 
@@ -115,17 +117,24 @@ jobs:
             if ! git diff-index --quiet HEAD --; then
               git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER
               $COMMIT_MSG"
+              echo "FINISHED: Successfully committed revision $REV_NUMBER"
+              
             else
               echo "Skipping revision number $REV_NUMBER: Nothing to commit, working tree clean."
             fi
-            echo "FINISHED: Successfully committed revision $REV_NUMBER"
             echo ""
             cd ../svn-repo
           fi
         done < ../svn_log.xml
-        
+
         git config --global user.name "${{ secrets.GIT_USERNAME }}"
         git config --global user.email "${{ secrets.GIT_EMAIL }}"
+        git add .
+        git commit -m "updating last_commit number #$REV_NUMBER in txt file."
+        
+        echo $REV_NUMBER > ../last_revision.txt
+        echo "Last revision number saved as: $REV_NUMBER"
+                
         
     - name: Create Pull Request
       if: ${{ env.HAS_UPDATES }} == 'yes'
