@@ -116,10 +116,8 @@ jobs:
               git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER
               $COMMIT_MSG"
             else
-              echo "Skipping: Nothing to commit, working tree clean."
+              echo "Skipping revision number $REV_NUMBER: Nothing to commit, working tree clean."
             fi
-            #git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER
-            $COMMIT_MSG"
             echo "FINISHED: Successfully committed revision $REV_NUMBER"
             echo ""
             cd ../svn-repo
