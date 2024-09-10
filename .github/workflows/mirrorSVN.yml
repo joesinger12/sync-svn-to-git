@@ -134,6 +134,8 @@ jobs:
         git config --global user.name "${{ secrets.GIT_USERNAME }}"
         git config --global user.email "${{ secrets.GIT_EMAIL }}"
         
+        export GIT_COMMITTER_DATE="$(date +'%Y-%m-%d %H:%M:%S')"
+        
         echo $REV_NUMBER > ../git-repo/last_revision.txt
         echo "Last revision number saved as: $REV_NUMBER"
         
