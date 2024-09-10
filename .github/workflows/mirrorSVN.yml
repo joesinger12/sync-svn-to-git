@@ -44,6 +44,7 @@ jobs:
       run: |
         cd svn-repo
         svn log -r 8605:HEAD --xml > ../svn_log.xml
+        echo "svn log file created"
 
     - name: Upload SVN log artifact
       uses: actions/upload-artifact@v4
@@ -72,8 +73,6 @@ jobs:
         echo "authors map array created"
 
         cd ../svn-repo
-        svn log -r {2024-08-01}:HEAD --xml > ../svn_log.xml
-        echo "svn log file created"
         
         while read -r line; do
           if [[ $line == "<msg>"* ]]; then
