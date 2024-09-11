@@ -29,6 +29,7 @@ jobs:
  
     - name: Set Branch Name
       run: |
+        # Creates a branch name with the current date and time
         echo "BRANCH_NAME=automation-branch-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
         echo "Done Setting Name As: ${{ env.BRANCH_NAME }} or $BRANCH_NAME"
 
@@ -43,10 +44,12 @@ jobs:
     - name: Generate SVN log
       run: |
         cd svn-repo
+        # Retrieve the last revision number from the last run
         LAST_REVISION=$(cat ../git-repo/last_revision.txt)
         echo "LAST_REVISION=$LAST_REVISION" >> $GITHUB_ENV
         echo "Last revision number is: $LAST_REVISION"
         
+        # get the log from last_revision to HEAD
         svn log -r $LAST_REVISION:HEAD --xml > ../svn_log.xml
         echo "svn log file created"
 
@@ -59,6 +62,7 @@ jobs:
     - name: Check to see if there are new commits
       run: |
         cd git-repo
+        # Check if there are any changes in the git repository and set the environment variable
         if [ -z "$(git status --porcelain)" ]; then
           echo "HAS_UPDATES=yes" >> $GITHUB_ENV
         else
@@ -70,6 +74,8 @@ jobs:
       if: ${{ env.HAS_UPDATES }} == 'yes'
       run: |
         cd git-repo
+
+        # Read the authors file and create an associative array variable
         declare -A AUTHORS_MAP
         while IFS=: read -r svn_username name_email; do
           AUTHORS_MAP["$svn_username"]="$name_email"
@@ -78,44 +84,69 @@ jobs:
 
         cd ../svn-repo
         
+        # Read the SVN log file and commit reach revision's changes to the Git repository
         while read -r line; do
+
           if [[ $line == "<msg>"* ]]; then
+            # Extract the commit message from the line
             COMMIT_MSG=$(echo $line | sed -e 's/<[^>]*>//g')
-            echo "SET Commit Message: $COMMIT_MSG"
+            echo "SET Commit Message as: $COMMIT_MSG"
+
           elif [[ $line == "<author>"* ]]; then
+            # Extract the author from the line
             SVN_AUTHOR=$(echo $line | sed -e 's/<[^>]*>//g')
             AUTHOR=${AUTHORS_MAP[$SVN_AUTHOR]}
+
             if [ -z "$AUTHOR" ]; then
+              # If the author is not found in the authors file, set it to Unknown
               echo "Error: No mapping found for SVN author $SVN_AUTHOR"
               AUTHOR="Unknown <>"
             fi
+
             AUTHOR_NAME=$(echo "$AUTHOR" | sed -E 's/(.*) <.*/\1/')
             AUTHOR_EMAIL=$(echo "$AUTHOR" | sed -E 's/.*<(.*)>/\1/')
-            echo "SET author: $AUTHOR"
+            echo "SET author as: $AUTHOR"
+
           elif [[ $line == "<date>"* ]]; then
+            # Extract the commit date from the line
             COMMIT_DATE=$(echo $line | sed -e 's/<[^>]*>//g')
             export GIT_COMMITTER_DATE="$COMMIT_DATE"
-            echo "SET Commit Date: $COMMIT_DATE"
+            echo "SET Commit Date as: $COMMIT_DATE"
+
           elif [[ $line == *"revision="* ]]; then
+            # Extract the revision number from the line
             REV_NUMBER=$(echo $line | sed -n 's/.*revision="\([0-9]*\)".*/\1/p')
-            echo "SET RevNumber: $REV_NUMBER"
+            echo "SET RevNumber as: $REV_NUMBER"
+
           elif [[ $line == "</logentry>"* ]]; then
+            # If all the required information is extracted, update the Git repository
             if [ -z "$REV_NUMBER" ]; then
               echo "Error: Revision number is empty"  # Debugging statement
               exit 1
             fi
+
             cd ../svn-repo
+
+            # Echo the extracted information for debugging
             echo "RevNumber: $REV_NUMBER"
             echo "author: $AUTHOR"
             echo "date: $COMMIT_DATE"
             echo "Commit Message: $COMMIT_MSG"
+            
+            # Update the SVN repository to the revision number
             svn update -r $REV_NUMBER
             echo "files updated for revision $REV_NUMBER"
+
+            # Copy the files from the SVN repository to the Git repository
             cp -R ../svn-repo/* ../git-repo/
             echo "Copied files to git-repo"
+
             cd ../git-repo
+
+            # Set the author and email for the commit
             git config --global user.name "$AUTHOR_NAME"
             git config --global user.email "$AUTHOR_EMAIL"
+
             git add .
             if ! git diff-index --quiet HEAD --; then
               git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER
@@ -125,12 +156,15 @@ jobs:
             else
               echo "Skipping revision number $REV_NUMBER: Nothing to commit, working tree clean."
             fi
+
             echo ""
             cd ../svn-repo
           fi
         done < ../svn_log.xml
 
         cd ../git-repo
+
+        # After each revision is committed, update the last revision number in the Git repository
         git config --global user.name "${{ secrets.GIT_USERNAME }}"
         git config --global user.email "${{ secrets.GIT_EMAIL }}"
         
