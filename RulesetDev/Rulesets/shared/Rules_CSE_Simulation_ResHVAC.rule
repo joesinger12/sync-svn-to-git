@@ -661,10 +661,7 @@ RULELIST "HVACSys_CSE_Defaulting" 0 0 0 1
 																										else  CreateComp( cseDUCTSEG, "SupplyDuct-" + substr( Name, 0, 42 ) )  endif  }
 	"Set cseRSYS:SupplyDuct:Parent"			cseRSYS:SupplyDuct:Parent		= {	Local( Name )  }
 	"Set cseRSYS:SupplyDuct:dsTy"				cseRSYS:SupplyDuct:dsTy			= {	"SUPPLY"  }
-	"Set cseRSYS:SupplyDuct:dsInArea"		cseRSYS:SupplyDuct:dsInArea	=     ; was: {	SourceHVACSys:DistribSystem:SupplyDuctArea  } - replaced to account for multiple HVACSystems served by a single DistribSystem - SAC 04/02/24
-      {  if (IfValidAnd( SourceHVACSys:FloorAreaServed[1] > 0 ) .AND. IfValidAnd( SourceHVACSys:FloorAreaServed[1] < SourceHVACSys:DistribSystem:FloorAreaServed ))
-         then  SourceHVACSys:DistribSystem:SupplyDuctArea * ( SourceHVACSys:FloorAreaServed[1] / SourceHVACSys:DistribSystem:FloorAreaServed )
-         else  SourceHVACSys:DistribSystem:SupplyDuctArea  endif  }
+	"Set cseRSYS:SupplyDuct:dsInArea"		cseRSYS:SupplyDuct:dsInArea	= {	SourceHVACSys:DistribSystem:SupplyDuctArea  }
 	"Set cseRSYS:SupplyDuct:dsDiameter"		cseRSYS:SupplyDuct:dsDiameter	= {	SourceHVACSys:DistribSystem:SupplyDuctDiam / 12  }
 	"Set cseRSYS:SupplyDuct:dsInsulR"		cseRSYS:SupplyDuct:dsInsulR	= {	SourceHVACSys:DistribSystem:DuctInsAdjRval  }
 	"Set cseRSYS:SupplyDuct:dsLeakF"			cseRSYS:SupplyDuct:dsLeakF		= {	SourceHVACSys:DistribSystem:DuctLeakageValUse * 0.585 / 100  }
@@ -697,10 +694,7 @@ RULELIST "HVACSys_CSE_Defaulting" 0 0 0 1
 																										else  CreateComp( cseDUCTSEG, "ReturnDuct-" + substr( Name, 0, 42 ) )  endif  }
 	"Set cseRSYS:ReturnDuct:Parent"			cseRSYS:ReturnDuct:Parent		= {	Local( Name )  }
 	"Set cseRSYS:ReturnDuct:dsTy"				cseRSYS:ReturnDuct:dsTy			= {	"RETURN"  }
-	"Set cseRSYS:ReturnDuct:dsInArea"		cseRSYS:ReturnDuct:dsInArea	=     ; was: {	SourceHVACSys:DistribSystem:ReturnDuctArea  } - replaced to account for multiple HVACSystems served by a single DistribSystem - SAC 04/02/24
-      {  if (IfValidAnd( SourceHVACSys:FloorAreaServed[1] > 0 ) .AND. IfValidAnd( SourceHVACSys:FloorAreaServed[1] < SourceHVACSys:DistribSystem:FloorAreaServed ))
-         then  SourceHVACSys:DistribSystem:ReturnDuctArea * ( SourceHVACSys:FloorAreaServed[1] / SourceHVACSys:DistribSystem:FloorAreaServed )
-         else  SourceHVACSys:DistribSystem:ReturnDuctArea  endif  }
+	"Set cseRSYS:ReturnDuct:dsInArea"		cseRSYS:ReturnDuct:dsInArea	= {	SourceHVACSys:DistribSystem:ReturnDuctArea  }
 	"Set cseRSYS:ReturnDuct:dsDiameter"		cseRSYS:ReturnDuct:dsDiameter	= {	SourceHVACSys:DistribSystem:ReturnDuctDiam / 12  }
 	"Set cseRSYS:ReturnDuct:dsInsulR"		cseRSYS:ReturnDuct:dsInsulR	= {	SourceHVACSys:DistribSystem:RetDuctInsAdjRval  }
 	"Set cseRSYS:ReturnDuct:dsLeakF"			cseRSYS:ReturnDuct:dsLeakF		= {	SourceHVACSys:DistribSystem:DuctLeakageValUse * 0.415 / 100  }
@@ -1787,13 +1781,8 @@ RULELIST "SimPrep_CSE_AirNet" 0 0 0 1
 	"Setup AirNet (other) IZXFER objects"		ResProj:Action		= {	EvalRulelist( "SimPrep_CSE_AirNet_Other" )  }
 
    ; SAC 10/19/20
-   ; add logic to PREVENT PrkgGarExhFlow IZXFERs for Non-Garage ResOtherZns - SAC 06/03/24
-   ;                          355 = "Parking Garage Area (Parking Zone and Ramps)"
-   ;                          356 = "Parking Garage Area (Daylight Adaptation Zones)"
-	"Create ResOtherZn:ExhaustIZXFERs[1] (exhaust)"		ResOtherZn:ExhaustIZXFERs[1]	=
-      {  if (PrkgGarExhFlow <= 0 .OR. Area <= 0) then  UNCHANGED
-         else if (SpcFunc != 355 .AND. SpcFunc != 356) then  UNCHANGED
-         else  CreateComp( cseIZXFER, substr( Name, 0, 44 ) + "-Exhst" )  endif endif  }
+	"Create ResOtherZn:ExhaustIZXFERs[1] (exhaust)"		ResOtherZn:ExhaustIZXFERs[1]	= {	if (PrkgGarExhFlow <= 0 .OR. Area <= 0) then  UNCHANGED
+																														else  CreateComp( cseIZXFER, substr( Name, 0, 44 ) + "-Exhst" )  endif  }
 	"Set ResOtherZn:ExhaustIZXFERs[1]:izNVType"			ResOtherZn:ExhaustIZXFERs[1]:izNVType		=	{	6  }		; AIRNETEXTFAN  - Fan from exterior to zone
 	"Set ResOtherZn:ExhaustIZXFERs[1]:izZn1"				ResOtherZn:ExhaustIZXFERs[1]:izZn1			=	{	CSE_ZONE  }
 	"Set ResOtherZn:ExhaustIZXFERs[1]:izVFmin"				ResOtherZn:ExhaustIZXFERs[1]:izVFmin			=	{	PrkgGarExhFlow * -1  }
@@ -3621,10 +3610,9 @@ RULELIST "SimPrep_CSE_AirNet_Other" 0 0 0 1
 	"Set ResIntCeiling:AirNetPrtySrfIZXFER:izExp"		ResIntCeiling:AirNetPrtySrfIZXFER:izExp		= {	0.65  }
 
    ; added new IZXFERs to interior walls to serve as relief when no other IZXFERs present (for the surface) - SAC 09/30/23
-   ; revised -relief vent IZXFER logic to ensure creation if new SimWithReliefVent flag is set (and other IZXFERs not present) - SAC 02/02/24
    "Create relief vent when needed: ResIntWall:AirNetReliefIZXFER"     ResIntWall:AirNetReliefIZXFER =
-      {  if (IfValidAnd( SimWithReliefVent > 0 )==0 .AND. IsPartySurface < 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
-         else if (IfValidAnd( SimWithReliefVent > 0 )==0 .AND. IsPartySurface > 0.5 .AND. OtherSideModeled > 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
+      {  if (IsPartySurface < 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
+         else if (IsPartySurface > 0.5 .AND. OtherSideModeled > 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
          else if (LocalCompAssigned( AirNetGarIZXFER ) > 0 .OR. LocalCompAssigned( AirNetDoorIZXFER[1] ) > 0 .OR. LocalCompAssigned( AirNetDoorIZXFER[2] ) > 0 .OR.
                   LocalCompAssigned( AirNetPrtySrfIZXFER[1]  ) > 0 .OR. LocalCompAssigned( AirNetPrtySrfIZXFER[2]  ) > 0 .OR. 
                   LocalCompAssigned( CndUCndAirNetIZXFERs[1] ) > 0 .OR. LocalCompAssigned( CndUCndAirNetIZXFERs[2] ) > 0) then  UNDEFINED
@@ -3644,10 +3632,9 @@ RULELIST "SimPrep_CSE_AirNet_Other" 0 0 0 1
    "Set ResIntWall:AirNetReliefIZXFER:izWEx_x"     ResIntWall:AirNetReliefIZXFER:izWEx_x  = {  Format( "@zone[%c%s%c].wzls", 34, CSE_ZONE:Name, 34 )  }
 
    ; added new IZXFERs to interior floors & ceilings to serve as relief when no other IZXFERs present (for the surface) - SAC 10/02/23
-   ; revised -relief vent IZXFER logic to ensure creation if new SimWithReliefVent flag is set (and other IZXFERs not present) - SAC 02/02/24
    "Create relief vent when needed: ResIntFlr:AirNetReliefIZXFER"    ResIntFlr:AirNetReliefIZXFER =
-      {  if (IfValidAnd( SimWithReliefVent > 0 )==0 .AND. IsPartySurface < 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
-         else if (IfValidAnd( SimWithReliefVent > 0 )==0 .AND. IsPartySurface > 0.5 .AND. OtherSideModeled > 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
+      {  if (IsPartySurface < 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
+         else if (IsPartySurface > 0.5 .AND. OtherSideModeled > 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
          else if (Area < 0.1 .OR. LocalCompAssigned( AirNetGarIZXFER ) > 0 .OR. LocalCompAssigned( AirNetPrtySrfIZXFER ) > 0 .OR.
                   LocalCompAssigned( AirNetStairIZXFER[1] ) > 0 .OR. LocalCompAssigned( AirNetStairIZXFER[2] ) > 0) then  UNDEFINED
          else  CreateComp( cseIZXFER, substr( Name, 0, 45 ) + "-relief" )
@@ -3666,8 +3653,8 @@ RULELIST "SimPrep_CSE_AirNet_Other" 0 0 0 1
    "Set ResIntFlr:AirNetReliefIZXFER:izWEx_x"      ResIntFlr:AirNetReliefIZXFER:izWEx_x  = {  Format( "@zone[%c%s%c].wzls", 34, CSE_ZONE:Name, 34 )  }
 
    "Create relief vent when needed: ResIntCeiling:AirNetReliefIZXFER"   ResIntCeiling:AirNetReliefIZXFER =
-      {  if (IfValidAnd( SimWithReliefVent > 0 )==0 .AND. IsPartySurface < 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
-         else if (IfValidAnd( SimWithReliefVent > 0 )==0 .AND. IsPartySurface > 0.5 .AND. OtherSideModeled > 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
+      {  if (IsPartySurface < 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
+         else if (IsPartySurface > 0.5 .AND. OtherSideModeled > 0.5 .AND. Parent( Name ) == ValidOr( Outside:Name, "zznullzz" )) then  UNDEFINED
          else if (Area < 0.1 .OR. LocalCompAssigned( AirNetGarIZXFER ) > 0 .OR. LocalCompAssigned( AirNetPrtySrfIZXFER ) > 0 .OR.
                   LocalCompAssigned( AirNetStairIZXFER[1] ) > 0 .OR. LocalCompAssigned( AirNetStairIZXFER[2] ) > 0) then  UNDEFINED
          else  CreateComp( cseIZXFER, substr( Name, 0, 45 ) + "-relief" )

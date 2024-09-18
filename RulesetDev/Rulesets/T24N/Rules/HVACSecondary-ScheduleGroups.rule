@@ -44,11 +44,11 @@ RULE NEW AirSys:CompRmArea
   INPUTCLASS 
     NotInput
   DEFAULT
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CompRmAreaWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CompRmAreaWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CompRmArea ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CompRmArea ) )
   SIZING
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CompRmAreaWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CompRmAreaWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CompRmArea ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CompRmArea ) )
 ENDRULE
 RULE NEW ZnSys:CompRmArea
   DATATYPE
@@ -58,13 +58,13 @@ RULE NEW ZnSys:CompRmArea
   INPUTCLASS 
     NotInput
   DEFAULT
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CompRmAreaWithMult ),
-              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:CompRmAreaWithMult ) ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CompRmAreaWithMult ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CompRmArea ),
+              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:CompRmArea ) ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CompRmArea ) )
   SIZING
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CompRmAreaWithMult ),
-              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:CompRmAreaWithMult ) ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CompRmAreaWithMult ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CompRmArea ),
+              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:CompRmArea ) ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CompRmArea ) )
 ENDRULE
 // Lab
 RULE NEW AirSys:LabArea
@@ -76,17 +76,17 @@ RULE NEW AirSys:LabArea
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:LabAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:LabArea )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:LabAreaWithMult ),
-          SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:LabAreaWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:LabArea ),
+          SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:LabArea ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:LabAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:LabArea )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:LabAreaWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:LabAreaWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:LabArea ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:LabArea ) )
     endif
 ENDRULE
 RULE NEW ZnSys:LabArea
@@ -98,19 +98,19 @@ RULE NEW ZnSys:LabArea
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:LabAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:LabArea )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:LabAreaWithMult ),
-              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:LabAreaWithMult ) ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:LabAreaWithMult ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:LabArea ),
+              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:LabArea ) ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:LabArea ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:LabAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:LabArea )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:LabAreaWithMult ),
-              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:LabAreaWithMult ) ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:LabAreaWithMult ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:LabArea ),
+              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:LabArea ) ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:LabArea ) )
     endif
 ENDRULE
 // Commerical kitchen
@@ -123,17 +123,17 @@ RULE NEW AirSys:CommKitArea
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:CommKitAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:CommKitArea )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CommKitAreaWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CommKitAreaWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CommKitArea ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CommKitArea ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:CommKitAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:CommKitArea )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CommKitAreaWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CommKitAreaWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CommKitArea ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CommKitArea ) )
     endif
 ENDRULE
 RULE NEW ZnSys:CommKitArea
@@ -145,19 +145,19 @@ RULE NEW ZnSys:CommKitArea
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:CommKitAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:CommKitArea )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CommKitAreaWithMult ),
-              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:CommKitAreaWithMult ) ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CommKitAreaWithMult ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CommKitArea ),
+              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:CommKitArea ) ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CommKitArea ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:CommKitAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:CommKitArea )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CommKitAreaWithMult ),
-              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:CommKitAreaWithMult ) ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CommKitAreaWithMult ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CommKitArea ),
+              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:CommKitArea ) ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:CommKitArea ) )
     endif
 ENDRULE
 // Parking Garage
@@ -170,12 +170,12 @@ RULE NEW AirSys:PrkgGarArea
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:PrkgGarAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:PrkgGarArea )
     else 0
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:PrkgGarAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:PrkgGarArea )
     else 0
     endif
 ENDRULE
@@ -188,12 +188,12 @@ RULE NEW ZnSys:PrkgGarArea
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:PrkgGarAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:PrkgGarArea )
     else 0
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:PrkgGarAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:PrkgGarArea )
     else 0
     endif
 ENDRULE
@@ -207,17 +207,17 @@ RULE NEW AirSys:FactoryArea
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FactoryAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FactoryArea )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FactoryAreaWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FactoryAreaWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FactoryArea ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FactoryArea ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FactoryAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FactoryArea )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FactoryAreaWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FactoryAreaWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FactoryArea ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FactoryArea ) )
     endif
 ENDRULE
 RULE NEW ZnSys:FactoryArea
@@ -229,19 +229,19 @@ RULE NEW ZnSys:FactoryArea
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FactoryAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FactoryArea )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FactoryAreaWithMult ),
-              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FactoryAreaWithMult ) ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FactoryAreaWithMult ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FactoryArea ),
+              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FactoryArea ) ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FactoryArea ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FactoryAreaWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FactoryArea )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FactoryAreaWithMult ),
-              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FactoryAreaWithMult ) ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FactoryAreaWithMult ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FactoryArea ),
+              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FactoryArea ) ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FactoryArea ) )
     endif
 ENDRULE
 // 24 hour operations area
@@ -254,17 +254,17 @@ RULE NEW AirSys:Is24HrSys
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpArea24HrWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpArea24Hr )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpArea24HrWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpArea24HrWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpArea24Hr ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpArea24Hr ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpArea24HrWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpArea24Hr )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpArea24HrWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpArea24HrWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpArea24Hr ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpArea24Hr ) )
     endif
 ENDRULE
 RULE NEW ZnSys:Is24HrSys
@@ -276,19 +276,19 @@ RULE NEW ZnSys:Is24HrSys
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpArea24HrWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpArea24Hr )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpArea24HrWithMult ),
-              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpArea24HrWithMult ) ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpArea24HrWithMult ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpArea24Hr ),
+              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpArea24Hr ) ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpArea24Hr ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpArea24HrWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpArea24Hr )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpArea24HrWithMult ),
-              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpArea24HrWithMult ) ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpArea24HrWithMult ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpArea24Hr ),
+              SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpArea24Hr ) ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpArea24Hr ) )
     endif
 ENDRULE
 RULE NEW AirSys:ProcArea
@@ -327,18 +327,20 @@ RULE NEW AirSys:FuncGrpAreaAssembly
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaAssemblyWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaAssembly )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaAssemblyWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaAssemblyWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaAssembly ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaAssembly ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaAssemblyWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaAssembly )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaAssemblyWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaAssemblyWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaAssembly ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaAssembly ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaAssembly
 ENDRULE 
 RULE NEW AirSys:FuncGrpAreaData
   DATATYPE
@@ -349,18 +351,20 @@ RULE NEW AirSys:FuncGrpAreaData
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaDataWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaData )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaDataWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaDataWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaData ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaData ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaDataWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaData )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaDataWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaDataWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaData ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaData ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaData
 ENDRULE 
 RULE NEW AirSys:FuncGrpAreaHealth
   DATATYPE
@@ -371,18 +375,20 @@ RULE NEW AirSys:FuncGrpAreaHealth
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaHealthWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaHealth )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaHealthWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaHealthWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaHealth ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaHealth ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaHealthWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaHealth )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaHealthWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaHealthWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaHealth ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaHealth ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaHealth
 ENDRULE 
 RULE NEW AirSys:FuncGrpAreaLab
   DATATYPE
@@ -393,18 +399,20 @@ RULE NEW AirSys:FuncGrpAreaLab
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaLabWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaLab )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaLabWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaLabWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaLab ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaLab ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaLabWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaLab )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaLabWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaLabWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaLab ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaLab ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaLab
 ENDRULE 
 RULE NEW AirSys:FuncGrpAreaManufacturing
   DATATYPE
@@ -415,18 +423,20 @@ RULE NEW AirSys:FuncGrpAreaManufacturing
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaManufacturingWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaManufacturing )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaManufacturingWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaManufacturingWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaManufacturing ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaManufacturing ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaManufacturingWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaManufacturing )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaManufacturingWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaManufacturingWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaManufacturing ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaManufacturing ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaManufacturing
 ENDRULE 
 RULE NEW AirSys:FuncGrpAreaOffice
   DATATYPE
@@ -437,18 +447,20 @@ RULE NEW AirSys:FuncGrpAreaOffice
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaOfficeWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaOffice )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaOfficeWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaOfficeWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaOffice ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaOffice ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaOfficeWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaOffice )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaOfficeWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaOfficeWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaOffice ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaOffice ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaOffice
 ENDRULE  
 RULE NEW AirSys:FuncGrpAreaParking
   DATATYPE
@@ -459,18 +471,20 @@ RULE NEW AirSys:FuncGrpAreaParking
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaParkingWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaParking )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaParkingWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaParkingWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaParking ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaParking ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaParkingWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaParking )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaParkingWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaParkingWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaParking ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaParking ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaParking
 ENDRULE  
 RULE NEW AirSys:FuncGrpAreaResidentialCommon
   DATATYPE
@@ -481,18 +495,20 @@ RULE NEW AirSys:FuncGrpAreaResidentialCommon
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialCommonWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialCommon )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialCommonWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialCommonWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialCommon ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialCommon ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialCommonWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialCommon )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialCommonWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialCommonWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialCommon ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialCommon ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaResidentialCommon
 ENDRULE  
 RULE NEW AirSys:FuncGrpAreaResidentialLiving
   DATATYPE
@@ -503,18 +519,20 @@ RULE NEW AirSys:FuncGrpAreaResidentialLiving
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialLivingWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialLiving )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialLivingWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialLivingWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialLiving ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialLiving ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialLivingWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialLiving )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialLivingWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialLivingWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialLiving ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialLiving ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaResidentialLiving
 ENDRULE 
 RULE NEW AirSys:FuncGrpAreaRestaurant
   DATATYPE
@@ -525,18 +543,20 @@ RULE NEW AirSys:FuncGrpAreaRestaurant
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRestaurantWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRestaurant )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRestaurantWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRestaurantWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRestaurant ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRestaurant ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRestaurantWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRestaurant )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRestaurantWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRestaurantWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRestaurant ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRestaurant ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaRestaurant
 ENDRULE 
 RULE NEW AirSys:FuncGrpAreaRetail
   DATATYPE
@@ -547,18 +567,20 @@ RULE NEW AirSys:FuncGrpAreaRetail
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRetailWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRetail )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRetailWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRetailWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRetail ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRetail ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRetailWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRetail )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRetailWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRetailWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRetail ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRetail ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaRetail
 ENDRULE 
 RULE NEW AirSys:FuncGrpAreaSchool
   DATATYPE
@@ -569,18 +591,20 @@ RULE NEW AirSys:FuncGrpAreaSchool
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaSchoolWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaSchool )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaSchoolWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaSchoolWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaSchool ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaSchool ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaSchoolWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaSchool )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaSchoolWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaSchoolWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaSchool ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaSchool ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaSchool
 ENDRULE
 RULE NEW AirSys:FuncGrpAreaWarehouse
   DATATYPE
@@ -591,18 +615,20 @@ RULE NEW AirSys:FuncGrpAreaWarehouse
     NotInput
   DEFAULT
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaWarehouseWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaWarehouse )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaWarehouseWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaWarehouseWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaWarehouse ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaWarehouse ) )
     endif
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaWarehouseWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaWarehouse )
     else
-    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaWarehouseWithMult ),
-         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaWarehouseWithMult ) )
+    Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaWarehouse ),
+         SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaWarehouse ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaWarehouse
 ENDRULE 
 
 // =========================== ZoneSystem ======================================
@@ -620,13 +646,15 @@ RULE NEW ZnSys:FuncGrpAreaAssembly
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaAssemblyWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaAssembly )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaAssemblyWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaAssemblyWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaAssemblyWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaAssemblyWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaAssembly ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaAssembly ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaAssembly ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaAssembly ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaAssembly
 ENDRULE 
 RULE NEW ZnSys:FuncGrpAreaData
   DATATYPE
@@ -637,13 +665,15 @@ RULE NEW ZnSys:FuncGrpAreaData
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaDataWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaData )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaDataWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaDataWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaDataWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaDataWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaData ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaData ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaData ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaData ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaData
 ENDRULE 
 RULE NEW ZnSys:FuncGrpAreaHealth
   DATATYPE
@@ -654,13 +684,15 @@ RULE NEW ZnSys:FuncGrpAreaHealth
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaHealthWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaHealth )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaHealthWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaHealthWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaHealthWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaHealthWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaHealth ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaHealth ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaHealth ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaHealth ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaHealth
 ENDRULE 
 RULE NEW ZnSys:FuncGrpAreaLab
   DATATYPE
@@ -671,13 +703,15 @@ RULE NEW ZnSys:FuncGrpAreaLab
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaLabWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaLab )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaLabWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaLabWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaLabWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaLabWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaLab ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaLab ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaLab ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaLab ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaLab
 ENDRULE 
 RULE NEW ZnSys:FuncGrpAreaManufacturing
   DATATYPE
@@ -688,13 +722,15 @@ RULE NEW ZnSys:FuncGrpAreaManufacturing
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaManufacturingWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaManufacturing )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaManufacturingWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaManufacturingWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaManufacturingWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaManufacturingWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaManufacturing ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaManufacturing ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaManufacturing ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaManufacturing ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaManufacturing
 ENDRULE 
 RULE NEW ZnSys:FuncGrpAreaOffice
   DATATYPE
@@ -705,13 +741,15 @@ RULE NEW ZnSys:FuncGrpAreaOffice
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaOfficeWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaOffice )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaOfficeWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaOfficeWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaOfficeWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaOfficeWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaOffice ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaOffice ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaOffice ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaOffice ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaOffice
 ENDRULE  
 RULE NEW ZnSys:FuncGrpAreaParking
   DATATYPE
@@ -722,13 +760,15 @@ RULE NEW ZnSys:FuncGrpAreaParking
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaParkingWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaParking )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaParkingWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaParkingWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaParkingWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaParkingWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaParking ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaParking ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaParking ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaParking ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaParking
 ENDRULE  
 RULE NEW ZnSys:FuncGrpAreaResidentialCommon
   DATATYPE
@@ -739,13 +779,15 @@ RULE NEW ZnSys:FuncGrpAreaResidentialCommon
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialCommonWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialCommon )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialCommonWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaResidentialCommonWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialCommonWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaResidentialCommonWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialCommon ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaResidentialCommon ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialCommon ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaResidentialCommon ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaResidentialCommon
 ENDRULE  
 RULE NEW ZnSys:FuncGrpAreaResidentialLiving
   DATATYPE
@@ -756,13 +798,15 @@ RULE NEW ZnSys:FuncGrpAreaResidentialLiving
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialLivingWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaResidentialLiving )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialLivingWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaResidentialLivingWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialLivingWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaResidentialLivingWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaResidentialLiving ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaResidentialLiving ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaResidentialLiving ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaResidentialLiving ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaResidentialLiving
 ENDRULE 
 RULE NEW ZnSys:FuncGrpAreaRestaurant
   DATATYPE
@@ -773,13 +817,15 @@ RULE NEW ZnSys:FuncGrpAreaRestaurant
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRestaurantWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRestaurant )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRestaurantWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaRestaurantWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRestaurantWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaRestaurantWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRestaurant ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaRestaurant ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRestaurant ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaRestaurant ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaRestaurant
 ENDRULE 
 RULE NEW ZnSys:FuncGrpAreaRetail
   DATATYPE
@@ -790,13 +836,15 @@ RULE NEW ZnSys:FuncGrpAreaRetail
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRetailWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaRetail )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRetailWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaRetailWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRetailWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaRetailWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaRetail ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaRetail ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaRetail ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaRetail ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaRetail
 ENDRULE 
 RULE NEW ZnSys:FuncGrpAreaSchool
   DATATYPE
@@ -807,13 +855,15 @@ RULE NEW ZnSys:FuncGrpAreaSchool
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaSchoolWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaSchool )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaSchoolWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaSchoolWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaSchoolWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaSchoolWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaSchool ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaSchool ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaSchool ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaSchool ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaSchool
 ENDRULE
 RULE NEW ZnSys:FuncGrpAreaWarehouse
   DATATYPE
@@ -824,13 +874,15 @@ RULE NEW ZnSys:FuncGrpAreaWarehouse
     NotInput
   SIZING
     if( IsExhSys > 0 )
-    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaWarehouseWithMult )
+    then SumRevRef( ThrmlZn:ExhSysRef, ThrmlZn:FuncGrpAreaWarehouse )
     else
-    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaWarehouseWithMult ),
-             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaWarehouseWithMult ) ),
-        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaWarehouseWithMult ),
-             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaWarehouseWithMult ) ) )
+    Max( Max( SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FuncGrpAreaWarehouse ),
+             SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:FuncGrpAreaWarehouse ) ),
+        Max( SumRevRef( ThrmlZn:VentSysRef, ThrmlZn:FuncGrpAreaWarehouse ),
+             SumRevRef( ThrmlZn:SimSysRef[1], ThrmlZn:FuncGrpAreaWarehouse ) ) )
     endif
+  ANNUAL
+    z:FuncGrpAreaWarehouse
 ENDRULE 
 
 
@@ -1042,7 +1094,7 @@ RULE NEW AirSys:MaxAreaThrmlZnRef
   INPUTCLASS
     NotInput
   SIZING
-    MaxRevRefComp( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FlrAreaWithMult )
+    MaxRevRefComp( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FlrArea )
 ENDRULE
 RULE NEW ZnSys:MaxAreaThrmlZnRef
   DATATYPE
@@ -1052,7 +1104,7 @@ RULE NEW ZnSys:MaxAreaThrmlZnRef
   INPUTCLASS
     NotInput
   SIZING
-    MaxRevRefComp( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FlrAreaWithMult )
+    MaxRevRefComp( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:FlrArea )
 ENDRULE
  
 // ---------- Section 5.7.2.2 - Schedules --------------------------------------

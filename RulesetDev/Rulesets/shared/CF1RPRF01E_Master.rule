@@ -1635,10 +1635,6 @@ RULELIST "CF1RPRF01E_Proposed"  1 0 0 1
                   case 194 :  "Generic26kW"      ; "generic 26kW"
                   case 195 :  "Generic40kW"      ; "generic 40kW"
                   case 196 :  "Generic45kW"      ; "generic 45kW"
-                  case 87 :  "Tier4Generic40"   ; "AWHSTier4Generic40"    ; NEEA generic tier 4 options - SAC 04/25/24 (tic #3595)
-                  case 88 :  "Tier4Generic50"   ; "AWHSTier4Generic50"
-                  case 89 :  "Tier4Generic65"   ; "AWHSTier4Generic65"
-                  case 90 :  "Tier4Generic80"   ; "AWHSTier4Generic80"
                   default :  UNDEFINED
                endswitch  endif  }
 
@@ -1762,10 +1758,6 @@ RULELIST "CF1RPRF01E_Proposed"  1 0 0 1
                   case 194 :  "Generic26kW"      ; "generic 26kW"
                   case 195 :  "Generic40kW"      ; "generic 40kW"
                   case 196 :  "Generic45kW"      ; "generic 45kW"
-                  case 87 :  "Tier4Generic40"   ; "AWHSTier4Generic40"    ; NEEA generic tier 4 options - SAC 04/25/24 (tic #3595)
-                  case 88 :  "Tier4Generic50"   ; "AWHSTier4Generic50"
-                  case 89 :  "Tier4Generic65"   ; "AWHSTier4Generic65"
-                  case 90 :  "Tier4Generic80"   ; "AWHSTier4Generic80"
                   default :  UNDEFINED
                endswitch  endif  }
 
@@ -2179,10 +2171,6 @@ RULELIST "CF1RPRF01E_Proposed"  1 0 0 1
                                     case "Rheem 2020 Builder 65"   :  "Rheem2020Build65"
                                     case "Rheem 2020 Builder 80"   :  "Rheem2020Build80"
                                     case "AO Smith CAHP-120"       :  "AOSmithCAHP120"    ; SAC 02/20/21 (tic #1260)
-                                    case "AWHSTier4Generic40" :  "AWHSTier4Generic40"  ; SAC 04/25/24 (tic #3595)
-                                    case "AWHSTier4Generic50" :  "AWHSTier4Generic50"
-                                    case "AWHSTier4Generic65" :  "AWHSTier4Generic65"
-                                    case "AWHSTier4Generic80" :  "AWHSTier4Generic80"
                                     default  :  UNDEFINED
                                 endswitch
                     endif endif  }
@@ -6024,12 +6012,11 @@ RULELIST "CF1RPRF01E_cf1rSection_Fenmf_Proposed"  1 0 0 1
          {  if (LocalStatus( CF1R_FenmfRow:Fen07mf_FenestrationIdenticalMultiplier ) < 1) then  "NotApplicable"  else  UNDEFINED  endif  }
       "Set ResWin:CF1R_FenmfRow:Fen08mf_FenestrationAssemblyArea" ResWin:CF1R_FenmfRow:Fen08mf_FenestrationAssemblyArea  = {  atof( Format( "%.2f", Area * Multiplier * ResZnGrp:Mult ) )  }
       "Set ResWin:CF1R_FenmfRow:Fen09mf_FenestrationAssemblyUFactor" ResWin:CF1R_FenmfRow:Fen09mf_FenestrationAssemblyUFactor  = {  atof( Format( "%.2f", NFRCUfactor ) )  }
-      ; replaced 'ADFP' w/ 'NA6' - SAC 04/20/24 (tic #3576)
       "Set ResWin:CF1R_FenmfRow:Fen10mf_FenestrationCertificationMethod" ResWin:CF1R_FenmfRow:Fen10mf_FenestrationCertificationMethod  = { 
                                                                                                                            switch( EnumString( UfactorSHGCSource ) )
                                                                                                                               case "NFRC"    :  "NFRCRated"
                                                                                                                               case "default" :  "CECDefaultPerformance"
-                                                                                                                              case "NA6"     :  "NA6Equations"
+                                                                                                                              case "ADFP"    :  "NA6Equations"
                                                                                                                               default  :  UNDEFINED
                                                                                                                            endswitch  }
       "Set ResWin:CF1R_FenmfRow:Fen11mf_FenestrationAssemblySHGC" ResWin:CF1R_FenmfRow:Fen11mf_FenestrationAssemblySHGC  = {  atof( Format( "%.2f", NFRCSHGC ) )  }
@@ -6037,7 +6024,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Fenmf_Proposed"  1 0 0 1
                                                                                                                            switch( EnumString( UfactorSHGCSource ) )
                                                                                                                               case "NFRC"    :  "NFRCRated"
                                                                                                                               case "default" :  "CECDefaultPerformance"
-                                                                                                                              case "NA6"     :  "NA6Equations"
+                                                                                                                              case "ADFP"    :  "NA6Equations"
                                                                                                                               default  :  UNDEFINED
                                                                                                                            endswitch  }
       "Set ResWin:CF1R_FenmfRow:Fen12mf_NotApplicableMessage" ResWin:CF1R_FenmfRow:Fen12mf_NotApplicableMessage  =
@@ -6076,12 +6063,11 @@ RULELIST "CF1RPRF01E_cf1rSection_Fenmf_Proposed"  1 0 0 1
       "Set ResSkylt:CF1R_FenmfRow:Fen03mf_NotApplicableMessage" ResSkylt:CF1R_FenmfRow:Fen03mf_NotApplicableMessage  =
          {  if (LocalStatus( CF1R_FenmfRow:Fen03mf_PartitionName ) < 1) then  "NotApplicable"  else  UNDEFINED  endif  }
       "Set ResSkylt:CF1R_FenmfRow:Fen04mf_Azimuth" ResSkylt:CF1R_FenmfRow:Fen04mf_Azimuth  = {  atof( Format( "%.2f", Azimuth ) )  }
-      ; replaced 'ADFP' w/ 'NA6' - SAC 04/20/24 (tic #3576)
       "Set ResSkylt:CF1R_FenmfRow:Fen05mf_FenestrationCertificationMethod" ResSkylt:CF1R_FenmfRow:Fen05mf_FenestrationCertificationMethod  = { 
                                                                                                                            switch( EnumString( UfactorSHGCSource ) )
                                                                                                                               case "NFRC"    :  "NFRCRated"
                                                                                                                               case "default" :  "CECDefaultPerformance"
-                                                                                                                              case "NA6"     :  "NA6Equations"
+                                                                                                                              case "ADFP"    :  "ADFP"
                                                                                                                               default  :  UNDEFINED
                                                                                                                            endswitch  }
       "Set ResSkylt:CF1R_FenmfRow:Fen06mf_AssemblyContext" ResSkylt:CF1R_FenmfRow:Fen06mf_AssemblyContext  = {  "unknown"  }
@@ -6094,7 +6080,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Fenmf_Proposed"  1 0 0 1
                                                                                                                            switch( EnumString( UfactorSHGCSource ) )
                                                                                                                               case "NFRC"    :  "NFRCRated"
                                                                                                                               case "default" :  "CECDefaultPerformance"
-                                                                                                                              case "NA6"     :  "NA6Equations"
+                                                                                                                              case "ADFP"    :  "NA6Equations"
                                                                                                                               default  :  UNDEFINED
                                                                                                                            endswitch  }
       "Set ResSkylt:CF1R_FenmfRow:Fen11mf_FenestrationAssemblySHGC" ResSkylt:CF1R_FenmfRow:Fen11mf_FenestrationAssemblySHGC  = {  atof( Format( "%.2f", NFRCSHGC ) )  }
@@ -6102,7 +6088,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Fenmf_Proposed"  1 0 0 1
                                                                                                                            switch( EnumString( UfactorSHGCSource ) )
                                                                                                                               case "NFRC"    :  "NFRCRated"
                                                                                                                               case "default" :  "CECDefaultPerformance"
-                                                                                                                              case "NA6"     :  "NA6Equations"
+                                                                                                                              case "ADFP"    :  "ADFP"
                                                                                                                               default  :  UNDEFINED
                                                                                                                            endswitch  }
 
@@ -7106,9 +7092,8 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
                  endif
             else UNDEFINED
             endif  }
-      ; added checks to prevent rule eval errors when ResDistSys:HERSCheck is not created/assigned (happens when assigned flr area = 0) - SAC 08/12/24
       "Set HVACDist:CF1R_DistMFHERSRow:Distmf12_IsDuctLocationVerificationRequired" HVACDist:CF1R_DistMFHERSRow:Distmf12_IsDuctLocationVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( HERSCheck:DuctLocation > 0 ))
                  then  "true"
                  else  "false"  
@@ -7116,7 +7101,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
             else UNDEFINED
             endif  }
       "Set HVACDist:CF1R_DistMFHERSRow:Distmf13_DuctsInCondExcept12CreditTaken" HVACDist:CF1R_DistMFHERSRow:Distmf13_DuctsInCondExcept12CreditTaken  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (EnumString( HERSCheck:DuctLocRptMsg ) == "Ducts located within the conditioned space (except < 12 lineal ft)")
                  then  "true"
                  else  "false"  
@@ -7124,7 +7109,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
             else UNDEFINED
             endif  }
       "Set HVACDist:CF1R_DistMFHERSRow:Distmf14_DuctDesignVerificationRequired" HVACDist:CF1R_DistMFHERSRow:Distmf14_DuctDesignVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( HERSCheck:RetDuctDesign > 0 ) .OR. IfValidAnd( HERSCheck:SupDuctDesign > 0 ))
                  then  "true"
                  else  "false"  
@@ -7132,7 +7117,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
             else UNDEFINED
             endif  }
       "Set HVACDist:CF1R_DistMFHERSRow:Distmf15_DuctsBuriedVerificationRequired" HVACDist:CF1R_DistMFHERSRow:Distmf15_DuctsBuriedVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( HERSCheck:BuriedDucts > 0 ))
                  then  "true"
                  else  "false"  
@@ -7140,7 +7125,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
             else UNDEFINED
             endif  }
       "Set HVACDist:CF1R_DistMFHERSRow:Distmf16_DuctsDeeplyBuriedComplianceCreditTaken" HVACDist:CF1R_DistMFHERSRow:Distmf16_DuctsDeeplyBuriedComplianceCreditTaken  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( HERSCheck:DeeplyBuriedDucts > 0 ))
                  then  "true"
                  else  "false"  
@@ -7149,7 +7134,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
             endif  }
          ; SAC 7/1/19 - revised following rule to flag Bb08_LowLeakageAirHandlingUnitVerificationRequired true iff user specifies "Low Leakage Air Handler" (tic #1127)
       "Set HVACDist:CF1R_DistMFHERSRow:Distmf17_LowLeakageAirHandlingUnitVerificationRequired" HVACDist:CF1R_DistMFHERSRow:Distmf17_LowLeakageAirHandlingUnitVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( HERSCheck:cf1rLowLeakageAH > 0 ))
                  then  "true"
                  else  "false"  
@@ -7158,18 +7143,17 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
             endif  }
          ; SAC 4/30/19 - fixed bug in following rule, replacing left side HERSDist:... w/ HVACDist:HERSCheck:... to have access to HVACDist properties
          ; RJH 12/22/23 - Per GitHub 2022-CBECC-Com-Schema Issue #120: switch EnumString test for Distmf18_ and Distmf19_ and change Distmf19_ element name
-         ; RJH 2/29/24 - Per GitHub 2022-CBECC-Com-Schema Issue #120: switch back EnumString test for Distmf18_ and Distmf19_
       "Set HVACDist:CF1R_DistMFHERSRow:Distmf18_LowLeakDuctsConditionedVerificationRequired" HVACDist:CF1R_DistMFHERSRow:Distmf18_LowLeakDuctsConditionedVerificationRequired  = {
             if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then if (EnumString( Type ) == "Verified low-leakage ducts entirely in conditioned space")
+            then if (EnumString( HERSCheck:DuctLocRptMsg ) == "Ducts located entirely in conditioned space confirmed by duct leakage testing")
                  then  "true"
                  else  "false"  
                  endif 
             else UNDEFINED
             endif  }
       "Set HVACDist:CF1R_DistMFHERSRow:Distmf19_DuctsInConditionedSpaceVerification" HVACDist:CF1R_DistMFHERSRow:Distmf19_DuctsInConditionedSpaceVerification  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
-            then if (EnumString( HERSCheck:DuctLocRptMsg ) == "Ducts located entirely in conditioned space confirmed by duct leakage testing")
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
+            then if (EnumString( Type ) == "Verified low-leakage ducts entirely in conditioned space")
                  then  "true"
                  else  "false"  
                  endif 

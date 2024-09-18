@@ -149,7 +149,7 @@
 ;                                ----------------------------------------------------------------------------------------------
 1,           "Type",              BEMP_Sym,  1,  0,  0,  Comp,  "",                 0,  0,                        3004, "Zone type",  ""    
 ;	mjb-11/26/13	mods for E+A+A	  2/14/14 - added Status
-1,           "Status",            BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                        3008, "Status",  ""                                      
+1,           "Status",            BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                        3008, "Status",  ""                                      
 1,           "IsVerified", 	  BEMP_Int,  1,  0,  0,  NInp,  "",                 0,   0,                       3008, "one or more child objects of this zone will be HERS verified",  ""
 1,           "HVACSysStatus",     BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                        3008, "Status of HVAC System - New, Altered or Existing",  ""                                      
 1,           "HVACSysVerified",   BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                        3008, "existing HVAC System will be HERS verified",  ""
@@ -256,11 +256,6 @@
 1,           "ExtFloorArea",      BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                        3008, "Sum of areas of children ExteriorFloor:Area",  ""    
 1,         "FlrOverUncondZnArea", BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                        3008, "Sum of areas of children InteriorFloor:Area (for those over uncond zones)",  ""    
 1,           "PartyEdgeArea",     BEMP_Flt,  1,  0,  0,  NInp,  "ft2",              0,  0,                        6010, "Interior wall/ceiling/floor area that is flagged as 'Party Edge'",  ""   ; SAC 10/3/13
-1,           "TargetIntZBSurfArea_WallMult", BEMP_Flt,  1,  0,  0,  NInp,  "",      0,  0,                        6010, "TargetInteriorZoneBoundarySurfaceArea_WallMultiplier",  ""   ; SAC 02/04/24
-1,           "TargetIntZBSurfArea_WallTot",  BEMP_Flt,  1,  0,  0,  NInp,  "ft2",   0,  0,                        6010, "TargetInteriorZoneBoundarySurfaceArea_WallTotal",  "" 
-1,           "TargetIntZBSurfArea_Wall", BEMP_Flt,  1,  0,  0,  NInp,  "ft2",       0,  0,                        6010, "TargetInteriorZoneBoundarySurfaceArea_Wall",  ""   ; SAC 02/01/24
-1,           "TargetIntZBSurfArea_Clg",  BEMP_Flt,  1,  0,  0,  NInp,  "ft2",       0,  0,                        6010, "TargetInteriorZoneBoundarySurfaceArea_Ceiling",  "" 
-1,           "TargetIntZBSurfArea_Flr",  BEMP_Flt,  1,  0,  0,  NInp,  "ft2",       0,  0,                        6010, "TargetInteriorZoneBoundarySurfaceArea_Floor",  "" 
 
          ; versions of area properties taking into account Mult - SAC 04/28/23 (tic #3392)
 1,           "ExtWallAreaWithMult",         BEMP_Flt,  1,  0,  0,  NInp,  "ft2",    0,  0,                        3008, "Sum of areas of children ExtWall:Area * Mult",  ""    
@@ -279,7 +274,6 @@
 1,           "TotCondZoneWinArea",BEMP_Flt,  4,  1,  0,  NInp,  "ft2",              0,   0,                       3008, "total conditioned zone child New window area (incl. window multipliers) (1-Total, 2-New/Alt (not addition), 3-Existing, 4-Additions)",  ""
 1,           "WinAreaByOrientation",BEMP_Flt, 4, 1,  0,  NInp,  "ft2",              0,   0,                       3008, "total zone ExtWall child window area (incl. window multipliers) by actual orientation (1-N, 2-E, 3-S, 4-W)",  ""     ; SAC 7/12/20
 1,           "NumWinOrientations",BEMP_Int,  1,  0,  0,  NInp,  "",                 0,   0,                       3008, "Number of orientations that include windows",  ""        ; SAC 7/12/20
-1,           "MinWinOrientArea",  BEMP_Int,  1,  0,  0,  NInp,  "",                 0,   0,                       3008, "Minimum win area by orientation",  ""       ; SAC 04/18/24 (tic #3554)
 1,      "NatVentWindPresCoefMult",BEMP_Flt,  1,  0,  0,  NInp,  "",            0,   0,                       1042, "multiplier on natural ventilation wind pressure coefficient for this zone",  ""     ; SAC 7/13/20
 ; mjb-10/22/13	new parameter for sum of Altered Windows
 1,        "TotCondZoneAltWinArea",BEMP_Flt,  1,  0,  0,  Pres,  "ft2",           0,   0,                       3008, "total conditioned zone child Altered window area (incl. window multipliers)",  ""
@@ -524,13 +518,9 @@
 
 1,           "GainVCHPCFan",      BEMP_Obj,  1,  1,  0,  NInp,  "",					    0,  1, "cseGAIN",  0, "",     3208, "Gain to model CFan of assigned VCHP equipment",  ""   ; SAC 11/7/18 - VCHP    
 
-1,           "IsNew", 		       BEMP_Int,  1,  0,  0,  NInp,  "",                 0,   0,                       3008, "flag set if this Zone is New",  ""
-1,           "IsAltered", 	       BEMP_Int,  1,  0,  0,  NInp,  "",                 0,   0,                       3008, "flag set if this Zone is Altered",  ""
+1,           "IsNew", 		    BEMP_Int,  1,  0,  0,  NInp,  "",                 0,   0,                       3008, "flag set if this Zone is New",  ""
+1,           "IsAltered", 	    BEMP_Int,  1,  0,  0,  NInp,  "",                 0,   0,                       3008, "flag set if this Zone is Altered",  ""
 1,           "IsExisting", 	    BEMP_Int,  1,  0,  0,  NInp,  "",                 0,   0,                       3008, "flag set if this Zone is Existing",  ""
-
-1,           "GasFueled",            BEMP_Int,  6,  1,  0,  NInp,  "",                 0,  0,                     3008, "tracks which enduses are gas fueled: 1-Any, 2-Sum, 3-SpcHtg, 4-WtrHtg, 5-Cookng, 6-Dryer",  ""   ; SAC 03/06/24
-1,           "AffordableGasFueled",  BEMP_Int,  6,  1,  0,  NInp,  "",                 0,  0,                     3008, "tracks which affordable housing enduses are gas fueled: 1-Any, 2-Sum, 3-SpcHtg, 4-WtrHtg, 5-Cookng, 6-Dryer",  ""   ; SAC 03/06/24
-
          ; RJH 4/9/18 - added to facilitate population of CF1R ZoneSF and ZoneMF tables
 1,           "CF1R_ZoneSFRow",  BEMP_Obj,  1,  0,  0,  Pres,  "",              0,  1, "cf1rtblRowZoneSF",   1, "",  8006, "CF1R ZoneSF Table Row object",  ""    
 1,           "CF1R_ZoneMFRow",  BEMP_Obj,  1,  0,  0,  Pres,  "",              0,  1, "cf1rtblRowZoneMF",   1, "",  8006, "CF1R ZoneMF Table Row object",  ""    
@@ -561,16 +551,15 @@
 1,           "VentSpcFunc",       BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                        3004, "Ventilation space function",  ""    
 1,           "FuncSchGrp",        BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                        3008, "FunctionScheduleGroup",  ""                                  
 
-1,           "Status",            BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                        3008, "Status",  ""                                      
+1,           "Status",            BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                        3008, "Status",  ""                                      
 ; 1,         "IsVerified", 	  BEMP_Int,  1,  0,  0,  Pres,  "",                 0,   0,                       3008, "one or more child objects of this zone will be HERS verified",  ""
 1,           "HVACSysStatus",     BEMP_Sym,  1,  0,  0,   Def,  "",              0,  0,                        3008, "Status of HVAC System - New, Altered or Existing",  ""                                      
 ; 1,         "HVACSysVerified",   BEMP_Int,  1,  0,  0,  Pres,  "",              0,  0,                        3008, "existing HVAC System will be HERS verified",  ""
 1,           "ozHVACSystem",      BEMP_Obj,  1,  0,  0,  CReq,  "",                 0,  2, "HVACSys",  3, "Status", "AirSys", 1, "Status",   3006, "New HVAC system assignment",  ""      ; revised to allow assignment of AirSys - SAC 04/18/22
 1,           "ServedByAirSys",    BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                        3008, "flag indicating this OtherZone is served by an AirSys", "" 
-1,           "AltHVACSystem",     BEMP_Obj,  1,  0,  0,  CReq,  "",                 0,  2, "HVACSys",  2, "Status", "AirSys", 1, "Status",   3006, "Altered HVAC system assignment",  "" 
-1,           "exHVACSystem",      BEMP_Obj,  1,  0,  0,  CReq,  "",                 0,  2, "HVACSys",  1, "Status", "AirSys", 2, "Status",   3006, "Existing HVAC system assignment",  "" 
+1,           "AltHVACSystem",     BEMP_Obj,  1,  0,  0,  CReq,  "",                 0,  1, "HVACSys",  2, "Status",                          3006, "Altered HVAC system assignment",  "" 
+1,           "exHVACSystem",      BEMP_Obj,  1,  0,  0,  CReq,  "",                 0,  1, "HVACSys",  1, "Status",                          3006, "Existing HVAC system assignment",  "" 
 1,           "ActiveHVACSystem",  BEMP_Obj,  1,  0,  0,  NInp,  "",                 0,  2, "HVACSys",  0, "", "AirSys", 0, "",               3006, "Assigned HVAC system, regardless of new/altered/existing type",  "" 
-1,           "AirSysCnt",         BEMP_Int,  1,  0,  0,   Def,  "",                 0,  0,                        3004, "The number of units for the air system serving the zone",  ""    
 1,           "HVACSysAssigned",   BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                        3004, "0/1 flag indicating whether cool/heat HVACSystem is assigned",  ""    
 1,           "DHWSysStatus",      BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                        3008, "Status of DHW System - New, Altered or Existing",  ""      ; SAC 06/25/23 (tic #3479)
 ; 1,         "DHWSysVerified",    BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                        3008, "existing DHW System 1 will be HERS verified",  ""
@@ -578,9 +567,6 @@
 1,           "AltDHWSys",         BEMP_Obj,  1,  0,  0,  CReq,  "",                 0,  2, "ResDHWSys",  2, "Status",  "ResDHWSys",  0, "IsReferenced",   3006, "Altered DHW system assignment",  ""     ; SAC 06/25/23 (tic #3479)
 1,           "exDHWSys",          BEMP_Obj,  1,  0,  0,  CReq,  "",                 0,  2, "ResDHWSys",  1, "Status",  "ResDHWSys",  0, "IsReferenced",   3006, "Existing DHW system assignment",  "" 
 1,           "ActiveDHWSystem",   BEMP_Obj,  1,  0,  0,  NInp,  "",                 0,  1, "ResDHWSys",  0, "",                                           3006, "Active DHW system, regardless of new/altered/existing type",  "" 
-1,           "NewValidResDHWSysRef", BEMP_Obj,  1,  0,  0, NInp,  "",               0,  1, "ResDHWSys",  3, "Status",     1003, "valid New DHW System assignment",  ""    ; added to ensure proper Alt/Ex system assignment setup - SAC 06/26/24
-1,           "AltValidResDHWSysRef", BEMP_Obj,  1,  0,  0, NInp,  "",               0,  1, "ResDHWSys",  2, "Status",     3006, "valid Altered DHW system assignment",  "" 
-1,           "ExValidResDHWSysRef",  BEMP_Obj,  1,  0,  0, NInp,  "",               0,  1, "ResDHWSys",  1, "Status",     3006, "valid Existing DHW system assignment",  "" 
 1,     "DHWSysNewCondFloorArea",  BEMP_Flt,  1,  0,  0,  Pres,  "ft2",           0,  0,                        3008, "Conditioned floor area for assigned new DHWSys1",  ""    
 1,     "DHWSysAltCondFloorArea",  BEMP_Flt,  1,  0,  0,  Pres,  "ft2",           0,  0,                        3008, "Conditioned floor area for assigned altered DHWSys1",  ""    
 1,     "DHWSysExCondFloorArea",   BEMP_Flt,  1,  0,  0,  Pres,  "ft2",           0,  0,                        3008, "Conditioned floor area for assigned existing DHWSys1",  ""    
@@ -760,16 +746,9 @@
 1,           "ExtFloorArea",      BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                        3008, "Sum of areas of children ExteriorFloor:Area",  ""    
 1,         "FlrOverUncondZnArea", BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                        3008, "Sum of areas of children InteriorFloor:Area (for those over uncond zones)",  ""    
 1,           "PartyEdgeArea",     BEMP_Flt,  1,  0,  0,  NInp,  "ft2",              0,  0,                        6010, "Interior wall/ceiling/floor area that is flagged as 'Party Edge'",  ""   ; SAC 10/3/13
-1,           "TargetIntZBSurfArea_WallMult", BEMP_Flt,  1,  0,  0,  NInp,  "",      0,  0,                        6010, "TargetInteriorZoneBoundarySurfaceArea_WallMultiplier",  ""   ; SAC 02/04/24
-1,           "TargetIntZBSurfArea_WallTot",  BEMP_Flt,  1,  0,  0,  NInp,  "ft2",   0,  0,                        6010, "TargetInteriorZoneBoundarySurfaceArea_WallTotal",  "" 
-1,           "TargetIntZBSurfArea_Wall", BEMP_Flt,  1,  0,  0,  NInp,  "ft2",       0,  0,                        6010, "TargetInteriorZoneBoundarySurfaceArea_Wall",  ""   ; SAC 02/01/24
-1,           "TargetIntZBSurfArea_Clg",  BEMP_Flt,  1,  0,  0,  NInp,  "ft2",       0,  0,                        6010, "TargetInteriorZoneBoundarySurfaceArea_Ceiling",  "" 
-1,           "TargetIntZBSurfArea_Flr",  BEMP_Flt,  1,  0,  0,  NInp,  "ft2",       0,  0,                        6010, "TargetInteriorZoneBoundarySurfaceArea_Floor",  "" 
-
 1,           "TotCondZoneWinArea",BEMP_Flt,  4,  1,  0,  NInp,  "ft2",              0,   0,                       3008, "total conditioned zone child New window area (incl. window multipliers) (1-Total, 2-New/Alt (not addition), 3-Existing, 4-Additions)",  ""
 1,           "WinAreaByOrientation",BEMP_Flt, 4, 1,  0,  NInp,  "ft2",              0,   0,                       3008, "total zone ExtWall child window area (incl. window multipliers) by actual orientation (1-N, 2-E, 3-S, 4-W)",  ""     ; SAC 7/12/20
 1,           "NumWinOrientations",BEMP_Int,  1,  0,  0,  NInp,  "",                 0,   0,                       3008, "Number of orientations that include windows",  ""        ; SAC 7/12/20
-1,           "MinWinOrientArea",  BEMP_Int,  1,  0,  0,  NInp,  "",                 0,   0,                       3008, "Minimum win area by orientation",  ""       ; SAC 04/18/24 (tic #3554)
 1,      "NatVentWindPresCoefMult",BEMP_Flt,  1,  0,  0,  NInp,  "",            0,   0,                       1042, "multiplier on natural ventilation wind pressure coefficient for this zone",  ""     ; SAC 7/13/20
 1,        "TotCondZoneAltWinArea",BEMP_Flt,  1,  0,  0,  Pres,  "ft2",           0,   0,                       3008, "total conditioned zone child Altered window area (incl. window multipliers)",  ""
 1,    "ExtWallAreaByWallType",    BEMP_Flt,  5,  1,  0,  Pres,  "ft2",       0,   0,                       3008, "total exterior wall area by construction type (1-wood frm / 2-steel frm / 3-conc/CMU / TOTAL of 1-3)",  ""
@@ -834,7 +813,7 @@
 1,           "IntLPDRegSim",      BEMP_Flt,  1,  0,  0,  NInp,  "W/ft2",            0,  0,                        3208, "Lighting power density simulated", ""
 1,           "IntLtgRegSchRef",   BEMP_Obj,  1,  0,  0,  Pres,   "",                0,  1, "Sch", 1, "Type", 3008, "Hourly lighting profile",  ""                         
 1,           "IntLtgSpecMthd",    BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                        3008, "Interior Lighting Specification Method",  ""  
-;1,           "ClerestoryPAFAllowed", BEMP_Int, 1, 0, 0,  NInp,  "",                 0,  0,                        3008, "A boolean flag to determine whether window(s) in this zone is eligible to claim a Clerestory Power Adjustment Factor.", ""
+1,           "ClerestoryPAFAllowed", BEMP_Int, 1, 0, 0,  NInp,  "",                 0,  0,                        3008, "A boolean flag to determine whether window(s) in this zone is eligible to claim a Clerestory Power Adjustment Factor.", ""
 
 1,           "GainExtLights",	  BEMP_Obj,  1,  1,  0,  NInp,  "",                 0,  1, "cseGAIN",  0, "",     3208, "Gain from external lighting",  ""    
 1,           "ExtLtg_Gain",	  BEMP_Flt,  1,  0,  0,  NInp,  "kWh/day/CFA",	    0,  0,						  3208, "External lighting gain kWh per day per CFA",  ""    
@@ -842,15 +821,17 @@
 1,           "ExtLtgDaySched_CSE",BEMP_Str,  1,  0,  0,  NInp,   "",                0,  0,                        3008, "Hourly exterior lighting profile (string representing profile in CSE input)",  ""
 
 1,           "GainPeople",        BEMP_Obj,  1,  1,  0,  NInp,  "",                 0,  1, "cseGAIN",  0, "",     3208, "Internal gain from People",  ""    
-1 ,          "OccDens",           BEMP_Flt,  1,  0,  0,  Pres,  "people/1,000 ft2", 0,  0,                        3008, "The density of occupants in the Space for egress design purposes.",  ""  
+1,           "MinOccNum",         BEMP_Flt,  1,  0,  0,  Pres,  "people",           0,  0,                        3008, "The minimum number of occupants in the Space for egress/DCV design purposes.",  ""        ; SAC 10/7/19 - MFamProto                        
+1,           "MinOccDens",        BEMP_Flt,  1,  0,  0,  Pres,  "people/1000ft2",   0,  0,                        3008, "The minimum density of occupants in the Space for egress/DCV design purposes.",  ""       
 1,           "OccFrac",           BEMP_Flt,  1,  0,  0,  Pres,  "frac",             0,  0,                        3008, "The expected fraction of the exiting people in a OtherZone, based on SpaceFunction, which will determine the design occupancy.",  ""                                   
-1,           "OccDensSim",        BEMP_Flt,  1,  0,  1,  Pres,  "people/1,000 ft2", 0,  0,                        3008, "The density of people of in a space for simulation and ventilation calculations.",  "" 
-1,           "OccNumSim",         BEMP_Flt,  1,  0,  0,  Pres,  "people",           0,  0,                        3008, "The number of people in a space for simulation and ventilation calculations.",  ""  
+1,           "MinOccNumSim",      BEMP_Flt,  1,  0,  0,  Pres,  "people",           0,  0,                        3008, "The minimum number of occupants in the OtherZone used in model simulations.",  ""                             
+1,           "MinOccDensSim",     BEMP_Flt,  1,  0,  0,  Pres,  "people/1000ft2",   0,  0,                        3008, "The minimum density of occupants in the OtherZone used in model simulations.",  ""       
+;1,          "OccDens",           BEMP_Flt,  1,  0,  0,  Pres,  "people/1,000 ft2", 0,  0,                        3008, "The density of occupants in the Space for egress/DCV design purposes.",  ""  
+;1,          "OccDensSim",        BEMP_Flt,  1,  0,  1,  Pres,  "people/1,000 ft2", 0,  0,                        3008, "The density of people of in a space for simulation and ventilation calculations.",  "" 
+;1,          "OccNumSim",         BEMP_Flt,  1,  0,  0,  Pres,  "people",           0,  0,                        3008, "The number of people in a space for simulation and ventilation calculations.",  ""  
 1,           "OccSensHtRt",       BEMP_Flt,  1,  0,  1,  Pres,  "Btu/h-person",     0,  0,                        3008, "The rate of sensible heat released per person which is a function of activity",  ""  
 1,           "OccLatHtRt",        BEMP_Flt,  1,  0,  1,  Pres,  "Btu/h-person",     0,  0,                        3008, "The rate of latent heat released per person which is a function of activity",  ""  
 1,           "OccSchRef",         BEMP_Obj,  1,  0,  1,  Pres,  "",                 0,  1, "Sch",   1, "Type",    3008, "Reference to a schedule that describes the fraction of occupancy on an hourly basis.",  ""
-1,           "DsgnOcc",           BEMP_Int,  1,  0,  0,   Def,  "",                 0,  0,                        3008, "DesignedOccupancy",	 ""
-1,           "DsgnOccNum",        BEMP_Flt,  1,  0,  0,   Def,  "people",           0,  0,                        3008, "DesignedOccupantNumber",	 ""
 ;1,          "Ppl_PeoplePerUnit", BEMP_Flt,  1,  0,  0,  Pres,  "",                 0,  0,						  3208, "People per unit",  ""    
 ;1,          "Ppl_GainPerCFA",    BEMP_Flt,  1,  0,  0,  Pres,  "BTU/day/CFA",	    0,  0,						  3208, "People gain per CFA",  ""    
 ;1,          "PplDaySched",       BEMP_Obj,  1,  0,  0,  Pres,   "",                0,  1, "SchDay",   1, "Type", 3008, "Hourly people profile",  ""                         
@@ -881,47 +862,6 @@
 1,           "RecptLatFrac",      BEMP_Flt,  1,  0,  1,  Pres,  "",               0,  0,                    3008, "The fraction of latent heat gain to a space based on appliance energy use.",  ""
 ;1,           "EqpDaySched",      BEMP_Obj,  1,  0,  0,  Pres,  "",                0,  1, "SchDay",   1, "Type", 3008, "Hourly equipment profile",  ""                         
 ;1,           "EqpDaySched_CSE",  BEMP_Str,  1,  0,  0,  Pres,  "",                0,  0,                        3008, "Hourly equipment profile (string representing profile in CSE input)",  ""                         
-
-; Process Loads
-1,           "GasEqpPwrDens",           BEMP_Flt,  1,  0,  1,   Opt,  "Btu/h-ft2",        0,  0,                              3008, "GasEquipmentPowerDensity",  "" 
-1,           "BaseGasEqpPwrDens",       BEMP_Flt,  1,  0,  0,  NInp,  "Btu/h-ft2",        0,  0,                              3008, "BaselineGasEquipmentPowerDensity",  "" 
-1,           "GasEqpSchRef",            BEMP_Obj,  1,  0,  1,   Opt,  "",                 0,  1, "Schedule",   1, "Type",     3008, "GasEquipmentScheduleReference",  "" 
-1,           "BaseGasEqpSchRef",        BEMP_Obj,  1,  0,  0,  NInp,  "",                 0,  1, "Schedule",   1, "Type",     3008, "BaselineGasEquipmentScheduleReference",  "" 
-1,           "GasEqpRadFrac",           BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "GasEquipmentRadiationFraction",  "" 
-1,           "GasEqpLatFrac",           BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "GasEquipmentLatentFraction",  "" 
-1,           "GasEqpLostFrac",          BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "GasEquipmentLostFraction",  "" 
-1,           "GainGasEqp",              BEMP_Obj,  1,  1,  0,  NInp,  "",                 0,  1, "cseGAIN",  0, "",           3208, "Internal gain from gas equipments",  "" 
-
-1,           "ProcElecPwrDens",         BEMP_Flt,  1,  0,  1,   Opt,  "W/ft2",            0,  0,                              3008, "ProcessElectricalPowerDensity",  "" 
-1,           "ProcElecSchRef",          BEMP_Obj,  1,  0,  1,   Opt,  "",                 0,  1, "Schedule",   1, "Type",     3008, "ProcessElectricalScheduleReference",  "" 
-1,           "ProcElecRadFrac",         BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ProcessElectricalRadiationFraction",  "" 
-1,           "ProcElecLatFrac",         BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ProcessElectricalLatentFraction",  "" 
-1,           "ProcElecLostFrac",        BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ProcessElectricalLostFraction",  "" 
-1,           "GainProcElec",            BEMP_Obj,  1,  1,  0,  NInp,  "",                 0,  1, "cseGAIN",  0, "",           3208, "Internal gain from electric process load",  "" 
-
-1,           "ProcGasPwrDens",          BEMP_Flt,  1,  0,  1,   Opt,  "Btu/h-ft2",        0,  0,                              3008, "ProcessGasPowerDensity",  "" 
-1,           "ProcGasSchRef",           BEMP_Obj,  1,  0,  1,   Opt,  "",                 0,  1, "Schedule",   1, "Type",     3008, "ProcessGasScheduleReference",  "" 
-1,           "ProcGasRadFrac",          BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ProcessGasRadiationFraction",  "" 
-1,           "ProcGasLatFrac",          BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ProcessGasLatentFraction",  "" 
-1,           "ProcGasLostFrac",         BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ProcessGasLostFraction",  "" 
-1,           "GainProcGas",             BEMP_Obj,  1,  1,  0,  NInp,  "",                 0,  1, "cseGAIN",  0, "",           3208, "Internal gain from gas process load",  "" 
-
-1,           "ElevCnt",                 BEMP_Int,  1,  0,  0,   Opt,  "ElevMech/Space",   0,  0,                              3008, "ElevatorCount",  "" 
-1,           "ElevPwr",                 BEMP_Flt,  1,  0,  1,   Opt,  "W/Elev",           0,  0,                              3008, "ElevatorPower",  "" 
-1,           "ElevSchRef",              BEMP_Obj,  1,  0,  1,   Opt,  "",                 0,  1, "Schedule",  1, "Type",      3008, "ElevatorScheduleReference",  "" 
-1,           "ElevRadFrac",             BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ElevatorRadiationFraction",  "" 
-1,           "ElevLatFrac",             BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ElevatorLatentFraction",  "" 
-1,           "ElevLostFrac",            BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ElevatorLostFraction",  "" 
-1,           "GainElev",                BEMP_Obj,  1,  1,  0,  NInp,  "",                 0,  1, "cseGAIN",  0, "",           3208, "Internal gain from elevators",  "" 
-
-1,           "EscalCnt",                BEMP_Int,  1,  0,  0,   Opt,  "Escal/Space",      0,  0,                              3008, "EscalatorCount",  "" 
-1,           "EscalPwr",                BEMP_Flt,  1,  0,  1,   Opt,  "W/Escal",          0,  0,                              3008, "EscalatorPower",  "" 
-1,           "EscalSchRef",             BEMP_Obj,  1,  0,  1,   Opt,  "",                 0,  1, "Schedule",  1, "Type",      3008, "EscalatorScheduleReference",  "" 
-1,           "EscalRadFrac",            BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "EscalatorRadiationFraction",  "" 
-1,           "EscalLatFrac",            BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "EscalatorLatentFraction",  "" 
-1,           "EscalLostFrac",           BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "EscalatorLostFraction",  "" 
-1,           "GainEscal",                BEMP_Obj,  1,  1,  0,  NInp,  "",                 0,  1, "cseGAIN",  0, "",           3208, "Internal gain from escalators",  "" 
-
 			; Thermostat setpoints
 1,           "HeatTDaySched",	  BEMP_Obj,  1,  0,  0,  Pres,  "",                0,  1, "SchDay",   1, "Type", 3008, "Hourly heating thermostat profile",  ""
 1,           "HeatTDaySched_CSE", BEMP_Str,  1,  0,  0,  Pres,  "",                0,  0,                        3008, "Hourly heating thermostat profile (string representing profile in CSE input)",  ""                         
@@ -974,8 +914,6 @@
 1,           "SpcRef",            BEMP_Obj,  1,  0,  0,  NInp,  "",                 0,  1, "Spc", 0, "",          3004, "Create a spc component when ResOtherZn need to be modeled using EnergyPlus.", ""
 
 1,           "CSE_TrmlSizingExpCol",   BEMP_Obj, 10,  1,  0,    Pres, "",                0,  1, "cseEXPORTCOL", 0, "",       3006, "CSE_TrmlSizingExportColumn",  ""  ; "ExportCol defining CSE-TERMINAL load and flow results",  ""    ; SAC 05/11/22
-
-1,           "GasFueled",            BEMP_Int,  6,  1,  0,  NInp,  "",                 0,  0,                     3008, "tracks which enduses are gas fueled: 1-Any, 2-Sum, 3-SpcHtg, 4-WtrHtg, 5-Cookng, 6-Dryer",  ""   ; SAC 03/07/24
 
       ; added for CBECC autosizing rules - SAC 05/11/22
 1,           "ClgDsgnLd",                 BEMP_Flt,  1,  0,  0,  NInp,  "Btu/h",           0,  0,                              3008, "CoolingDesignLoad",  "" 
@@ -1070,7 +1008,7 @@
 ;                                ----------------------------------------------------------------------------------------------
 1,           "Type",              BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                            3204, "Attic type",  ""    
 ;	mjb-11/27/13	mods for E+A+A	
-1,           "Status",            BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                            3008, "Status",  ""                                      
+1,           "Status",            BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                            3008, "Status",  ""                                      
 1,           "IsVerified", 	    BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                            3008, "existing wall conditions will be HERS verified",  ""
 1,           "FloorArea",         BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                            3208, "Floor area of attic",  ""    
 1,           "Area",              BEMP_Flt,  1,  0,  0,  NInp,  "ft2",              0,  0,                            3008, "Floor area of attic",  ""    ; added for consistency w/ Garage & OtherZone

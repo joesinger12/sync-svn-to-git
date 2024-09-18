@@ -3,7 +3,7 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "0519215-RetlMed-HPWtrHtrPckgdEF2x"  
    BldgEngyModelVersion = 17
    CreateDate = 1505253600
-   ModDate = 1714761474
+   ModDate = 1697218258
    RunDate = 1697218259
    RunDateFmt = "17:02, Sun, Dec 22, 2013"
    Elevation = 477
@@ -158,7 +158,6 @@ Spc   "Back_Space"
    Vol = 81782
    SpcFuncDefaultsRef = "Retail Back_Space"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 1"  
@@ -325,7 +324,6 @@ Spc   "Core_Retail"
    Vol = 344549
    SpcFuncDefaultsRef = "Retail Sales"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 8"  
@@ -1352,7 +1350,6 @@ Spc   "Front_Entry"
    SpcFuncDefaultsRef = "Retail Main Entry"
    PriSide100PctControlled = 1
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 38"  
@@ -1520,7 +1517,6 @@ Spc   "Front_Retail"
    Vol = 32466.1
    SpcFuncDefaultsRef = "Retail Sales"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 45"  
@@ -1663,7 +1659,6 @@ Spc   "Point_Of_Sale"
    Vol = 32466.1
    SpcFuncDefaultsRef = "Retail Sales"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 51"  

@@ -6016,8 +6016,8 @@ RULE WtrHtr:CodeMinEF
     10
   REPORTPRECISION
     3
-  DEFAULT : T24N_2016 T24N_2019
-    if( FluidSys:Type = "ServiceHotWater" 
+  DEFAULT
+    if( FluidSys:Type = "ServiceHotWater" .AND.
         LocalStatus( StorCap ) > 0 )
     then
       if( Type <> "Conventional" )
@@ -6064,8 +6064,6 @@ RULE WtrHtr:CodeMinEF
       endif endif endif endif endif
     else UNDEFINED
     endif
-  DEFAULT : T24N
-    0
   SIZING
     UNDEFINED
   ANNUAL
@@ -6264,7 +6262,7 @@ RULE NEW WtrHtr:EffMetricChk
   then
     UNCHANGED
   else   
-    if( IfValidAnd( EFReq > 0 ) .AND. WtrHtr:Status = "New" .AND. IfValidAnd(StorCap >= 20) )
+    if( IfValidAnd( EFReq > 0 ) .AND. WtrHtr:Status = "New"  )
     then 
       PostError("Energy Factor rating is no longer allowed for new water heater '%s'. 
                  Please select the UEF rated check box or revise inputs to have a 

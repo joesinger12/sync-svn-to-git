@@ -298,10 +298,10 @@ RULE AirSys:IsAllOA
   CHECKCODE
     if( ( Type = "DOASCV" .OR. Type = "DOASVAV" ) .AND. IsAllOA = 0 )
     then
-      PostError("AirSystem '%s' is a DOAS system but has not been defined
-                 as a 100% OA system ( IsAllOA = 0 ). For compliance, this
-                 system should be modeled as 100% OA. If the propsed design
-                 is not a 100% OA system select a different system type.", Name)
+      PostWarning("AirSystem '%s' is a DOAS system but has not been defined
+                   as a 100% OA system ( IsAllOA = 0 ). For compliance, this
+                   system will be modeled as 100% OA. If the propsed design
+                   is not a 100% OA system select a different system type.", Name)
     else UNCHANGED
     endif
   SIZING : T24N_2016
@@ -774,7 +774,7 @@ RULE NEW AirSys:CompRmPwr
     ComputerRoomPower
   INPUTCLASS
     NotInput
-  ANNUAL : T24N
+  ANNUAL_BASELINE : T24N
     SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CompRmPwr )
 ENDRULE
 RULE OACtrl:EconoCtrlMthd
@@ -1025,7 +1025,7 @@ RULE AirSys:AirSeg:CoilClg:CapTotGrossRtdSim
           ( AirSys:SubType = "CRAH" .OR.
             AirSys:SubType = "CRAC" ) )
       then // Update CapTotGrossRtdSim
-        CapTotGrossRtd * SysCntSim
+        CapTotGrossRtd * SysCnt
       else UNCHANGED
       endif
     else UNCHANGED
@@ -1233,7 +1233,7 @@ RULE OACtrl:EconoHiTempLockout
   COMMONMAXIMUM
     85  
   UNITS 
-    Â°F  
+    °F  
   REPORTPRECISION
     0
   DEFAULT : S901G
@@ -1387,7 +1387,7 @@ RULE OACtrl:EconoLowTempLockout
   INPUTCLASS 
     Default
   UNITS 
-    Â°F
+    °F
   RESETS
     ResetThisWhenTheFollowingIsModified
       OACtrl:EconoCtrlMthd
@@ -1797,12 +1797,12 @@ RULE ZnSys:ClgOAFlowCapSim
     cfm
   SIZING
     if( IfValidAnd( ClgOAFlowCap >= 0 ) )
-    then ClgOAFlowCap * CntSim
+    then ClgOAFlowCap * Cnt
     else UNDEFINED
     endif
   ANNUAL
     if( IfValidAnd( ClgOAFlowCap >= 0 ) )
-    then ClgOAFlowCap * CntSim
+    then ClgOAFlowCap * Cnt
     else UNDEFINED
     endif
 ENDRULE
@@ -1821,12 +1821,12 @@ RULE ZnSys:HtgOAFlowCapSim
     cfm
   SIZING
     if( IfValidAnd( HtgOAFlowCap >= 0 ) )
-    then HtgOAFlowCap * CntSim
+    then HtgOAFlowCap * Cnt
     else UNDEFINED
     endif
   ANNUAL
     if( IfValidAnd( HtgOAFlowCap >= 0 ) )
-    then HtgOAFlowCap * CntSim
+    then HtgOAFlowCap * Cnt
     else UNDEFINED
     endif
 ENDRULE
@@ -1843,12 +1843,12 @@ RULE ZnSys:NoClgHtgOAFlowCapSim
     cfm
   SIZING
     if( IfValidAnd( NoClgHtgOAFlowCap >= 0 ) )
-    then NoClgHtgOAFlowCap * CntSim
+    then NoClgHtgOAFlowCap * Cnt
     else UNDEFINED
     endif
   ANNUAL
     if( IfValidAnd( NoClgHtgOAFlowCap >= 0 ) )
-    then NoClgHtgOAFlowCap * CntSim
+    then NoClgHtgOAFlowCap * Cnt
     else UNDEFINED
     endif
 ENDRULE

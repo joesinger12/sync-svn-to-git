@@ -164,6 +164,7 @@ RULE NEW ThrmlZn:FuncGrpAreaWarehouse
   DEFAULT
     SumRevRef( Spc:ThrmlZnRef, Spc:FuncGrpAreaWarehouse )
 ENDRULE 
+
 RULE NEW ThrmlZn:FuncGrpArea24Hr
   DATATYPE
     Float
@@ -174,148 +175,6 @@ RULE NEW ThrmlZn:FuncGrpArea24Hr
   DEFAULT
     SumRevRef( Spc:ThrmlZnRef, Spc:Is24HrArea )
 ENDRULE 
-// with Multipliers for ZnSys/AirSys
-RULE NEW ThrmlZn:FuncGrpAreaAssemblyWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaAssemblyWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-     FuncGrpAreaAssembly * Mult
-ENDRULE 
-RULE NEW ThrmlZn:FuncGrpAreaDataWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaDataWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaData * Mult
-ENDRULE 
-RULE NEW ThrmlZn:FuncGrpAreaHealthWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaHealthWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaHealth * Mult
-ENDRULE 
-RULE NEW ThrmlZn:FuncGrpAreaLabWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaLabWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaLab * Mult
-ENDRULE 
-RULE NEW ThrmlZn:FuncGrpAreaManufacturingWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaManufacturingWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaManufacturing * Mult
-ENDRULE 
-RULE NEW ThrmlZn:FuncGrpAreaOfficeWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaOfficeWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaOffice * Mult
-ENDRULE  
-RULE NEW ThrmlZn:FuncGrpAreaParkingWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaParkingWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaParking * Mult
-ENDRULE  
-RULE NEW ThrmlZn:FuncGrpAreaResidentialCommonWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaResidentialCommonWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaResidentialCommon * Mult
-ENDRULE 
-RULE NEW ThrmlZn:FuncGrpAreaResidentialLivingWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaResidentialLivingWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaResidentialLiving * Mult
-ENDRULE  
-RULE NEW ThrmlZn:FuncGrpAreaRestaurantWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaRestaurantWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaRestaurant * Mult
-ENDRULE 
-RULE NEW ThrmlZn:FuncGrpAreaRetailWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaRetailWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaRetail * Mult
-ENDRULE 
-RULE NEW ThrmlZn:FuncGrpAreaSchoolWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaSchoolWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaSchool * Mult
-ENDRULE
-RULE NEW ThrmlZn:FuncGrpAreaWarehouseWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaWarehouseWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaWarehouse * Mult
-ENDRULE 
-RULE NEW ThrmlZn:FuncGrpArea24HrWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupArea24HrWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpArea24Hr * Mult
-ENDRULE 
-
 
 // Determine the function group with the most area in the zone
 RULE NEW ThrmlZn:MaxFuncGrpArea
@@ -406,7 +265,7 @@ RULE NEW Spc:HtgOnlySysArea
       if( ThrmlZnRef:PredominantFuncGrp = "Warehouse" .AND.
           ThrmlZnRef:HasHtg = 1 .AND.
           ThrmlZnRef:HasClg = 0 )
-      then CondFlrArea
+      then CondFlrAreaWithMult
       else 0
       endif
     else 0
@@ -475,63 +334,71 @@ RULE NEW ThrmlZn:HtgOnlySysAreaAltered
     zp:HtgOnlySysAreaAltered
 ENDRULE
 // Story level values
-RULE NEW Story:HtgOnlySysAreaWithMult
+RULE NEW Story:HtgOnlySysArea
   DATATYPE
     Float
   LONGFORM
-    HeatingOnlySystemAreaWithMultiplier
+    HeatingOnlySystemArea
   DESCRIPTION
-    "The total (conditioned) HtgOnly system floor area, including multipliers." 
+    "The total (conditioned) HtgOnly system floor area." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT : S901G ECBC
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:HtgOnlySysArea ) * Mult
-  SIZING
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:HtgOnlySysArea ) * Mult
+    SumChildren( Spc:HtgOnlySysAreaWithMult )
+  SIZING_PROPOSED
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:HtgOnlySysArea )
+  SIZING_BASELINE
+    zp:HtgOnlySysArea
 ENDRULE
-RULE NEW Story:HtgOnlySysAreaNewWithMult
+RULE NEW Story:HtgOnlySysAreaNew
   DATATYPE
     Float
   LONGFORM
-    HeatingOnlySystemAreaNewWithMultiplier
+    HeatingOnlySystemAreaNew
   DESCRIPTION
-    "The total (conditioned) HtgOnly system floor area with NEW Overall status, including multipliers."
+    "The total (conditioned) HtgOnly system floor area with NEW Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2     
-  SIZING
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:HtgOnlySysAreaNew ) * Mult
+  SIZING_PROPOSED
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:HtgOnlySysAreaNew )
+  SIZING_BASELINE
+    zp:HtgOnlySysAreaNew
 ENDRULE
-RULE NEW Story:HtgOnlySysAreaExistingWithMult
+RULE NEW Story:HtgOnlySysAreaExisting
   DATATYPE
     Float
   LONGFORM
-    HeatingOnlySystemAreaExistingWithMultiplier
+    HeatingOnlySystemAreaExisting
   DESCRIPTION
-    "The total (conditioned) HtgOnly system floor area with EXISTING Overall status, including multipliers."
+    "The total (conditioned) HtgOnly system floor area with EXISTING Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
-  SIZING
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:HtgOnlySysAreaExisting ) * Mult
+  SIZING_PROPOSED
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:HtgOnlySysAreaExisting )
+  SIZING_BASELINE
+    zp:HtgOnlySysAreaExisting 
 ENDRULE
-RULE NEW Story:HtgOnlySysAreaAlteredWithMult
+RULE NEW Story:HtgOnlySysAreaAltered
   DATATYPE
     Float
   LONGFORM
-    HeatingOnlySystemAreaAlteredWithMultiplier
+    HeatingOnlySystemAreaAltered
   DESCRIPTION
-    "The total (conditioned) HtgOnly system floor area with ALTERED Overall status, including multipliers."
+    "The total (conditioned) HtgOnly system floor area with ALTERED Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
-  SIZING
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:HtgOnlySysAreaAltered ) * Mult
+  SIZING_PROPOSED
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:HtgOnlySysAreaAltered )  
+  SIZING_BASELINE
+    zp:HtgOnlySysAreaAltered   
 ENDRULE
 // Bldg level values
 RULE NEW Bldg:HtgOnlySysArea
@@ -542,7 +409,7 @@ RULE NEW Bldg:HtgOnlySysArea
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:HtgOnlySysAreaWithMult )
+    SumChildren( ThrmlZn:HtgOnlySysArea )
   SIZING_BASELINE
     zp:HtgOnlySysArea
 ENDRULE 
@@ -554,7 +421,7 @@ RULE NEW Bldg:HtgOnlySysAreaNew
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:HtgOnlySysAreaNewWithMult )
+    SumChildren( ThrmlZn:HtgOnlySysAreaNew )
   SIZING_BASELINE
     zp:HtgOnlySysAreaNew
 ENDRULE 
@@ -566,7 +433,7 @@ RULE NEW Bldg:HtgOnlySysAreaExisting
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:HtgOnlySysAreaExistingWithMult )
+    SumChildren( ThrmlZn:HtgOnlySysAreaExisting )
   SIZING_BASELINE
     zp:HtgOnlySysAreaExisting
 ENDRULE 
@@ -578,7 +445,7 @@ RULE NEW Bldg:HtgOnlySysAreaAltered
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:HtgOnlySysAreaAlteredWithMult )
+    SumChildren( ThrmlZn:HtgOnlySysAreaAltered )
   SIZING_BASELINE
     zp:HtgOnlySysAreaAltered
 ENDRULE 
@@ -809,7 +676,6 @@ ENDRULE
 // Computer Room
 // -----------------------------------------------------------------------------
 // ThrmlZn level values
-// ComputerRoomArea
 RULE NEW ThrmlZn:CompRmArea
   DATATYPE
     Float
@@ -819,16 +685,6 @@ RULE NEW ThrmlZn:CompRmArea
     NotInput
   DEFAULT
     SumRevRef( Spc:ThrmlZnRef, Spc:CompRmArea )
-ENDRULE
-RULE NEW ThrmlZn:CompRmAreaWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    ComputerRoomAreaWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-  CompRmArea * Mult
 ENDRULE
 RULE NEW ThrmlZn:CompRmAreaNew
   DATATYPE
@@ -875,7 +731,8 @@ RULE NEW ThrmlZn:CompRmAreaAltered
   SIZING_BASELINE
     zp:CompRmAreaAltered
 ENDRULE
-// ComputerRoomArea
+// Calculate receptacle power for Computer Room zones.  Summed to Bldg
+// to determine baseline HVAC system (CRAC vs CRAH)
 RULE NEW ThrmlZn:CompRmPwr
   DATATYPE
     Float
@@ -885,6 +742,8 @@ RULE NEW ThrmlZn:CompRmPwr
     NotInput
   SIZING_PROPOSED
     SumRevRef( Spc:ThrmlZnRef, Spc:CompRmPwr )
+  SIZING_BASELINE
+    zp:CompRmPwr
 ENDRULE
 RULE NEW ThrmlZn:CompRmPwrNew
   DATATYPE
@@ -895,6 +754,8 @@ RULE NEW ThrmlZn:CompRmPwrNew
     NotInput
   SIZING_PROPOSED
     SumRevRef( Spc:ThrmlZnRef, Spc:CompRmPwrNew )
+  SIZING_BASELINE
+    zp:CompRmPwrNew
 ENDRULE
 RULE NEW ThrmlZn:CompRmPwrExisting
   DATATYPE
@@ -905,6 +766,8 @@ RULE NEW ThrmlZn:CompRmPwrExisting
     NotInput
   SIZING_PROPOSED
     SumRevRef( Spc:ThrmlZnRef, Spc:CompRmPwrExisting )
+  SIZING_BASELINE
+    zp:CompRmPwrExisting
 ENDRULE
 RULE NEW ThrmlZn:CompRmPwrAltered
   DATATYPE
@@ -915,106 +778,66 @@ RULE NEW ThrmlZn:CompRmPwrAltered
     NotInput
   SIZING_PROPOSED
     SumRevRef( Spc:ThrmlZnRef, Spc:CompRmPwrAltered )
+  SIZING_BASELINE
+    zp:CompRmPwrAltered
 ENDRULE
 
 // Story level values
-// ComputerRoomArea
-RULE NEW Story:CompRmAreaWithMult
+RULE NEW Story:CompRmArea
   DATATYPE
     Float
   LONGFORM
-    ComputerRoomAreaWithMultiplier
+    ComputerRoomArea
   DESCRIPTION
-    "The total (conditioned) 'Computer Room' floor area, including multipliers." 
+    "The total (conditioned) 'Computer Room' floor area." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildren( Spc:CompRmArea ) * Mult
+    SumChildren( Spc:CompRmArea ) 
 ENDRULE
-RULE NEW Story:CompRmAreaNewWithMult
+RULE NEW Story:CompRmAreaNew
   DATATYPE
     Float
   LONGFORM
-    ComputerRoomAreaNewWithMultiplier
+    ComputerRoomAreaNew
   DESCRIPTION
-    "The total (conditioned) 'Computer Room' floor area with NEW status, including multipliers." 
+    "The total (conditioned) 'Computer Room' floor area with NEW status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:CompRmArea, Spc:OverallAreaNew > 0 ) * Mult
+    SumChildrenIf( Spc:CompRmArea, Spc:OverallAreaNew > 0 ) 
 ENDRULE
-RULE NEW Story:CompRmAreaExistingWithMult
+RULE NEW Story:CompRmAreaExisting
   DATATYPE
     Float
   LONGFORM
-    ComputerRoomAreaExistingWithMultiplier
+    ComputerRoomAreaExisting
   DESCRIPTION
-    "The total (conditioned) 'Computer Room' floor area with EXISTING status, including multipliers." 
+    "The total (conditioned) 'Computer Room' floor area with EXISTING status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:CompRmArea, Spc:OverallAreaExisting > 0 ) * Mult
+    SumChildrenIf( Spc:CompRmArea, Spc:OverallAreaExisting > 0 ) 
 ENDRULE
-RULE NEW Story:CompRmAreaAlteredWithMult
+RULE NEW Story:CompRmAreaAltered
   DATATYPE
     Float
   LONGFORM
-    ComputerRoomAreaAlteredWithMultiplier
+    ComputerRoomAreaAltered
   DESCRIPTION
-    "The total (conditioned) 'Computer Room' floor area with ALTERED status, including multipliers." 
+    "The total (conditioned) 'Computer Room' floor area with ALTERED status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:CompRmArea, Spc:OverallAreaAltered > 0 ) * Mult
-ENDRULE
-// ComputerRoomPower
-RULE NEW Story:CompRmPwrWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    ComputerRoomPowerWithMultiplier
-  INPUTCLASS
-    NotInput
-  SIZING_PROPOSED
-    SumChildren( Spc:CompRmPwr ) * Mult
-ENDRULE
-RULE NEW Story:CompRmPwrNewWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    ComputerRoomPowerNewWithMultiplier
-  INPUTCLASS
-    NotInput
-  SIZING_PROPOSED
-    SumChildren( Spc:CompRmPwrNew ) * Mult
-ENDRULE
-RULE NEW Story:CompRmPwrExistingWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    ComputerRoomPowerExistingWithMultiplier
-  INPUTCLASS
-    NotInput
-  SIZING_PROPOSED
-    SumChildren( Spc:CompRmPwrExisting ) * Mult
-ENDRULE
-RULE NEW Story:CompRmPwrAlteredWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    ComputerRoomPowerAlteredWithMultiplier
-  INPUTCLASS
-    NotInput
-  SIZING_PROPOSED
-    SumChildren( Spc:CompRmPwrAltered ) * Mult
+    SumChildrenIf( Spc:CompRmArea, Spc:OverallAreaAltered > 0 ) 
 ENDRULE
 // Bldg level values
 // ComputerRoomArea
@@ -1026,7 +849,9 @@ RULE NEW Bldg:CompRmAreaNew
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:CompRmAreaNewWithMult )
+    SumChildren( ThrmlZn:CompRmAreaNew )
+  SIZING_BASELINE
+    zp:CompRmAreaNew
 ENDRULE 
 RULE NEW Bldg:CompRmAreaExisting
   DATATYPE
@@ -1036,7 +861,9 @@ RULE NEW Bldg:CompRmAreaExisting
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:CompRmAreaExistingWithMult )
+    SumChildren( ThrmlZn:CompRmAreaExisting )
+  SIZING_BASELINE
+    zp:CompRmAreaExisting
 ENDRULE 
 RULE NEW Bldg:CompRmAreaAltered
   DATATYPE
@@ -1046,7 +873,9 @@ RULE NEW Bldg:CompRmAreaAltered
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:CompRmAreaAlteredWithMult )
+    SumChildren( ThrmlZn:CompRmAreaAltered )
+  SIZING_BASELINE
+    zp:CompRmAreaAltered
 ENDRULE 
 RULE NEW Bldg:CompRmArea
   DATATYPE
@@ -1056,7 +885,9 @@ RULE NEW Bldg:CompRmArea
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:CompRmAreaWithMult )
+    SumChildren( ThrmlZn:CompRmArea )
+  SIZING_BASELINE
+    zp:CompRmArea
 ENDRULE 
 // ComputerRoomPower
 RULE NEW Bldg:CompRmPwrNew
@@ -1069,7 +900,9 @@ RULE NEW Bldg:CompRmPwrNew
   INPUTCLASS
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:CompRmPwrNewWithMult )
+    SumChildren( ThrmlZn:CompRmPwrNew )
+  SIZING_BASELINE
+    zp:CompRmPwrNew
 ENDRULE
 RULE NEW Bldg:CompRmPwrExisting
   DATATYPE
@@ -1081,7 +914,9 @@ RULE NEW Bldg:CompRmPwrExisting
   INPUTCLASS
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:CompRmPwrExistingWithMult )
+    SumChildren( ThrmlZn:CompRmPwrExisting )
+  SIZING_BASELINE
+    zp:CompRmPwrExisting
 ENDRULE
 RULE NEW Bldg:CompRmPwrAltered
   DATATYPE
@@ -1093,7 +928,9 @@ RULE NEW Bldg:CompRmPwrAltered
   INPUTCLASS
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:CompRmPwrAlteredWithMult )
+    SumChildren( ThrmlZn:CompRmPwrAltered )
+  SIZING_BASELINE
+    zp:CompRmPwrAltered
 ENDRULE
 RULE NEW Bldg:CompRmPwr
   DATATYPE
@@ -1106,7 +943,10 @@ RULE NEW Bldg:CompRmPwr
     NotInput
   SIZING_PROPOSED
     CompRmPwrNew + CompRmPwrExisting + CompRmPwrAltered
+  SIZING_BASELINE
+    zp:CompRmPwr
 ENDRULE
+
 
 // Laboratory
 // -----------------------------------------------------------------------------
@@ -1121,16 +961,6 @@ RULE NEW ThrmlZn:LabArea
   DEFAULT
     SumRevRef( Spc:ThrmlZnRef, Spc:LabArea ) 
 ENDRULE
-RULE NEW ThrmlZn:LabAreaWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    LaboratoryAreaWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    LabArea * Mult
-ENDRULE
 RULE NEW ThrmlZn:LabAreaNew
   DATATYPE
     Float
@@ -1143,6 +973,8 @@ RULE NEW ThrmlZn:LabAreaNew
     then OverallAreaNew
     else 0
     endif
+  SIZING_BASELINE
+    zp:LabAreaNew
 ENDRULE
 RULE NEW ThrmlZn:LabAreaExisting
   DATATYPE
@@ -1156,6 +988,8 @@ RULE NEW ThrmlZn:LabAreaExisting
     then OverallAreaExisting
     else 0
     endif
+  SIZING_BASELINE
+    zp:LabAreaExisting
 ENDRULE
 RULE NEW ThrmlZn:LabAreaAltered
   DATATYPE
@@ -1169,63 +1003,65 @@ RULE NEW ThrmlZn:LabAreaAltered
     then OverallAreaAltered
     else 0
     endif
+  SIZING_BASELINE
+    zp:LabAreaAltered
 ENDRULE
 // Story level
-RULE NEW Story:LabAreaWithMult
+RULE NEW Story:LabArea
   DATATYPE
     Float
   LONGFORM
-    LaboratoryAreaWithMultiplier
+    LaboratoryArea
   DESCRIPTION
-    "The total (conditioned) 'Laboratory' floor area, including multipliers." 
+    "The total (conditioned) 'Laboratory' floor area." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildren( Spc:LabArea ) * Mult
+    SumChildren( Spc:LabArea )
 ENDRULE
-RULE NEW Story:LabAreaNewWithMult
+RULE NEW Story:LabAreaNew
   DATATYPE
     Float
   LONGFORM
-    LaboratoryAreaNewWithMultiplier
+    LaboratoryAreaNew
   DESCRIPTION
-    "The total (conditioned) 'Laboratory' floor area with NEW Overall status, including multipliers." 
+    "The total (conditioned) 'Laboratory' floor area with NEW Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:LabArea, Spc:OverallAreaNew > 0 ) * Mult
+    SumChildrenIf( Spc:LabArea, Spc:OverallAreaNew > 0 ) 
 ENDRULE
-RULE NEW Story:LabAreaExistingWithMult
+RULE NEW Story:LabAreaExisting
   DATATYPE
     Float
   LONGFORM
-    LaboratoryAreaExistingWithMultiplier
+    LaboratoryAreaExisting
   DESCRIPTION
-    "The total (conditioned) 'Laboratory' floor area with EXISTING Overall status, including multipliers." 
+    "The total (conditioned) 'Laboratory' floor area with EXISTING Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:LabArea, Spc:OverallAreaExisting > 0 ) * Mult
+    SumChildrenIf( Spc:LabArea, Spc:OverallAreaExisting > 0 ) 
 ENDRULE
-RULE NEW Story:LabAreaAlteredWithMult
+RULE NEW Story:LabAreaAltered
   DATATYPE
     Float
   LONGFORM
-    LaboratoryAreaAlteredWithMultiplier
+    LaboratoryAreaAltered
   DESCRIPTION
-    "The total (conditioned) 'Laboratory' floor area with ALTERED Overall status, including multipliers." 
+    "The total (conditioned) 'Laboratory' floor area with ALTERED Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:LabArea, Spc:OverallAreaAltered > 0 ) * Mult
+    SumChildrenIf( Spc:LabArea, Spc:OverallAreaAltered > 0 ) 
 ENDRULE
 // Bldg level values
       // DEFAULT expression added to fix undefined data error in Space-ScheduleGroups - SAC 02/18/22
@@ -1237,9 +1073,11 @@ RULE NEW Bldg:LabArea
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:LabAreaWithMult )
+    SumChildren( ThrmlZn:LabArea )
   SIZING_PROPOSED
-    SumChildren( Story:LabAreaWithMult )
+    SumChildren( ThrmlZn:LabArea )
+  SIZING_BASELINE
+    zp:LabArea
 ENDRULE 
 RULE NEW Bldg:LabAreaNew
   DATATYPE
@@ -1249,7 +1087,9 @@ RULE NEW Bldg:LabAreaNew
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:LabAreaNewWithMult )
+    SumChildren( ThrmlZn:LabAreaNew )
+  SIZING_BASELINE
+    zp:LabAreaNew
 ENDRULE 
 RULE NEW Bldg:LabAreaExisting
   DATATYPE
@@ -1259,7 +1099,9 @@ RULE NEW Bldg:LabAreaExisting
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:LabAreaExistingWithMult )
+    SumChildren( ThrmlZn:LabAreaExisting )
+  SIZING_BASELINE
+    zp:LabAreaExisting
 ENDRULE 
 RULE NEW Bldg:LabAreaAltered
   DATATYPE
@@ -1269,7 +1111,9 @@ RULE NEW Bldg:LabAreaAltered
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:LabAreaAlteredWithMult )
+    SumChildren( ThrmlZn:LabAreaAltered )
+  SIZING_BASELINE
+    zp:LabAreaAltered
 ENDRULE 
 
 
@@ -1286,16 +1130,6 @@ RULE NEW ThrmlZn:CommKitArea
   DEFAULT
     SumRevRef( Spc:ThrmlZnRef, Spc:CommKitArea )
 ENDRULE
-RULE NEW ThrmlZn:CommKitAreaWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    CommercialKitchenAreaWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    SumRevRef( Spc:ThrmlZnRef, Spc:CommKitArea ) * Mult
-ENDRULE
 RULE NEW ThrmlZn:CommKitAreaNew
   DATATYPE
     Float
@@ -1308,6 +1142,8 @@ RULE NEW ThrmlZn:CommKitAreaNew
     then OverallAreaNew
     else 0
     endif
+  SIZING_BASELINE
+    zp:CommKitAreaNew
 ENDRULE
 RULE NEW ThrmlZn:CommKitAreaExisting
   DATATYPE
@@ -1321,6 +1157,8 @@ RULE NEW ThrmlZn:CommKitAreaExisting
     then OverallAreaExisting
     else 0
     endif
+  SIZING_BASELINE
+    zp:CommKitAreaExisting
 ENDRULE
 RULE NEW ThrmlZn:CommKitAreaAltered
   DATATYPE
@@ -1334,64 +1172,66 @@ RULE NEW ThrmlZn:CommKitAreaAltered
     then OverallAreaAltered
     else 0
     endif
+  SIZING_BASELINE
+    zp:CommKitAreaAltered
 ENDRULE
 
 // Story level values
-RULE NEW Story:CommKitAreaWithMult
+RULE NEW Story:CommKitArea
   DATATYPE
     Float
   LONGFORM
-    CommercialKitchenAreaWithMultiplier
+    CommercialKitchenArea
   DESCRIPTION
-    "The total (conditioned) 'CommercialKitchen' floor area for the Story, including multipliers." 
+    "The total (conditioned) 'CommercialKitchen' floor area for the Story." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildren( Spc:CommKitArea ) * Mult
+    SumChildren( Spc:CommKitArea ) 
 ENDRULE
-RULE NEW Story:CommKitAreaNewWithMult
+RULE NEW Story:CommKitAreaNew
   DATATYPE
     Float
   LONGFORM
-    CommercialKitchenAreaNewWithMultiplier
+    CommercialKitchenAreaNew
   DESCRIPTION
-    "The total (conditioned) 'CommercialKitchen' floor area with NEW Overall status, including multipliers." 
+    "The total (conditioned) 'CommercialKitchen' floor area with NEW Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:CommKitArea, Spc:OverallAreaNew > 0 ) * Mult
+    SumChildrenIf( Spc:CommKitArea, Spc:OverallAreaNew > 0 ) 
 ENDRULE
-RULE NEW Story:CommKitAreaExistingWithMult
+RULE NEW Story:CommKitAreaExisting
   DATATYPE
     Float
   LONGFORM
-    CommercialKitchenAreaExistingWithMultiplier
+    CommercialKitchenAreaExisting
   DESCRIPTION
-    "The total (conditioned) 'CommercialKitchen' floor area with EXISTING Overall status, including multipliers." 
+    "The total (conditioned) 'CommercialKitchen' floor area with EXISTING Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:CommKitArea, Spc:OverallAreaExisting > 0 ) * Mult
+    SumChildrenIf( Spc:CommKitArea, Spc:OverallAreaExisting > 0 ) 
 ENDRULE
-RULE NEW Story:CommKitAreaAlteredWithMult
+RULE NEW Story:CommKitAreaAltered
   DATATYPE
     Float
   LONGFORM
-    CommercialKitchenAreaAlteredWithMultiplier
+    CommercialKitchenAreaAltered
   DESCRIPTION
-    "The total (conditioned) 'CommercialKitchen' floor area with ALTERED Overall status, including multipliers." 
+    "The total (conditioned) 'CommercialKitchen' floor area with ALTERED Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:CommKitArea, Spc:OverallAreaAltered > 0 ) * Mult
+    SumChildrenIf( Spc:CommKitArea, Spc:OverallAreaAltered > 0 ) 
 ENDRULE
 
 // Bldg level values
@@ -1403,7 +1243,9 @@ RULE NEW Bldg:CommKitArea
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:CommKitAreaWithMult )
+    SumChildren( ThrmlZn:CommKitArea )
+  SIZING_BASELINE
+    zp:CommKitArea
 ENDRULE 
 RULE NEW Bldg:CommKitAreaNew
   DATATYPE
@@ -1413,7 +1255,9 @@ RULE NEW Bldg:CommKitAreaNew
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:CommKitAreaNewWithMult )
+    SumChildren( ThrmlZn:CommKitAreaNew )
+  SIZING_BASELINE
+    zp:CommKitAreaNew
 ENDRULE 
 RULE NEW Bldg:CommKitAreaExisting
   DATATYPE
@@ -1423,7 +1267,9 @@ RULE NEW Bldg:CommKitAreaExisting
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:CommKitAreaExistingWithMult )
+    SumChildren( ThrmlZn:CommKitAreaExisting )
+  SIZING_BASELINE
+    zp:CommKitAreaExisting
 ENDRULE 
 RULE NEW Bldg:CommKitAreaAltered
   DATATYPE
@@ -1433,7 +1279,9 @@ RULE NEW Bldg:CommKitAreaAltered
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:CommKitAreaAlteredWithMult )
+    SumChildren( ThrmlZn:CommKitAreaAltered )
+  SIZING_BASELINE
+    zp:CommKitAreaAltered
 ENDRULE 
 
 // Total Conditioned Process Area
@@ -1480,6 +1328,7 @@ RULE NEW ThrmlZn:ProcAreaAltered
     CompRmAreaAltered + LabAreaAltered + CommKitAreaAltered
 ENDRULE
 
+
 // ParkingGarage
 // -----------------------------------------------------------------------------
 // ThrmlZn level values
@@ -1493,27 +1342,6 @@ RULE NEW ThrmlZn:PrkgGarArea
   DEFAULT
     SumRevRef( Spc:ThrmlZnRef, Spc:PrkgGarArea )
 ENDRULE
-RULE NEW ThrmlZn:PrkgGarAreaWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    ParkingGarageAreaWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    PrkgGarArea * Mult
-ENDRULE
-// Story level values
-RULE NEW Story:PrkgGarAreaWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    ParkingGarageAreaWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    SumChildren( Spc:PrkgGarArea ) * Mult
-ENDRULE
 // Bldg level values
 RULE NEW Bldg:PrkgGarArea
   DATATYPE
@@ -1523,8 +1351,9 @@ RULE NEW Bldg:PrkgGarArea
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:PrkgGarAreaWithMult )
+    SumChildren( ThrmlZn:PrkgGarArea )
 ENDRULE 
+
 
 // Factory
 // -----------------------------------------------------------------------------
@@ -1539,16 +1368,6 @@ RULE NEW ThrmlZn:FactoryArea
   DEFAULT
     SumRevRef( Spc:ThrmlZnRef, Spc:FactoryArea )
 ENDRULE
-RULE NEW ThrmlZn:FactoryAreaWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FactoryAreaWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FactoryArea * Mult
-ENDRULE
 RULE NEW ThrmlZn:FactoryAreaNew
   DATATYPE
     Float
@@ -1561,6 +1380,8 @@ RULE NEW ThrmlZn:FactoryAreaNew
     then OverallAreaNew
     else 0
     endif
+  SIZING_BASELINE
+    zp:FactoryAreaNew
 ENDRULE
 RULE NEW ThrmlZn:FactoryAreaExisting
   DATATYPE
@@ -1574,6 +1395,8 @@ RULE NEW ThrmlZn:FactoryAreaExisting
     then OverallAreaExisting
     else 0
     endif
+  SIZING_BASELINE
+    zp:FactoryAreaExisting
 ENDRULE
 RULE NEW ThrmlZn:FactoryAreaAltered
   DATATYPE
@@ -1587,64 +1410,66 @@ RULE NEW ThrmlZn:FactoryAreaAltered
     then OverallAreaAltered
     else 0
     endif
+  SIZING_BASELINE
+    zp:FactoryAreaAltered
 ENDRULE
 
 // Story level values
-RULE NEW Story:FactoryAreaWithMult
+RULE NEW Story:FactoryArea
   DATATYPE
     Float
   LONGFORM
-    FactoryAreaWithMultiplier
+    FactoryArea
   DESCRIPTION
-    "The total (conditioned) 'Factory' floor area for the Story, including multipoiers." 
+    "The total (conditioned) 'Factory' floor area for the Story." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildren( Spc:FactoryArea ) * Mult
+    SumChildren( Spc:FactoryArea ) 
 ENDRULE
-RULE NEW Story:FactoryAreaNewWithMult
+RULE NEW Story:FactoryAreaNew
   DATATYPE
     Float
   LONGFORM
-    FactoryAreaNewWithMultiplier
+    FactoryAreaNew
   DESCRIPTION
-    "The total (conditioned) 'Factory' floor area with NEW Overall status, including multipoiers." 
+    "The total (conditioned) 'Factory' floor area with NEW Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:FactoryArea, Spc:OverallAreaNew > 0 ) * Mult
+    SumChildrenIf( Spc:FactoryArea, Spc:OverallAreaNew > 0 ) 
 ENDRULE
-RULE NEW Story:FactoryAreaExistingWithMult
+RULE NEW Story:FactoryAreaExisting
   DATATYPE
     Float
   LONGFORM
-    FactoryAreaExistingWithMultiplier
+    FactoryAreaExisting
   DESCRIPTION
-    "The total (conditioned) 'Factory' floor area with EXISTING Overall status, including multipoiers." 
+    "The total (conditioned) 'Factory' floor area with EXISTING Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:FactoryArea, Spc:OverallAreaExisting > 0 ) * Mult
+    SumChildrenIf( Spc:FactoryArea, Spc:OverallAreaExisting > 0 ) 
 ENDRULE
-RULE NEW Story:FactoryAreaAlteredWithMult
+RULE NEW Story:FactoryAreaAltered
   DATATYPE
     Float
   LONGFORM
-    FactoryAreaAlteredWithMultiplier
+    FactoryAreaAltered
   DESCRIPTION
-    "The total (conditioned) 'Factory' floor area with ALTERED Overall status, including multipoiers." 
+    "The total (conditioned) 'Factory' floor area with ALTERED Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:FactoryArea, Spc:OverallAreaAltered > 0 ) * Mult
+    SumChildrenIf( Spc:FactoryArea, Spc:OverallAreaAltered > 0 ) 
 ENDRULE
 
 // Bldg level values
@@ -1656,7 +1481,9 @@ RULE NEW Bldg:FactoryArea
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:FactoryAreaWithMult )
+    SumChildren( ThrmlZn:FactoryArea )
+  SIZING_BASELINE
+    zp:FactoryArea
 ENDRULE 
 RULE NEW Bldg:FactoryAreaNew
   DATATYPE
@@ -1666,7 +1493,9 @@ RULE NEW Bldg:FactoryAreaNew
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:FactoryAreaNewWithMult )
+    SumChildren( ThrmlZn:FactoryAreaNew )
+  SIZING_BASELINE
+    zp:FactoryAreaNew
 ENDRULE 
 RULE NEW Bldg:FactoryAreaExisting
   DATATYPE
@@ -1676,7 +1505,9 @@ RULE NEW Bldg:FactoryAreaExisting
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:FactoryAreaExistingWithMult )
+    SumChildren( ThrmlZn:FactoryAreaExisting )
+  SIZING_BASELINE
+    zp:FactoryAreaExisting
 ENDRULE 
 RULE NEW Bldg:FactoryAreaAltered
   DATATYPE
@@ -1686,71 +1517,65 @@ RULE NEW Bldg:FactoryAreaAltered
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:FactoryAreaAlteredWithMult )
+    SumChildren( ThrmlZn:FactoryAreaAltered )
+  SIZING_BASELINE
+    zp:FactoryAreaAltered
 ENDRULE 
+
+
 
 // Process Area
 // -----------------------------------------------------------------------------
 // Story level values
-RULE NEW Story:ProcAreaWithMult
+RULE NEW Story:ProcAreaNew
   DATATYPE
     Float
   LONGFORM
-    ProcAreaWithMultiplier
+    ProcAreaNew
   DESCRIPTION
-    "The total (conditioned) process space floor area, including multipliers." 
+    "The total (conditioned) process space floor area with NEW status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT
-    CompRmAreaWithMult + LabAreaWithMult + CommKitAreaWithMult 
+    CompRmAreaNew + LabAreaNew + CommKitAreaNew 
   SIZING_PROPOSED
-    CompRmAreaWithMult + LabAreaWithMult + CommKitAreaWithMult 
+    CompRmAreaNew + LabAreaNew + CommKitAreaNew 
+  SIZING_BASELINE
+    zp:ProcAreaNew
 ENDRULE
-RULE NEW Story:ProcAreaNewWithMult
+RULE NEW Story:ProcAreaExisting
   DATATYPE
     Float
   LONGFORM
-    ProcAreaNewWithMultiplier
+    ProcAreaExisting
   DESCRIPTION
-    "The total (conditioned) process space floor area with NEW status, including multipliers." 
-  INPUTCLASS
-    NotInput
-  UNITS 
-    ft2
-  DEFAULT
-    CompRmAreaNewWithMult + LabAreaNewWithMult + CommKitAreaNewWithMult 
-  SIZING_PROPOSED
-    CompRmAreaNewWithMult + LabAreaNewWithMult + CommKitAreaNewWithMult 
-ENDRULE
-RULE NEW Story:ProcAreaExistingWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    ProcAreaExistingWithMultiplier
-  DESCRIPTION
-    "The total (conditioned) process space floor area with EXISTING status, including multipliers." 
+    "The total (conditioned) process space floor area with EXISTING status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   SIZING_PROPOSED
-    CompRmAreaExistingWithMult + LabAreaExistingWithMult + CommKitAreaExistingWithMult 
+    CompRmAreaExisting + LabAreaExisting + CommKitAreaExisting 
+  SIZING_BASELINE
+    zp:ProcAreaExisting
 ENDRULE
-RULE NEW Story:ProcAreaAlteredWithMult
+RULE NEW Story:ProcAreaAltered
   DATATYPE
     Float
   LONGFORM
-    ProcAreaAlteredWithMultiplier
+    ProcAreaAltered
   DESCRIPTION
-    "The total (conditioned) process space floor area with ALTERED status, including multipliers." 
+    "The total (conditioned) process space floor area with ALTERED status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   SIZING_PROPOSED
-    CompRmAreaAlteredWithMult + LabAreaAlteredWithMult + CommKitAreaAlteredWithMult 
+    CompRmAreaAltered + LabAreaAltered + CommKitAreaAltered 
+  SIZING_BASELINE
+    zp:ProcAreaAltered
 ENDRULE
 // Bldg level values
 RULE NEW Bldg:ProcArea
@@ -1761,7 +1586,11 @@ RULE NEW Bldg:ProcArea
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:ProcAreaWithMult )
+    SumChildren( ThrmlZn:CompRmArea ) +
+    SumChildren( ThrmlZn:LabArea ) +
+    SumChildren( ThrmlZn:CommKitArea )
+  SIZING_BASELINE
+    zp:ProcArea
 ENDRULE 
 RULE NEW Bldg:ProcAreaNew
   DATATYPE
@@ -1771,7 +1600,11 @@ RULE NEW Bldg:ProcAreaNew
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:ProcAreaNewWithMult )
+    SumChildren( ThrmlZn:CompRmAreaNew ) +
+    SumChildren( ThrmlZn:LabAreaNew ) +
+    SumChildren( ThrmlZn:CommKitAreaNew )
+  SIZING_BASELINE
+    zp:ProcAreaNew
 ENDRULE 
 RULE NEW Bldg:ProcAreaExisting
   DATATYPE
@@ -1781,7 +1614,11 @@ RULE NEW Bldg:ProcAreaExisting
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:ProcAreaExistingWithMult )
+    SumChildren( ThrmlZn:CompRmAreaExisting ) +
+    SumChildren( ThrmlZn:LabAreaExisting ) +
+    SumChildren( ThrmlZn:CommKitAreaExisting )
+  SIZING_BASELINE
+    zp:ProcAreaExisting
 ENDRULE 
 RULE NEW Bldg:ProcAreaAltered
   DATATYPE
@@ -1791,7 +1628,11 @@ RULE NEW Bldg:ProcAreaAltered
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:ProcAreaAlteredWithMult )
+    SumChildren( ThrmlZn:CompRmAreaAltered ) +
+    SumChildren( ThrmlZn:LabAreaAltered ) +
+    SumChildren( ThrmlZn:CommKitAreaAltered )
+  SIZING_BASELINE
+    zp:ProcAreaAltered
 ENDRULE 
 
 // Retail Area
@@ -1814,6 +1655,8 @@ RULE NEW ThrmlZn:RetailArea
       SumRevRef( Spc:ThrmlZnRef, Spc:RetailArea )
     else 0
     endif
+  SIZING_BASELINE
+    zp:RetailArea
 ENDRULE
 // Update Spc:RetailArea
 RULE NEW Spc:RetailArea
@@ -1835,6 +1678,8 @@ RULE NEW ThrmlZn:RetailAreaNew
     then OverallAreaNew
     else 0
     endif
+  SIZING_BASELINE
+    zp:RetailAreaNew
 ENDRULE
 RULE NEW ThrmlZn:RetailAreaExisting
   DATATYPE
@@ -1848,6 +1693,8 @@ RULE NEW ThrmlZn:RetailAreaExisting
     then OverallAreaExisting
     else 0
     endif
+  SIZING_BASELINE
+    zp:RetailAreaExisting
 ENDRULE
 RULE NEW ThrmlZn:RetailAreaAltered
   DATATYPE
@@ -1861,72 +1708,82 @@ RULE NEW ThrmlZn:RetailAreaAltered
     then OverallAreaAltered
     else 0
     endif
+  SIZING_BASELINE
+    zp:RetailAreaAltered
 ENDRULE
 
 // Story level values
-RULE NEW Story:RetailAreaWithMult
+RULE NEW Story:RetailArea
   DATATYPE
     Float
   LONGFORM
-    RetailAreaWithMultiplier
+    RetailArea
   DESCRIPTION
-    "The total (conditioned) 'Retail' floor area for the Story, including multipliers." 
+    "The total (conditioned) 'Retail' floor area for the Story." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT  
-    SumChildren( Spc:RetailArea ) * Mult
+    SumChildren( Spc:RetailArea ) 
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:RetailArea ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:RetailArea )
+  SIZING_BASELINE
+    zp:RetailArea
 ENDRULE
-RULE NEW Story:RetailAreaNewWithMult
+RULE NEW Story:RetailAreaNew
   DATATYPE
     Float
   LONGFORM
-    RetailAreaNewMultiplier
+    RetailAreaNew
   DESCRIPTION
-    "The total (conditioned) 'Retail' floor area with NEW Overall status, including multipliers." 
+    "The total (conditioned) 'Retail' floor area with NEW Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2 
   DEFAULT
-    SumChildrenIf( Spc:RetailArea, Spc:OverallAreaNew > 0 ) * Mult
+    SumChildrenIf( Spc:RetailArea, Spc:OverallAreaNew > 0 )   
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:RetailAreaNew ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:RetailAreaNew )  
+  SIZING_BASELINE
+    zp:RetailAreaNew
 ENDRULE
-RULE NEW Story:RetailAreaExistingWithMult
+RULE NEW Story:RetailAreaExisting
   DATATYPE
     Float
   LONGFORM
-    RetailAreaExistingMultiplier
+    RetailAreaExisting
   DESCRIPTION
-    "The total (conditioned) 'Retail' floor area with EXISTING Overall status, including multipliers." 
+    "The total (conditioned) 'Retail' floor area with EXISTING Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT
-    SumChildrenIf( Spc:RetailArea, Spc:OverallAreaExisting > 0 ) * Mult
+    SumChildrenIf( Spc:RetailArea, Spc:OverallAreaExisting > 0 )   
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:RetailAreaExisting ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:RetailAreaExisting )  
+  SIZING_BASELINE
+    zp:RetailAreaExisting  
 ENDRULE
-RULE NEW Story:RetailAreaAlteredWithMult
+RULE NEW Story:RetailAreaAltered
   DATATYPE
     Float
   LONGFORM
-    RetailAreaAlteredMultiplier
+    RetailAreaAltered
   DESCRIPTION
-    "The total (conditioned) 'Retail' floor area with ALTERED Overall status, including multipliers." 
+    "The total (conditioned) 'Retail' floor area with ALTERED Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT
-    SumChildrenIf( Spc:RetailArea, Spc:OverallAreaAltered > 0 ) * Mult
+    SumChildrenIf( Spc:RetailArea, Spc:OverallAreaAltered > 0 )
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:RetailAreaAltered ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:RetailAreaAltered )  
+  SIZING_BASELINE
+    zp:RetailAreaAltered
 ENDRULE
 
 // Bldg level values
@@ -1938,7 +1795,9 @@ RULE NEW Bldg:RetailArea
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:RetailAreaWithMult )
+    SumChildren( ThrmlZn:RetailArea )
+  SIZING_BASELINE
+    zp:RetailArea
 ENDRULE 
 RULE NEW Bldg:RetailAreaNew
   DATATYPE
@@ -1948,7 +1807,9 @@ RULE NEW Bldg:RetailAreaNew
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:RetailAreaNewWithMult )
+    SumChildren( ThrmlZn:RetailAreaNew )
+  SIZING_BASELINE
+    zp:RetailAreaNew
 ENDRULE 
 RULE NEW Bldg:RetailAreaExisting
   DATATYPE
@@ -1958,7 +1819,9 @@ RULE NEW Bldg:RetailAreaExisting
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:RetailAreaExistingWithMult )
+    SumChildren( ThrmlZn:RetailAreaExisting )
+  SIZING_BASELINE
+    zp:RetailAreaExisting
 ENDRULE 
 RULE NEW Bldg:RetailAreaAltered
   DATATYPE
@@ -1968,7 +1831,9 @@ RULE NEW Bldg:RetailAreaAltered
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:RetailAreaAlteredWithMult )
+    SumChildren( ThrmlZn:RetailAreaAltered )
+  SIZING_BASELINE
+    zp:RetailAreaAltered
 ENDRULE
 
 // School Area
@@ -1987,6 +1852,8 @@ RULE NEW ThrmlZn:SchoolArea
       SumRevRef( Spc:ThrmlZnRef, Spc:SchoolArea )
     else 0
     endif
+  SIZING_BASELINE
+    zp:SchoolArea
 ENDRULE
 // Update Spc:SchoolArea
 RULE NEW Spc:SchoolArea
@@ -2008,6 +1875,8 @@ RULE NEW ThrmlZn:SchoolAreaNew
     then OverallAreaNew
     else 0
     endif
+  SIZING_BASELINE
+    zp:SchoolAreaNew
 ENDRULE
 RULE NEW ThrmlZn:SchoolAreaExisting
   DATATYPE
@@ -2021,6 +1890,8 @@ RULE NEW ThrmlZn:SchoolAreaExisting
     then OverallAreaExisting
     else 0
     endif
+  SIZING_BASELINE
+    zp:SchoolAreaExisting
 ENDRULE
 RULE NEW ThrmlZn:SchoolAreaAltered
   DATATYPE
@@ -2034,72 +1905,82 @@ RULE NEW ThrmlZn:SchoolAreaAltered
     then OverallAreaAltered
     else 0
     endif
+  SIZING_BASELINE
+    zp:SchoolAreaAltered
 ENDRULE
 
 // Story level values
-RULE NEW Story:SchoolAreaWithMult
+RULE NEW Story:SchoolArea
   DATATYPE
     Float
   LONGFORM
-    SchoolAreaWithMultiplier
+    SchoolArea
   DESCRIPTION
-    "The total (conditioned) 'School' floor area for the Story, including multipliers." 
+    "The total (conditioned) 'School' floor area for the Story." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT  
-    SumChildren( Spc:SchoolArea ) * Mult
+    SumChildren( Spc:SchoolArea ) 
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:SchoolArea ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:SchoolArea ) 
+  SIZING_BASELINE
+    zp:SchoolArea
 ENDRULE
-RULE NEW Story:SchoolAreaNewWithMult
+RULE NEW Story:SchoolAreaNew
   DATATYPE
     Float
   LONGFORM
-    SchoolAreaNewWithMultiplier
+    SchoolAreaNew
   DESCRIPTION
-    "The total (conditioned) 'School' floor area with NEW Overall status, including multipliers." 
+    "The total (conditioned) 'School' floor area with NEW Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2 
   DEFAULT
-    SumChildrenIf( Spc:SchoolArea, Spc:OverallAreaNew > 0 ) * Mult
+    SumChildrenIf( Spc:SchoolArea, Spc:OverallAreaNew > 0 )   
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:SchoolAreaNew ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:SchoolAreaNew ) 
+  SIZING_BASELINE
+    zp:SchoolAreaNew
 ENDRULE
-RULE NEW Story:SchoolAreaExistingWithMult
+RULE NEW Story:SchoolAreaExisting
   DATATYPE
     Float
   LONGFORM
-    SchoolAreaExistingWithMultiplier
+    SchoolAreaExisting
   DESCRIPTION
-    "The total (conditioned) 'School' floor area with EXISTING Overall status, including multipliers." 
+    "The total (conditioned) 'School' floor area with EXISTING Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT
-    SumChildrenIf( Spc:SchoolArea, Spc:OverallAreaExisting > 0 ) * Mult
+    SumChildrenIf( Spc:SchoolArea, Spc:OverallAreaExisting > 0 )   
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:SchoolAreaExisting ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:SchoolAreaExisting ) 
+  SIZING_BASELINE
+    zp:SchoolAreaExisting  
 ENDRULE
-RULE NEW Story:SchoolAreaAlteredWithMult
+RULE NEW Story:SchoolAreaAltered
   DATATYPE
     Float
   LONGFORM
-    SchoolAreaAlteredWithMultiplier
+    SchoolAreaAltered
   DESCRIPTION
-    "The total (conditioned) 'School' floor area with ALTERED Overall status, including multipliers." 
+    "The total (conditioned) 'School' floor area with ALTERED Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT
-    SumChildrenIf( Spc:SchoolArea, Spc:OverallAreaAltered > 0 ) * Mult
+    SumChildrenIf( Spc:SchoolArea, Spc:OverallAreaAltered > 0 )
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:SchoolAreaAltered ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:SchoolAreaAltered ) 
+  SIZING_BASELINE
+    zp:SchoolAreaAltered
 ENDRULE
 
 // Bldg level values
@@ -2111,7 +1992,9 @@ RULE NEW Bldg:SchoolArea
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:SchoolAreaWithMult )
+    SumChildren( ThrmlZn:SchoolArea )
+  SIZING_BASELINE
+    zp:SchoolArea
 ENDRULE 
 RULE NEW Bldg:SchoolAreaNew
   DATATYPE
@@ -2121,7 +2004,9 @@ RULE NEW Bldg:SchoolAreaNew
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:SchoolAreaNewWithMult )
+    SumChildren( ThrmlZn:SchoolAreaNew )
+  SIZING_BASELINE
+    zp:SchoolAreaNew
 ENDRULE 
 RULE NEW Bldg:SchoolAreaExisting
   DATATYPE
@@ -2131,7 +2016,9 @@ RULE NEW Bldg:SchoolAreaExisting
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:SchoolAreaExistingWithMult )
+    SumChildren( ThrmlZn:SchoolAreaExisting )
+  SIZING_BASELINE
+    zp:SchoolAreaExisting
 ENDRULE 
 RULE NEW Bldg:SchoolAreaAltered
   DATATYPE
@@ -2141,7 +2028,9 @@ RULE NEW Bldg:SchoolAreaAltered
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:SchoolAreaAlteredWithMult )
+    SumChildren( ThrmlZn:SchoolAreaAltered )
+  SIZING_BASELINE
+    zp:SchoolAreaAltered
 ENDRULE
 
 // Office Area
@@ -2161,6 +2050,8 @@ RULE NEW ThrmlZn:OfficeArea
       SumRevRef( Spc:ThrmlZnRef, Spc:OfficeArea )
     else 0
     endif
+  SIZING_BASELINE
+    zp:OfficeArea
 ENDRULE
 // Update Spc:OfficeArea
 RULE NEW Spc:OfficeArea
@@ -2182,6 +2073,8 @@ RULE NEW ThrmlZn:OfficeAreaNew
     then OverallAreaNew
     else 0
     endif
+  SIZING_BASELINE
+    zp:OfficeAreaNew
 ENDRULE
 RULE NEW ThrmlZn:OfficeAreaExisting
   DATATYPE
@@ -2195,6 +2088,8 @@ RULE NEW ThrmlZn:OfficeAreaExisting
     then OverallAreaExisting
     else 0
     endif
+  SIZING_BASELINE
+    zp:OfficeAreaExisting
 ENDRULE
 RULE NEW ThrmlZn:OfficeAreaAltered
   DATATYPE
@@ -2208,72 +2103,82 @@ RULE NEW ThrmlZn:OfficeAreaAltered
     then OverallAreaAltered
     else 0
     endif
+  SIZING_BASELINE
+    zp:OfficeAreaAltered
 ENDRULE
 
 // Story level values
-RULE NEW Story:OfficeAreaWithMult
+RULE NEW Story:OfficeArea
   DATATYPE
     Float
   LONGFORM
-    OfficeAreaWithMultiplier
+    OfficeArea
   DESCRIPTION
-    "The total (conditioned) 'Office' floor area for the Story, including multipliers." 
+    "The total (conditioned) 'Office' floor area for the Story." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT  
-    SumChildren( Spc:OfficeArea ) * Mult
+    SumChildren( Spc:OfficeArea ) 
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:OfficeArea ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:OfficeArea ) 
+  SIZING_BASELINE
+    zp:OfficeArea
 ENDRULE
-RULE NEW Story:OfficeAreaNewWithMult
+RULE NEW Story:OfficeAreaNew
   DATATYPE
     Float
   LONGFORM
-    OfficeAreaNewWithMultiplier
+    OfficeAreaNew
   DESCRIPTION
-    "The total (conditioned) 'Office' floor area with NEW Overall status, including multipliers." 
+    "The total (conditioned) 'Office' floor area with NEW Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2 
   DEFAULT
-    SumChildrenIf( Spc:OfficeArea, Spc:OverallAreaNew > 0 ) * Mult
+    SumChildrenIf( Spc:OfficeArea, Spc:OverallAreaNew > 0 )   
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:OfficeAreaNew ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:OfficeAreaNew ) 
+  SIZING_BASELINE
+    zp:OfficeAreaNew
 ENDRULE
-RULE NEW Story:OfficeAreaExistingWithMult
+RULE NEW Story:OfficeAreaExisting
   DATATYPE
     Float
   LONGFORM
-    OfficeAreaExistingWithMultiplier
+    OfficeAreaExisting
   DESCRIPTION
-    "The total (conditioned) 'Office' floor area with EXISTING Overall status, including multipliers." 
+    "The total (conditioned) 'Office' floor area with EXISTING Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT
-    SumChildrenIf( Spc:OfficeArea, Spc:OverallAreaExisting > 0 ) * Mult
+    SumChildrenIf( Spc:OfficeArea, Spc:OverallAreaExisting > 0 )   
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:OfficeAreaExisting ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:OfficeAreaExisting ) 
+  SIZING_BASELINE
+    zp:OfficeAreaExisting  
 ENDRULE
-RULE NEW Story:OfficeAreaAlteredWithMult
+RULE NEW Story:OfficeAreaAltered
   DATATYPE
     Float
   LONGFORM
-    OfficeAreaAlteredWithMultiplier
+    OfficeAreaAltered
   DESCRIPTION
-    "The total (conditioned) 'Office' floor area with ALTERED Overall status, including multipliers." 
+    "The total (conditioned) 'Office' floor area with ALTERED Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT
-    SumChildrenIf( Spc:OfficeArea, Spc:OverallAreaAltered > 0 ) * Mult
+    SumChildrenIf( Spc:OfficeArea, Spc:OverallAreaAltered > 0 )
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:OfficeAreaAltered ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:OfficeAreaAltered ) 
+  SIZING_BASELINE
+    zp:OfficeAreaAltered
 ENDRULE
 
 // Bldg level values
@@ -2285,7 +2190,9 @@ RULE NEW Bldg:OfficeArea
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:OfficeAreaWithMult )
+    SumChildren( ThrmlZn:OfficeArea )
+  SIZING_BASELINE
+    zp:OfficeArea
 ENDRULE 
 RULE NEW Bldg:OfficeAreaNew
   DATATYPE
@@ -2295,7 +2202,9 @@ RULE NEW Bldg:OfficeAreaNew
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:OfficeAreaNewWithMult )
+    SumChildren( ThrmlZn:OfficeAreaNew )
+  SIZING_BASELINE
+    zp:OfficeAreaNew
 ENDRULE 
 RULE NEW Bldg:OfficeAreaExisting
   DATATYPE
@@ -2305,7 +2214,9 @@ RULE NEW Bldg:OfficeAreaExisting
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:OfficeAreaExistingWithMult )
+    SumChildren( ThrmlZn:OfficeAreaExisting )
+  SIZING_BASELINE
+    zp:OfficeAreaExisting
 ENDRULE 
 RULE NEW Bldg:OfficeAreaAltered
   DATATYPE
@@ -2315,7 +2226,9 @@ RULE NEW Bldg:OfficeAreaAltered
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:OfficeAreaAlteredWithMult )
+    SumChildren( ThrmlZn:OfficeAreaAltered )
+  SIZING_BASELINE
+    zp:OfficeAreaAltered
 ENDRULE 
 
 // WarehouseOffice Area
@@ -2334,6 +2247,8 @@ RULE NEW ThrmlZn:WarehouseOfficeArea
       SumRevRef( Spc:ThrmlZnRef, Spc:WarehouseOfficeArea )
     else 0
     endif
+  SIZING_BASELINE
+    zp:WarehouseOfficeArea
 ENDRULE
 // Update Spc:WarehouseOfficeArea
 RULE NEW Spc:WarehouseOfficeArea
@@ -2355,6 +2270,8 @@ RULE NEW ThrmlZn:WarehouseOfficeAreaNew
     then OverallAreaNew
     else 0
     endif
+  SIZING_BASELINE
+    zp:WarehouseOfficeAreaNew
 ENDRULE
 RULE NEW ThrmlZn:WarehouseOfficeAreaExisting
   DATATYPE
@@ -2368,6 +2285,8 @@ RULE NEW ThrmlZn:WarehouseOfficeAreaExisting
     then OverallAreaExisting
     else 0
     endif
+  SIZING_BASELINE
+    zp:WarehouseOfficeAreaExisting
 ENDRULE
 RULE NEW ThrmlZn:WarehouseOfficeAreaAltered
   DATATYPE
@@ -2381,72 +2300,82 @@ RULE NEW ThrmlZn:WarehouseOfficeAreaAltered
     then OverallAreaAltered
     else 0
     endif
+  SIZING_BASELINE
+    zp:WarehouseOfficeAreaAltered
 ENDRULE
 
 // Story level values
-RULE NEW Story:WarehouseOfficeAreaWithMult
+RULE NEW Story:WarehouseOfficeArea
   DATATYPE
     Float
   LONGFORM
-    WarehouseOfficeAreaWithMultiplier
+    WarehouseOfficeArea
   DESCRIPTION
-    "The total (conditioned) 'WarehouseOffice' floor area for the Story, including multipliers." 
+    "The total (conditioned) 'WarehouseOffice' floor area for the Story." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT  
-    SumChildren( Spc:WarehouseOfficeArea ) * Mult
+    SumChildren( Spc:WarehouseOfficeArea ) 
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:WarehouseOfficeArea ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:WarehouseOfficeArea ) 
+  SIZING_BASELINE
+    zp:WarehouseOfficeArea
 ENDRULE
-RULE NEW Story:WarehouseOfficeAreaNewWithMult
+RULE NEW Story:WarehouseOfficeAreaNew
   DATATYPE
     Float
   LONGFORM
-    WarehouseOfficeAreaNewWithMultiplier
+    WarehouseOfficeAreaNew
   DESCRIPTION
-    "The total (conditioned) 'WarehouseOffice' floor area with NEW Overall status, including multipliers." 
+    "The total (conditioned) 'WarehouseOffice' floor area with NEW Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2 
   DEFAULT
-    SumChildrenIf( Spc:WarehouseOfficeArea, Spc:OverallAreaNew > 0 ) * Mult
+    SumChildrenIf( Spc:WarehouseOfficeArea, Spc:OverallAreaNew > 0 )   
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:WarehouseOfficeAreaNew ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:WarehouseOfficeAreaNew ) 
+  SIZING_BASELINE
+    zp:WarehouseOfficeAreaNew
 ENDRULE
-RULE NEW Story:WarehouseOfficeAreaExistingWithMult
+RULE NEW Story:WarehouseOfficeAreaExisting
   DATATYPE
     Float
   LONGFORM
-    WarehouseOfficeAreaExistingWithMultiplier
+    WarehouseOfficeAreaExisting
   DESCRIPTION
-    "The total (conditioned) 'WarehouseOffice' floor area with EXISTING Overall status, including multipliers." 
+    "The total (conditioned) 'WarehouseOffice' floor area with EXISTING Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT
-    SumChildrenIf( Spc:WarehouseOfficeArea, Spc:OverallAreaExisting > 0 ) * Mult
+    SumChildrenIf( Spc:WarehouseOfficeArea, Spc:OverallAreaExisting > 0 )   
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:WarehouseOfficeAreaExisting ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:WarehouseOfficeAreaExisting ) 
+  SIZING_BASELINE
+    zp:WarehouseOfficeAreaExisting  
 ENDRULE
-RULE NEW Story:WarehouseOfficeAreaAlteredWithMult
+RULE NEW Story:WarehouseOfficeAreaAltered
   DATATYPE
     Float
   LONGFORM
-    WarehouseOfficeAreaAlteredWithMultiplier
+    WarehouseOfficeAreaAltered
   DESCRIPTION
-    "The total (conditioned) 'WarehouseOffice' floor area with ALTERED Overall status, including multipliers." 
+    "The total (conditioned) 'WarehouseOffice' floor area with ALTERED Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2
   DEFAULT
-    SumChildrenIf( Spc:WarehouseOfficeArea, Spc:OverallAreaAltered > 0 ) * Mult
+    SumChildrenIf( Spc:WarehouseOfficeArea, Spc:OverallAreaAltered > 0 )
   SIZING_PROPOSED
-    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:WarehouseOfficeAreaAltered ) * Mult
+    SumRevRef( ThrmlZn:StoryRef, ThrmlZn:WarehouseOfficeAreaAltered ) 
+  SIZING_BASELINE
+    zp:WarehouseOfficeAreaAltered
 ENDRULE
 
 // Bldg level values
@@ -2458,7 +2387,9 @@ RULE NEW Bldg:WarehouseOfficeArea
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:WarehouseOfficeAreaWithMult )
+    SumChildren( ThrmlZn:WarehouseOfficeArea )
+  SIZING_BASELINE
+    zp:WarehouseOfficeArea
 ENDRULE 
 RULE NEW Bldg:WarehouseOfficeAreaNew
   DATATYPE
@@ -2468,7 +2399,9 @@ RULE NEW Bldg:WarehouseOfficeAreaNew
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:WarehouseOfficeAreaNewWithMult )
+    SumChildren( ThrmlZn:WarehouseOfficeAreaNew )
+  SIZING_BASELINE
+    zp:WarehouseOfficeAreaNew
 ENDRULE 
 RULE NEW Bldg:WarehouseOfficeAreaExisting
   DATATYPE
@@ -2478,7 +2411,9 @@ RULE NEW Bldg:WarehouseOfficeAreaExisting
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:WarehouseOfficeAreaExistingWithMult )
+    SumChildren( ThrmlZn:WarehouseOfficeAreaExisting )
+  SIZING_BASELINE
+    zp:WarehouseOfficeAreaExisting
 ENDRULE 
 RULE NEW Bldg:WarehouseOfficeAreaAltered
   DATATYPE
@@ -2488,7 +2423,9 @@ RULE NEW Bldg:WarehouseOfficeAreaAltered
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:WarehouseOfficeAreaAlteredWithMult )
+    SumChildren( ThrmlZn:WarehouseOfficeAreaAltered )
+  SIZING_BASELINE
+    zp:WarehouseOfficeAreaAltered
 ENDRULE 
 
 // HealthCare Area
@@ -2504,7 +2441,7 @@ RULE NEW ThrmlZn:HlthCareArea
   DEFAULT
     SumRevRef( Spc:ThrmlZnRef, Spc:HlthCareArea )
   CHECKCODE
-    if( HlthCareArea > 0 .AND. HlthCareArea != CondFlrArea )
+    if( HlthCareArea > 0 .AND. HlthCareArea != CondFlrAreaWithMult )
     then 
       PostError("ThermalZone '%s' includes some healthcare area, but also other
                  non-healthcare spaces. Revise the spaces that reference this zone 
@@ -2520,7 +2457,7 @@ RULE ThrmlZn:IsHlthCare
   INPUTCLASS 
     NotInput
   DEFAULT
-    if( HlthCareArea > 0 .AND. HlthCareArea = CondFlrArea )
+    if( HlthCareArea > 0 .AND. HlthCareArea = CondFlrAreaWithMult )
     then 1
     else 0
     endif
@@ -2537,6 +2474,8 @@ RULE NEW ThrmlZn:HlthCareAreaNew
     then OverallAreaNew
     else 0
     endif
+  SIZING_BASELINE
+    zp:HlthCareAreaNew
 ENDRULE
 RULE NEW ThrmlZn:HlthCareAreaExisting
   DATATYPE
@@ -2550,6 +2489,8 @@ RULE NEW ThrmlZn:HlthCareAreaExisting
     then OverallAreaExisting
     else 0
     endif
+  SIZING_BASELINE
+    zp:HlthCareAreaExisting
 ENDRULE
 RULE NEW ThrmlZn:HlthCareAreaAltered
   DATATYPE
@@ -2563,64 +2504,66 @@ RULE NEW ThrmlZn:HlthCareAreaAltered
     then OverallAreaAltered
     else 0
     endif
+  SIZING_BASELINE
+    zp:HlthCareAreaAltered
 ENDRULE
 
 // Story level values
-RULE NEW Story:HlthCareAreaWithMult
+RULE NEW Story:HlthCareArea
   DATATYPE
     Float
   LONGFORM
-    HealthCareAreaWithMultiplier
+    HealthCareArea
   DESCRIPTION
-    "The total (conditioned) 'HlthCare' floor area for the Story, including multipliers." 
+    "The total (conditioned) 'HlthCare' floor area for the Story." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildren( Spc:HlthCareArea ) * Mult
+    SumChildren( Spc:HlthCareArea ) 
 ENDRULE
-RULE NEW Story:HlthCareAreaNewWithMult
+RULE NEW Story:HlthCareAreaNew
   DATATYPE
     Float
   LONGFORM
-    HealthCareAreaNewWithMultiplier
+    HealthCareAreaNew
   DESCRIPTION
-    "The total (conditioned) 'HlthCare' floor area with NEW Overall status, including multipliers." 
+    "The total (conditioned) 'HlthCare' floor area with NEW Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:HlthCareArea, Spc:OverallAreaNew > 0 ) * Mult
+    SumChildrenIf( Spc:HlthCareArea, Spc:OverallAreaNew > 0 ) 
 ENDRULE
-RULE NEW Story:HlthCareAreaExistingWithMult
+RULE NEW Story:HlthCareAreaExisting
   DATATYPE
     Float
   LONGFORM
-    HealthCareAreaExistingWithMultiplier
+    HealthCareAreaExisting
   DESCRIPTION
-    "The total (conditioned) 'HlthCare' floor area with EXISTING Overall status, including multipliers." 
+    "The total (conditioned) 'HlthCare' floor area with EXISTING Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:HlthCareArea, Spc:OverallAreaExisting > 0 ) * Mult
+    SumChildrenIf( Spc:HlthCareArea, Spc:OverallAreaExisting > 0 ) 
 ENDRULE
-RULE NEW Story:HlthCareAreaAlteredWithMult
+RULE NEW Story:HlthCareAreaAltered
   DATATYPE
     Float
   LONGFORM
-    HealthCareAreaAlteredWithMultiplier
+    HealthCareAreaAltered
   DESCRIPTION
-    "The total (conditioned) 'HlthCare' floor area with ALTERED Overall status, including multipliers." 
+    "The total (conditioned) 'HlthCare' floor area with ALTERED Overall status." 
   INPUTCLASS
     NotInput
   UNITS 
     ft2    
   DEFAULT 
-    SumChildrenIf( Spc:HlthCareArea, Spc:OverallAreaAltered > 0 ) * Mult
+    SumChildrenIf( Spc:HlthCareArea, Spc:OverallAreaAltered > 0 ) 
 ENDRULE
 
 // Bldg level values
@@ -2632,7 +2575,9 @@ RULE NEW Bldg:HlthCareArea
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:HlthCareAreaWithMult )
+    SumChildren( ThrmlZn:HlthCareArea )
+  SIZING_BASELINE
+    zp:HlthCareArea
 ENDRULE 
 RULE NEW Bldg:HlthCareAreaNew
   DATATYPE
@@ -2642,7 +2587,9 @@ RULE NEW Bldg:HlthCareAreaNew
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:HlthCareAreaNewWithMult )
+    SumChildren( ThrmlZn:HlthCareAreaNew )
+  SIZING_BASELINE
+    zp:HlthCareAreaNew
 ENDRULE 
 RULE NEW Bldg:HlthCareAreaExisting
   DATATYPE
@@ -2652,7 +2599,9 @@ RULE NEW Bldg:HlthCareAreaExisting
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:HlthCareAreaExistingWithMult )
+    SumChildren( ThrmlZn:HlthCareAreaExisting )
+  SIZING_BASELINE
+    zp:HlthCareAreaExisting
 ENDRULE 
 RULE NEW Bldg:HlthCareAreaAltered
   DATATYPE
@@ -2662,7 +2611,9 @@ RULE NEW Bldg:HlthCareAreaAltered
   INPUTCLASS 
     NotInput
   SIZING_PROPOSED
-    SumChildren( Story:HlthCareAreaAlteredWithMult )
+    SumChildren( ThrmlZn:HlthCareAreaAltered )
+  SIZING_BASELINE
+    zp:HlthCareAreaAltered
 ENDRULE 
 
 // Residential Common Area
@@ -2678,7 +2629,7 @@ RULE NEW ThrmlZn:ResCommonArea
   DEFAULT
     SumRevRef( Spc:ThrmlZnRef, Spc:ResCommonArea )
   CHECKCODE
-    if( ResCommonArea > 0 .AND. ResCommonArea != CondFlrArea )
+    if( ResCommonArea > 0 .AND. ResCommonArea != CondFlrAreaWithMult )
     then 
       PostError("ThermalZone '%s' includes some spaces identified as 'Residential
                  Common' area, but also other spaces that are not eligible or set 
@@ -2697,7 +2648,7 @@ RULE NEW ThrmlZn:IsResCommon
   INPUTCLASS 
     NotInput
   DEFAULT
-    if( ResCommonArea > 0 .AND. ResCommonArea = CondFlrArea )
+    if( ResCommonArea > 0 .AND. ResCommonArea = CondFlrAreaWithMult )
     then 1
     else 0
     endif

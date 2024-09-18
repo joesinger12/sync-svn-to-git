@@ -120,26 +120,6 @@ RULELIST "ProposedModelCodeCheck" 1 0 0 0
                               then  PostError( "DwellUnit '%s' conditioned floor area (%g) must be equal to that of its referenced DwellUnitType '%s' (%g).", Name, CondFlrArea, DwellUnitTypeRef:Name, DwellUnitTypeRef:CondFlrArea )
                               else  UNCHANGED  endif endif endif endif endif endif  }
 
-   ;  ;         then  if (EnableResearchMode > 0) 
-   ;  ;               then  PostWarning( "ResZns with 4 window orientations cannot have more than 1 dwelling, '%s' has %g dwellings (and 4 window orientations). This zone must be split up before performing compliance analysis.", Name, NumDwellingUnits )
-   ;  ;               else  PostError(   "ResZn '%s' has %g dwellings and 4 window orientations, which is not allowed in compliance analysis. 4 window orientation zones can have no more than 1 dwelling each.", Name, NumDwellingUnits )  endif
-   ;  ;         else if (IfValidAnd( NumDwellingUnits > 2 ) .AND. NumWinOrientations > 2)
-   ;  ;         then  if (EnableResearchMode > 0) 
-   ;  ;               then  PostWarning( "ResZns with 3 window orientations cannot have more than 2 dwellings, '%s' has %g dwellings (and 3 window orientations). This zone must be split up before performing compliance analysis.", Name, NumDwellingUnits )
-   ;  ;               else  PostError(   "ResZn '%s' has %g dwellings and 3 window orientations, which is not allowed in compliance analysis. 3 window orientation zones can have no more than 2 dwellings each.", Name, NumDwellingUnits )  endif
-   ;  "check to ensure # zone dwellings inline w/ # of window orientations"   ResZn:Action =    ; SAC 04/18/24 (tic #3554)
-   ;     {  if (IfValidAnd( NumDwellingUnits > 1 ) .AND. NumWinOrientations > 3)
-   ;        then
-   ;              PostWarning( "ResZns with 4 window orientations cannot have more than 1 dwelling, '%s' has %g dwellings (and 4 window orientations). This zone must be split up before performing compliance analysis.", Name, NumDwellingUnits )
-   ;        else if (IfValidAnd( NumDwellingUnits > 2 ) .AND. NumWinOrientations > 2)
-   ;        then
-   ;              PostWarning( "ResZns with 3 window orientations cannot have more than 2 dwellings, '%s' has %g dwellings (and 3 window orientations). This zone must be split up before performing compliance analysis.", Name, NumDwellingUnits )
-   ;        else if (IfValidAnd( NumDwellingUnits > 1 ) .AND. NumWinOrientations > 2)
-   ;        then  PostWarning( "ResZns with 3 window orientations are best modeled as separate zones. ResZn '%s' has %g dwellings (and 3 window orientations). Consider splitting this zone up to ensure consistent window orientations for all dwellings before performing compliance analysis.", Name, NumDwellingUnits )
-   ;        else if (IfValidAnd( NumDwellingUnits > 6 ) .AND. NumWinOrientations > 1)
-   ;        then  PostWarning( "Dwellings in a single zone should all have the same window orientations. ResZn '%s' has %g dwellings and 2 window orientations. Consider splitting this zone up to ensure consistent window orientations for all dwellings before performing compliance analysis.", Name, NumDwellingUnits )
-   ;        else  UNCHANGED  endif endif endif endif  }
-
    "Ensure user has confirmed home in service territory of selected Community Solar project"    Proj:Action =        ; SAC 7/3/20 (CommunitySolar)
       {  if (CommunitySolarProjID > 0 .AND. IfValidAnd( CmntySlrProjCZCompat > 0 )==0)
          then  PostError( "Selected Community Solar project '%s' if not avaialble in %s", EnumString( CommunitySolarProject ), EnumString( ClimateZone ) )
@@ -625,9 +605,8 @@ RULELIST "ProposedModelCodeCheck" 1 0 0 0
 ; MFAM TO DO - need to revise settings in Com rules to include (and simulate) adjacent Com surfaces - SAC 10/27/21
 
    ; restored and enhanced surface count & area checks - SAC 04/19/23 (tic #3497)  ; added logic to bypass these check when EnableResearchMode is activated - SAC 01/05/24
-   ; bypass these checks when automatically generating ZB (zn boundry) int surfaces - SAC 02/01/24
 	"Check for sufficient ResZn:SurfaceCount"		ResZn:Action	=
-      {  if (IfValidAnd( Proj:EnableResearchMode > 0 ) .OR. ResProj:IntSurfModelMthd > 0) then  UNCHANGED
+      {  if (IfValidAnd( Proj:EnableResearchMode > 0 )) then  UNCHANGED
          else if (SurfaceCount < 3)
          then	PostError( "Residential Zone (ResZn) '%s' has too few child and/or adjacent surfaces (%g, minimum is 3) to be simulated.", Name, SurfaceCount )
          else if (SurfaceAreaMax > (SurfaceAreaSum * 0.4))
@@ -644,7 +623,7 @@ RULELIST "ProposedModelCodeCheck" 1 0 0 0
          then	PostError( "Residential zone (ResZn) '%s' has too much bottom/floor surface area (%g) - can't be more than 250%% of overall zone area (%g).", Name, SurfaceAreaBot, FloorArea )
          else	UNCHANGED  endif endif endif endif endif endif endif  }
 	"Check for sufficient ResOtherZn:SurfaceCount"	ResOtherZn:Action	=     ; SAC 9/18/19 - (MFamProto)
-      {  if (IfValidAnd( Proj:EnableResearchMode > 0 ) .OR. ResProj:IntSurfModelMthd > 0) then  UNCHANGED
+      {  if (IfValidAnd( Proj:EnableResearchMode > 0 )) then  UNCHANGED
          else if (SurfaceCount < 3)
          then	PostError( "Residential OtherZone (ResOtherZn) '%s' has too few child and/or adjacent surfaces (%g, minimum is 3) to be simulated.", Name, SurfaceCount )
          else if (SurfaceAreaMax > (SurfaceAreaSum * 0.4))
@@ -694,11 +673,11 @@ RULELIST "ProposedModelCodeCheck" 1 0 0 0
       {  if ( (ComponentCount( ResZn      ) > 0 .AND. MinAll( ResZn:OutsideConnection      ) < 1) .OR.
               (ComponentCount( ResOtherZn ) > 0 .AND. MinAll( ResOtherZn:OutsideConnection ) < 1) )
          then  EvalRulelist( "SetIndirectOutsideConnection" )  else  UNCHANGED  endif  }
-	"Report insufficient ResZn connection to outside"		   ResZn:Action	   =     ; SAC 04/20/23 (tic #3497)   ; allow when generating ZB surfaces (w/ relief vents) - SAC 02/01/24
-      {  if (OutsideConnection > 0 .OR. ResProj:IntSurfModelMthd > 0) then  UNCHANGED
+	"Report insufficient ResZn connection to outside"		   ResZn:Action	   =     ; SAC 04/20/23 (tic #3497)
+      {  if (OutsideConnection > 0) then  UNCHANGED
          else  PostError( "ResZn '%s' has no connection to the outside (direct through exterior surfaces or indirect through adjacent zones w/ ext surfaces), which is required", Name )  endif  }
 	"Report insufficient ResOtherZn connection to outside"   ResOtherZn:Action	=
-      {  if (OutsideConnection > 0 .OR. ResProj:IntSurfModelMthd > 0) then  UNCHANGED
+      {  if (OutsideConnection > 0) then  UNCHANGED
          else  PostError( "ResOtherZn '%s' has no connection to the outside (via exterior surfaces of this or adjacent zones), which is required", Name )  endif  }
 
 	"Check consistency between Zone area & the sum of the child DwellUnit areas"		; SAC 6/25/14
@@ -1194,7 +1173,7 @@ RULELIST "ProposedModelCodeCheck" 1 0 0 0
   	"Ensure DHWSys objects not assigned to serve BOTH new/altered & existing areas"
 		ResDHWSys:Action		= {	if ( IfValidAnd( ResProj:RunScope == 2 ) .AND. ExFlrAreaServed >= 1 .AND. (AltFlrAreaServed + NewFlrAreaServed) >= 1)
 										then	if ( Proj:IsComRuleset)
-												then	PostError( "DHW System '%s' is assigned to a combination of existing and new/altered common areas and/or dwelling unit types.  No one system can be referenced as an existing system and a new/altered system by different zones.", Name )
+												then	PostError( "DHW System '%s' is assigned to a combination of existing and new/altered dwelling unit types.  No one system can be referenced as an existing system and a new/altered system by different dwelling unit types.", Name )
 												else	PostError( "DHW System '%s' is assigned to a combination of existing and new/altered zones.  No one system can be referenced as an existing system and a new/altered system by different zones.", Name )
 												endif
 										else if (IfValidAnd( FloorAreaServed >= 1 ) .AND. IfValidAnd( FirstDHWHtrIndex > 0 )==0 .AND.
@@ -1220,16 +1199,14 @@ RULELIST "ProposedModelCodeCheck" 1 0 0 0
          else if ( Proj:IsComRuleset .AND. IfValidAnd( CentralDHW > 0 ) .AND.
                   CentralDHWType == 2 .AND. IfValidAnd( CHPWHNumCompFlt > 0 )==0)
          then  PostError( "Central HPWH DHWSys '%s' missing compressor count input.", Name )
-         else	UNCHANGED  endif endif endif  }
+         else if ( Proj:IsComRuleset .AND. IfValidAnd( CentralDHW > 0 ) .AND.
+                   IfValidAnd( NumDUsServed > 0 ) .AND. IfValidAnd( NumResOtherZnsServed > 0.1 ))
+         then  PostError( "Central DHWSys '%s' must be assigned to serve either dwelling units or common areas (ResOtherZn), but not both.", Name )
+         else	UNCHANGED  endif endif endif endif  }
       ; remove check preventing central DHW systems w/ no dwellings assigned - SAC 04/21/23 (tic #3418)
       ;   else if ( (Proj:IsComRuleset .OR. Proj:IsComRuleset) .AND. IfValidAnd( CentralDHW > 0 ) .AND.
       ;            IfValidAnd( SimDHWSys > 0 ) .AND. IfValidAnd( NumDUsServed > 0 )==0)
       ;   then  PostError( "Central DHWSys '%s' must be assigned to serve at least one dwelling unit.", Name )
-      ; removed combined res + nonres central DHW assignment error - SAC 01/12/24
-      ;   else if ( Proj:IsComRuleset .AND. IfValidAnd( CentralDHW > 0 ) .AND.
-      ;             IfValidAnd( NumDUsServed > 0 ) .AND. IfValidAnd( NumResOtherZnsServed > 0.1 ) .AND.
-      ;             IfValidAnd( Proj:EnableResearchMode > 0 )==0 )
-      ;   then  PostError( "Central DHWSys '%s' must be assigned to serve either dwelling units or common areas (ResOtherZn), but not both.", Name )
 
 ; SAC 5/13/15 - REMOVED this check preventing MFamDistType = '- none -', as this turns out to be a valid selection, even when CentralDHW is checked. (issue 537)
 ;	"Check ResDHWSys:MFamDistType selection"	ResDHWSys:Action	= {	if ( Proj:IsSFamResRuleset .OR. CentralDHW < 0.5 .OR. MFamDistType > 0.5) then  UNCHANGED
@@ -1521,15 +1498,12 @@ RULELIST "ProposedModelCodeCheck" 1 0 0 0
 
    ; SAC 5/14/18 - add check to ensure that if QII = Improved then at least one surface in the model will benefit in the simulation (tic #775)
    ; SAC 5/18/18 - revised logic slightly to accommodate wall exception input (tic #798)
-   ; switch error to warning for QII set but not applicable for 2022.3.1 and future releases - SAC 04/15/24 (tic #1360)
    "Check for presence of at least one surface benefitting by QII = Improved"    ResProj:Action  = {  
          if (InsulConsQuality < 1.5 .OR.
              SumAll( ResCeilingBelowAttic:ICQAtticBypassApplies ) > 0) then UNCHANGED
          else if (SumAcrossIf( ResConsAssm:SurfacesQIINotDegraded, ResConsAssm:AssignedSurfaceArea > 0 ) > 0) then UNCHANGED
          else if (IfValidAnd( EnergyCodeYearNum >= 2019 ))
-         then  if (IfValidAnd( Proj:AnalysisVersion >= 220301 )) 
-               then  PostWarning( "Quality Insulation Installation (QII) is set to 'Yes' but no surfaces in the model can benefit from this setting. QII applies only to surfaces of New Zones/Attics." )
-               else  PostError(   "Quality Insulation Installation (QII) is set to 'Yes' but no surfaces in the model can benefit from this setting. QII applies only to surfaces of New Zones/Attics." )  endif
+         then  PostError( "Quality Insulation Installation (QII) is set to 'Yes' but no surfaces in the model can benefit from this setting. QII applies only to surfaces of New Zones/Attics." )
          else  PostError( "Insulation Construction Quality is set to 'Improved' but no surfaces in the model can benefit from this setting. Improved InsulConsQuality applies only to surfaces of New Zones/Attics." )  endif endif endif  }
 
 ; SAC 1/3/16 - check for ResDistSys:DuctInsRvalOpt too high in certain cases (tic 597)

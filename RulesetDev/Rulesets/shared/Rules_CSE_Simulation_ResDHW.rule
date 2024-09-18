@@ -674,16 +674,16 @@ RULELIST "CSE_SimulationPrep_DHW_part2" 1 0 0 1
 	; SAC 3/17/16 - added logic for ResProj:CSEDHWUseMethod
 	"Set cseDHWSYS:wsUse_x"				cseDHWSYS:wsUse_x	=                 ; revised for ResOtherZn:HotWtrHtgSchRef and nonres use - SAC 02/22/23 (tic #3418)
       {  if (IfValidAnd( SourceOtherZone:HotWtrHrlyUsePerPers > 0 ) .AND.
-             IfValidAnd( SourceOtherZone:OccNumSim > 0 ))
+             IfValidAnd( SourceOtherZone:MinOccNumSim > 0 ))
          then  if (LocalStatus( SourceOtherZone:HotWtrHtgSchRef:CSEinput ) > 0)
-               then  Format( "%g * %s", (SourceOtherZone:HotWtrHrlyUsePerPers * SourceOtherZone:OccNumSim), SourceOtherZone:HotWtrHtgSchRef:CSEinput )
+               then  Format( "%g * %s", (SourceOtherZone:HotWtrHrlyUsePerPers * SourceOtherZone:MinOccNumSim), SourceOtherZone:HotWtrHtgSchRef:CSEinput )
                else  UNDEFINED  endif
          else if (IfValidAnd( ResProj:CSEDHWUseMethod = 1 )==0) then  UNDEFINED
          else	Format( "%g * select( $isWeekend, HWUSEF_WE, default HWUSEF_WD )", HWUse )
          endif endif  }
 ; RESTORE for use schedules!!
-;               then  Format( "%g * %s", (SourceOtherZone:HotWtrHrlyUsePerPers * SourceOtherZone:OccNumSim), SourceOtherZone:HotWtrHtgSchRef:CSEinput )
-;               then  Format( "%g", (SourceOtherZone:HotWtrHrlyUsePerPers * SourceOtherZone:OccNumSim) )
+;               then  Format( "%g * %s", (SourceOtherZone:HotWtrHrlyUsePerPers * SourceOtherZone:MinOccNumSim), SourceOtherZone:HotWtrHtgSchRef:CSEinput )
+;               then  Format( "%g", (SourceOtherZone:HotWtrHrlyUsePerPers * SourceOtherZone:MinOccNumSim) )
 
    "Set Proj:DHWDUShuffleNum[1] (SFam)"      Proj:DHWDUShuffleNum[1] =     ; SAC 02/18/21
       {  if (IfValidAnd( ResProj:SFamDHWDUShuffleNum >= 1) .AND. IfValidAnd( ResProj:SFamDHWDUShuffleNum <= 5) .AND.
@@ -1012,21 +1012,6 @@ RULELIST "CSE_SimulationPrep_DHW_part2" 1 0 0 1
          then  EvalRulelist( "Setup_cseDHWHEATREC" )
          else  UNCHANGED  endif  }
 	; end of - cseDHWHEATREC setup
-
-   ; debug logging - SAC 01/16/24
-   ;	"LOG Create Child cseDHWLOOPHEATER"		cseDHWSYS:Action	=
-   ;      {  if ( IfValidAnd( SourceDHWSys:NewCentralElecModel > 0 )==0 .OR.
-   ;              LocalCompAssigned( wsCentralDHWSYS ) > 0 ) then  PostMessageToLog( "NOT creating ChildcseDHWLOOPHEATER (1) for run '%s' cseDHWSYS '%s':  SourceDHWSys:NewCentralElecModel %g / wsCentralDHWSYS assigned %g", Proj:RunAbbrev, Name, ValidOr( SourceDHWSys:NewCentralElecModel, -999 ), LocalCompAssigned( wsCentralDHWSYS ) )
-   ;         else if (IfValidAnd( SourceDHWSys:CentralDHWTypeVal = 2 ) .AND. IfValidAnd( SourceDHWSys:CHPWHSysDescrip > 0 ) .AND.
-   ;                  IfValidAnd( SourceDHWSys:CHPWHLoopTankTypeVal > 0 ) .AND. IfValidAnd( SourceDHWSys:ValidAnalysisCHPWH > 0 ))
-   ;         then  PostMessageToLog( "Creating ChildcseDHWLOOPHEATER (2) for run '%s' cseDHWSYS '%s':  SourceDHWSys:CentralDHWTypeVal %g / SourceDHWSys:CHPWHSysDescrip %g / SourceDHWSys:CHPWHLoopTankTypeVal %g / SourceDHWSys:ValidAnalysisCHPWH %g", 
-   ;                                       Proj:RunAbbrev, Name, ValidOr( SourceDHWSys:CentralDHWTypeVal, -999 ), ValidOr( SourceDHWSys:CHPWHSysDescrip, -999 ), ValidOr( SourceDHWSys:CHPWHLoopTankTypeVal, -999 ), ValidOr( SourceDHWSys:ValidAnalysisCHPWH, -999 ) )
-   ;         else if (IfValidAnd( SourceDHWSys:CentralDHWTypeVal = 2 )==0 .AND. LocalCompAssigned( SourceDHWSys:LoopHeater ) > 0)
-   ;         then  PostMessageToLog( "Creating ChildcseDHWLOOPHEATER (3) for run '%s' cseDHWSYS '%s':  SourceDHWSys:CentralDHWTypeVal %g / SourceDHWSys:LoopHeater assigned %g", 
-   ;                                       Proj:RunAbbrev, Name, ValidOr( SourceDHWSys:CentralDHWTypeVal, -999 ), LocalCompAssigned( SourceDHWSys:LoopHeater ) )
-   ;         else  PostMessageToLog( "NOT creating ChildcseDHWLOOPHEATER (4) for run '%s' cseDHWSYS '%s' (final else):  SourceDHWSys:CentralDHWTypeVal %g / SourceDHWSys:CHPWHSysDescrip %g / SourceDHWSys:CHPWHLoopTankTypeVal %g / SourceDHWSys:ValidAnalysisCHPWH %g / SourceDHWSys:CHPWHNumCompFlt %g / SourceDHWSys:FloorAreaServed[1] %g / SourceDHWSys:CHPWHErrMsg '%s'", 
-   ;                                       Proj:RunAbbrev, Name, ValidOr( SourceDHWSys:CentralDHWTypeVal, -999 ), ValidOr( SourceDHWSys:CHPWHSysDescrip, -999 ), ValidOr( SourceDHWSys:CHPWHLoopTankTypeVal, -999 ), ValidOr( SourceDHWSys:ValidAnalysisCHPWH, -999 ), ValidOr( SourceDHWSys:CHPWHNumCompFlt, -999 ), ValidOr( SourceDHWSys:FloorAreaServed[1], -999 ), ValidOr( SourceDHWSys:CHPWHErrMsg, "undefined" ) )
-   ;         endif endif endif  }
 
    ; SAC 10/24/19 - added writing of new DHWLOOPHEATER for 'new' CSE central electric system model
    ; SAC 10/28/19 - moved DHWLOOPHEATER creation & population here, ABOVE DHWHEATER, to ensure proper placement (above loops) in CSE input
@@ -1677,8 +1662,8 @@ RULELIST "CSE_SimulationPrep_DHWHtr_DHWHtr" 1 0 0 1
    	else  SourceDHWHeater:TankVolume  
       endif endif endif endif  }
 
-	"Set cseDHWHEATER:whEF"  cseDHWHEATER:whEF		=              ; revised to prevent CSE error: whEF (0.98+) must be <= 0.98 when whHeatSrc=ResistanceX - SAC 05/14/24
-   { if ( IfValidAnd( SourceDHWHeater:EnergyFactor > 0 ) .AND. 
+	"Set cseDHWHEATER:whEF"  cseDHWHEATER:whEF		= {	
+    if ( IfValidAnd( SourceDHWHeater:EnergyFactor > 0 ) .AND. 
          SourceDHWHeater:HeaterElementType == 5 )                              ; LH 170717 - UEF Rated Heat Pump Water Heater
     then  if( SourceDHWHeater:IsUEF .AND. 
               IfValidAnd( SourceDHWHeater:UEFModelCalcEF > 0 ) )
@@ -1698,9 +1683,7 @@ RULELIST "CSE_SimulationPrep_DHWHtr_DHWHtr" 1 0 0 1
                 endif
           else if( IfValidAnd( SourceDHWHeater:HeaterType = 12 ) .AND.         ; LH 170717 - Consumer Storage (UEF)
                    IfValidAnd( SourceDHWHeater:UEFModelCalcEF > 0 ) )
-          then  if (IfValidAnd( whHeatSrc = 5 ))   ; whHeatSrc = "ResistanceX"
-                then  min( 0.98, SourceDHWHeater:UEFModelCalcEF )
-                else             SourceDHWHeater:UEFModelCalcEF     endif
+          then  SourceDHWHeater:UEFModelCalcEF                                      
           else if( IfValidAnd( SourceDHWHeater:EnergyFactor > 0 ) )
           then  SourceDHWHeater:EnergyFactor  
           else  UNDEFINED
@@ -1765,14 +1748,13 @@ RULELIST "CSE_SimulationPrep_DHWHtr_DHWHtr" 1 0 0 1
          else  UNDEFINED  endif  }
 
    ; increased min whResHtPwr* to 0.1 (consistent w/ CSE) - SAC 09/04/20
-   ; add max() function to prevent whResHtPwr & whResHtPwr2 from being set < CSE minimum of 550W - SAC 01/17/24 (tic #3477)
    "Set cseDHWHEATER:whResHtPwr (upper)"     cseDHWHEATER:whResHtPwr  =    ; SAC 5/29/20
       {  if (IfValidAnd( SourceDHWHeater:ResHtPwrSim[1] >= 0.1 ))
-         then  max( SourceDHWHeater:ResHtPwrSim[1], 550 )
+         then  SourceDHWHeater:ResHtPwrSim[1]
          else  UNDEFINED  endif  }
    "Set cseDHWHEATER:whResHtPwr2 (lower)"    cseDHWHEATER:whResHtPwr2 = 
       {  if (IfValidAnd( SourceDHWHeater:ResHtPwrSim[2] >= 0.1 ))
-         then  max( SourceDHWHeater:ResHtPwrSim[2], 550 )
+         then  SourceDHWHeater:ResHtPwrSim[2]
          else  UNDEFINED  endif  }
 
 ; whHPAF removed from CSE by CB - SAC 1/22/20
@@ -1930,11 +1912,6 @@ RULELIST "CSE_SimulationPrep_DHWHtr_DHWHtr" 1 0 0 1
                   case  83: "AOSmithHPTS50"           ; SAC 01/19/23
                   case  84: "AOSmithHPTS66"
                   case  85: "AOSmithHPTS80"
-                  case  86: "AquaThermAire"     ; RJH 02/14/24
-                  case   87: "AWHSTier4Generic40"     ; NEEA generic tier 4 options - SAC 04/25/24 (tic #3595)
-                  case   88: "AWHSTier4Generic50"
-                  case   89: "AWHSTier4Generic65"
-                  case   90: "AWHSTier4Generic80"
                   case  191: "Scalable_SP"    ; 5kW    ; SAC 06/22/21
                   case  192: "Scalable_SP"    ; 11kW
                   case  193: "Scalable_SP"    ; 20kW
@@ -1976,11 +1953,10 @@ RULELIST "CSE_SimulationPrep_DHWHtr_DHWHtr" 1 0 0 1
 
    ; SAC 6/13/18 - updated InputRating property name to InputRatingSim to accommodate InputRating being ignored for most heater types (tic #940)
    ; increased min whResHtPwr* to 0.1 (consistent w/ CSE) - SAC 09/04/20
-   ; add max() function to prevent whResHtPwr from being set < CSE minimum of 550W - SAC 01/17/24 (tic #3477)
 	"Set cseDHWHEATER:whResHtPwr"		cseDHWHEATER:whResHtPwr		= {	if (SourceDHWHeater:HeaterElementType != 0 .OR.
                                                                          IfValidAnd( SourceDHWHeater:ShowTankLocation > 0 )==0 .OR.
 																								 IfValidAnd( SourceDHWHeater:InputRatingSim >= 0.1 )==0) then  UNDEFINED
-																							else	max( SourceDHWHeater:InputRatingSim, 550 )  endif  }
+																							else	SourceDHWHeater:InputRatingSim  endif  }
 
    ; updates for large std design central HPWHs - SAC 07/10/21
 	"Set cseDHWHEATER:whZone"			cseDHWHEATER:whZone			= {	if (IfValidAnd( SourceDHWHeater:ShowTankLocation > 0 )==0 .OR.
@@ -2357,11 +2333,6 @@ RULELIST "CSE_SimulationPrep_DHWLoopHtr_DHWSys" 1 0 0 1
                   case   83: "AOSmithHPTS50"          ; SAC 01/19/23
                   case   84: "AOSmithHPTS66"
                   case   85: "AOSmithHPTS80"
-                  case   86: "AquaThermAire"     ; RJH 02/14/24
-                  case   87: "AWHSTier4Generic40"     ; NEEA generic tier 4 options - SAC 04/25/24 (tic #3595)
-                  case   88: "AWHSTier4Generic50"
-                  case   89: "AWHSTier4Generic65"
-                  case   90: "AWHSTier4Generic80"
                   case  191: "Scalable_SP"    ; 5kW    ; SAC 06/22/21
                   case  192: "Scalable_SP"    ; 11kW
                   case  193: "Scalable_SP"    ; 20kW
@@ -2409,24 +2380,23 @@ RULELIST "CSE_SimulationPrep_DHWLoopHtr_DHWSys" 1 0 0 1
    ; SAC 5/28/20 - from today's DHW dev team call   ; SAC 6/1/20 - revised to prevent for BuiltUp ASHPX   ; min whVol - SAC 09/04/20
    ; reference CHPWHLoopTankResHtPwr - SAC 07/03/21 (tic #1275)
    ; new default based on NumAssignedDUFracs - SAC 07/16/21 (tic #1275)
-   ; add max() function to prevent whResHtPwr & whResHtPwr2 from being set < CSE minimum of 550W - SAC 01/17/24 (tic #3477)
    "Set cseDHWLOOPHEATER:whResHtPwr"   cseDHWLOOPHEATER:whResHtPwr   =     ; zero-out whResHtPwr & specify only whResHtPwr2 for whResType = SwingTank - SAC 07/16/21 (tic #1275)
       {  if (whType == 6 .AND. whHeatSrc == 4) then  UNDEFINED   ; BuiltUp / ASHPX
          else if (IfValidAnd( whResType = "SwingTank" )) then  UNDEFINED
          else if (IfValidAnd( SourceDHWLoopTankSys:CHPWHLoopTankResHtPwr > 0 ))
-         then  max( SourceDHWLoopTankSys:CHPWHLoopTankResHtPwr, 550 )
+         then  SourceDHWLoopTankSys:CHPWHLoopTankResHtPwr
          else if (IfValidAnd( SourceDHWLoopTankSys:NumAssignedDUFracs > 0 ))
-         then  max( 1.75 * 100 * SourceDHWLoopTankSys:NumAssignedDUFracs, 550 )
+         then  1.75 * 100 * SourceDHWLoopTankSys:NumAssignedDUFracs
          else if (IfValidAnd( whVol >= 0.001 )==0) then  UNDEFINED
-         else  max( 1000 * whVol / 10, 550 )  endif endif endif endif endif  }
+         else  1000 * whVol / 10  endif endif endif endif endif  }
    "Set cseDHWLOOPHEATER:whResHtPwr2"  cseDHWLOOPHEATER:whResHtPwr2  =
       {  if (whType == 6 .AND. whHeatSrc == 4) then  UNDEFINED   ; BuiltUp / ASHPX
          else if (IfValidAnd( whResType = "SwingTank" ) .AND.
                   LocalStatus( whResHtPwr ) < 1)
          then  if (IfValidAnd( SourceDHWLoopTankSys:CHPWHLoopTankResHtPwr > 0 ))
-               then  max( SourceDHWLoopTankSys:CHPWHLoopTankResHtPwr, 550 )
+               then  SourceDHWLoopTankSys:CHPWHLoopTankResHtPwr
                else if (IfValidAnd( SourceDHWLoopTankSys:NumAssignedDUFracs > 0 ))
-               then  max( 1.75 * 100 * SourceDHWLoopTankSys:NumAssignedDUFracs, 550 )
+               then  1.75 * 100 * SourceDHWLoopTankSys:NumAssignedDUFracs
                else  UNDEFINED  endif endif
          else  whResHtPwr  endif endif  }
 
@@ -2500,9 +2470,8 @@ RULELIST "CSE_SimulationPrep_DHWLoopHtr_DHWHtr" 1 0 0 1
 	"Set cseDHWLOOPHEATER:whVol"   cseDHWLOOPHEATER:whVol	= {	SourceDHWLoopTankHeater:whVol  }
 	"Set cseDHWLOOPHEATER:whEF"  cseDHWLOOPHEATER:whEF		= {	SourceDHWLoopTankHeater:whEF   }
    ; added min whResHtPwr* to 0.1 (consistent w/ CSE) - SAC 09/04/20
-   ; add max() function to prevent whResHtPwr from being set < CSE minimum of 550W - SAC 01/17/24 (tic #3477)
 	"Set cseDHWLOOPHEATER:whResHtPwr"   cseDHWLOOPHEATER:whResHtPwr	=
-      {	if (IfValidAnd( SourceDHWLoopTankHeater:whResHtPwr >= 0.1 )) then  max( SourceDHWLoopTankHeater:whResHtPwr, 550 )  else  UNDEFINED  endif   }
+      {	if (IfValidAnd( SourceDHWLoopTankHeater:whResHtPwr >= 0.1 )) then  SourceDHWLoopTankHeater:whResHtPwr  else  UNDEFINED  endif   }
 
    ; SAC 11/18/19
    ; updates for large std design central HPWHs - SAC 07/10/21
@@ -2586,8 +2555,8 @@ RULELIST "CSE_SimulationPrep_DHWLoopHtr_DHWHtr___OLD" 1 0 0 1                 ; 
 	 else  SourceDHWHeater:TankVolume  
    endif endif  }
 
-	"Set cseDHWLOOPHEATER:whEF"  cseDHWLOOPHEATER:whEF		=        ; revised to prevent CSE error: whEF (0.98+) must be <= 0.98 when whHeatSrc=ResistanceX - SAC 05/14/24
-   { if ( IfValidAnd( SourceDHWHeater:EnergyFactor > 0 ) .AND. 
+	"Set cseDHWLOOPHEATER:whEF"  cseDHWLOOPHEATER:whEF		= {	
+    if ( IfValidAnd( SourceDHWHeater:EnergyFactor > 0 ) .AND. 
         SourceDHWHeater:HeaterElementType == 5 )                               ; LH 170717 - UEF Rated Heat Pump Water Heater
     then if( SourceDHWHeater:IsUEF .AND. 
              IfValidAnd( SourceDHWHeater:UEFModelCalcEF > 0 ) )
@@ -2606,9 +2575,7 @@ RULELIST "CSE_SimulationPrep_DHWLoopHtr_DHWHtr___OLD" 1 0 0 1                 ; 
         endif
       else if( IfValidAnd( SourceDHWHeater:HeaterType = 12 ) .AND.               ; LH 170717 - Consumer Storage (UEF)
                IfValidAnd( SourceDHWHeater:UEFModelCalcEF > 0 ) )
-      then  if (IfValidAnd( whHeatSrc = 5 ))   ; whHeatSrc = "ResistanceX"
-            then  min( 0.98, SourceDHWHeater:UEFModelCalcEF )
-            else             SourceDHWHeater:UEFModelCalcEF     endif
+      then SourceDHWHeater:UEFModelCalcEF                                      
       else if( IfValidAnd( SourceDHWHeater:EnergyFactor > 0 ) )
       then  SourceDHWHeater:EnergyFactor  
       else UNDEFINED
@@ -2705,10 +2672,9 @@ RULELIST "CSE_SimulationPrep_DHWLoopHtr_DHWHtr___OLD" 1 0 0 1                 ; 
 
    ; SAC 6/13/18 - updated InputRating property name to InputRatingSim to accommodate InputRating being ignored for most heater types (tic #940)
    ; increased min whResHtPwr* to 0.1 (consistent w/ CSE) - SAC 09/04/20
-   ; add max() function to prevent whResHtPwr from being set < CSE minimum of 550W - SAC 01/17/24 (tic #3477)
 	"Set cseDHWLOOPHEATER:whResHtPwr"		cseDHWLOOPHEATER:whResHtPwr		= {	if (SourceDHWHeater:HeaterElementType != 0 .OR. SourceDHWHeater:ShowTankLocation < 1 .OR.
 																								 IfValidAnd( SourceDHWHeater:InputRatingSim >= 0.1 )==0) then  UNDEFINED
-																							else	max( SourceDHWHeater:InputRatingSim, 550 )  endif  }
+																							else	SourceDHWHeater:InputRatingSim  endif  }
 
    ; updates for large std design central HPWHs - SAC 07/10/21
 	"Set cseDHWLOOPHEATER:whZone"			cseDHWLOOPHEATER:whZone		= {	if (SourceDHWHeater:ShowTankLocation < 1 .OR.

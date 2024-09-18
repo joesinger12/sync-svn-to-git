@@ -930,7 +930,6 @@
 ; APB 05/12/2022 - Community solar (tic #3352)
 0, ResProj:CommunitySolarProject,  0      ; SAC 6/10/20 (CommunitySolar)   / added CZ-dependence - SAC 7/3/20
 0, Proj:CommunitySolarProject,  0         ; began port of community solar stuff from ResProj to Proj - SAC 05/27/22
-0, CUAC:CommunitySolarProject,  0         ; SAC 10/01/23 (CUAC)
 1,     Proj:CliZnNum,    11,  0     ; CommunitySolarProject's available in CZ 11
 2,              0,    "- select CS project -"
 2,              1,    "SMUD Neighborhood SolarShares - Wildflower"
@@ -3428,12 +3427,9 @@
 ; 360LDH 171212 - last updated by L.Hovee for 2019 Spc Func List 12/12/17
 ; 360LDH 160330 - removed all conditional enumerations that rely on Bldg:FuncClassMthd = "CompleteBuildingMethod", these no longer align with current space functions
 ; last updated based on NACM App 5.4A spreadsheet RLH 3/31/16
-; moved 'High-Rise Residential Living Spaces' into separate backward compatibility group - SAC 04/22/24
 ; !!CAUTION!! Please remember to update the SpcFuncDefaults:SpcFunc list when updating this list since these two list should be identical
 0, Proj:MandatoryLtgCtrlSpcFunctRpt, 0
 0, Spc:SpcFunc,  0
-1,    Proj:Ruleset,  -1001,  1   ; Backward compatibility
-2,            336,    "High-Rise Residential Living Spaces"
 1,    Bldg:FuncClassMthd,  -1001,  0   ; Backward compatibility for 2019
 2,            301,    "All Other"
 2,            310,    "Audience Seating Area"
@@ -3468,7 +3464,7 @@
 2,            333,    "Healthcare Facility and Hospitals (Patient Room)"
 2,            334,    "Healthcare Facility and Hospitals (Physical Therapy Room)"
 2,            335,    "Healthcare Facility and Hospitals (Recovery Room)"
-; 2,            336,    "High-Rise Residential Living Spaces"
+2,            336,    "High-Rise Residential Living Spaces"
 2,            337,    "Hotel Function Area"
 2,            338,    "Hotel/Motel Guest Room"
 2,            339,    "Kitchen/Food Preparation Area"
@@ -3555,7 +3551,7 @@
 2,            333,    "Healthcare Facility and Hospitals (Patient Room)"
 2,            334,    "Healthcare Facility and Hospitals (Physical Therapy Room)"
 2,            335,    "Healthcare Facility and Hospitals (Recovery Room)"
-; 2,            336,    "High-Rise Residential Living Spaces"
+2,            336,    "High-Rise Residential Living Spaces"
 2,            337,    "Hotel Function Area"
 2,            338,    "Hotel/Motel Guest Room"
 2,            339,    "Kitchen/Food Preparation Area"
@@ -3608,10 +3604,7 @@
 ; 360LDH 171212 - last updated by L.Hovee for 2019 Spc Func List 12/12/17
 ; 360LDH 160330 - removed all conditional enumerations that rely on Bldg:FuncClassMthd = "CompleteBuildingMethod", these no longer align with current space functions
 ; last updated based on NACM App 5.4A spreadsheet RLH 3/31/16
-; moved 'High-Rise Residential Living Spaces' into separate backward compatibility group - SAC 04/22/24
 0, SpcFuncDefaults:SpcFunc,  0
-1,    Proj:Ruleset,  -1001,  1   ; Backward compatibility
-2,            336,    "High-Rise Residential Living Spaces"
 1,    Bldg:FuncClassMthd,  -1001,  0   ; Backward compatibility for 2019
 2,            301,    "All Other"
 2,            310,    "Audience Seating Area"
@@ -3646,7 +3639,7 @@
 2,            333,    "Healthcare Facility and Hospitals (Patient Room)"
 2,            334,    "Healthcare Facility and Hospitals (Physical Therapy Room)"
 2,            335,    "Healthcare Facility and Hospitals (Recovery Room)"
-; 2,            336,    "High-Rise Residential Living Spaces"
+2,            336,    "High-Rise Residential Living Spaces"
 2,            337,    "Hotel Function Area"
 2,            338,    "Hotel/Motel Guest Room"
 2,            339,    "Kitchen/Food Preparation Area"
@@ -3730,7 +3723,7 @@
 2,            333,    "Healthcare Facility and Hospitals (Patient Room)"
 2,            334,    "Healthcare Facility and Hospitals (Physical Therapy Room)"
 2,            335,    "Healthcare Facility and Hospitals (Recovery Room)"
-; 2,            336,    "High-Rise Residential Living Spaces"
+2,            336,    "High-Rise Residential Living Spaces"
 2,            337,    "Hotel Function Area"
 2,            338,    "Hotel/Motel Guest Room"
 2,            339,    "Kitchen/Food Preparation Area"
@@ -3812,7 +3805,7 @@
 2,            333,    "Healthcare Facility and Hospitals (Patient Room)"
 2,            334,    "Healthcare Facility and Hospitals (Physical Therapy Room)"
 2,            335,    "Healthcare Facility and Hospitals (Recovery Room)"
-; 2,            336,    "High-Rise Residential Living Spaces"
+2,            336,    "High-Rise Residential Living Spaces"
 2,            337,    "Hotel Function Area"
 2,            338,    "Hotel/Motel Guest Room"
 2,            339,    "Kitchen/Food Preparation Area"
@@ -4014,7 +4007,7 @@
 2,              58,     "Misc - All others"
 1, Spc:SpcFunc,        335,  58  ;  Healthcare Facility and Hospitals (Recovery Room)
 2,              58,     "Misc - All others"
-1, Spc:SpcFunc,        336,  96  ;  High-Rise Residential Living Spaces    - no longer valid
+1, Spc:SpcFunc,        336,  96  ;  High-Rise Residential Living Spaces
 2,              96,     "NA"
 1, Spc:SpcFunc,        337,  57  ;  Hotel Function Area
 2,              48,     "General - Conference/meeting"
@@ -4028,7 +4021,7 @@
 2,              44,     "Food Service - Kitchen (cooking)"
 1, Spc:SpcFunc,        340,  31  ;  Kitchenette or Residential Kitchen
 2,              31,     "Exhaust - Kitchenettes"
-1, Spc:SpcFunc,        341,  21  ;  Laboratory, Scientific
+1, Spc:SpcFunc,        341,  22  ;  Laboratory, Scientific
 2,              21,     "Education - Science laboratories"
 2,              22,     "Education - University/college laboratories"
 2,              63,     "Misc - General manufacturing (excludes heavy industrial and process using chemicals)"
@@ -4142,7 +4135,6 @@
 1, Spc:SpcFunc,        366,  66  ;  Storage, Commercial/Industrial (Shipping & Handling)
 2,              66,     "Misc - Shipping/receiving"
 1, Spc:SpcFunc,        380,  58  ;  Storage, General
-2,              30,     "Exhaust - Janitor closets, trash rooms, recycling"
 2,              38,     "Exhaust - Storage rooms, chemical"
 2,              50,     "General - Occupiable storage rooms for liquids or gels"
 2,              58,     "Misc - All others"
@@ -4348,7 +4340,7 @@
 2,              58,     "Misc - All others"
 1, SpcFuncDefaults:SpcFunc,        335,  58  ;  Healthcare Facility and Hospitals (Recovery Room)
 2,              58,     "Misc - All others"
-1, SpcFuncDefaults:SpcFunc,        336,  96  ;  High-Rise Residential Living Spaces       - no longer valid
+1, SpcFuncDefaults:SpcFunc,        336,  96  ;  High-Rise Residential Living Spaces
 2,              96,     "NA"
 1, SpcFuncDefaults:SpcFunc,        337,  57  ;  Hotel Function Area
 2,              48,     "General - Conference/meeting"
@@ -4362,7 +4354,7 @@
 2,              44,     "Food Service - Kitchen (cooking)"
 1, SpcFuncDefaults:SpcFunc,        340,  31  ;  Kitchenette or Residential Kitchen
 2,              31,     "Exhaust - Kitchenettes"
-1, SpcFuncDefaults:SpcFunc,        341,  21  ;  Laboratory, Scientific
+1, SpcFuncDefaults:SpcFunc,        341,  22  ;  Laboratory, Scientific
 2,              21,     "Education - Science laboratories"
 2,              22,     "Education - University/college laboratories"
 2,              63,     "Misc - General manufacturing (excludes heavy industrial and process using chemicals)"
@@ -4476,7 +4468,6 @@
 1, SpcFuncDefaults:SpcFunc,        366,  66  ;  Storage, Commercial/Industrial (Shipping & Handling)
 2,              66,     "Misc - Shipping/receiving"
 1, SpcFuncDefaults:SpcFunc,        380,  58  ;  Storage, General
-2,              30,     "Exhaust - Janitor closets, trash rooms, recycling"
 2,              38,     "Exhaust - Storage rooms, chemical"
 2,              50,     "General - Occupiable storage rooms for liquids or gels"
 2,              58,     "Misc - All others"

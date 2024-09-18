@@ -132,7 +132,7 @@ RULE NEW Spc:HtgOnlySysArea
     then
       if( IfValidAnd( ThrmlZnRef:HasHtg = 1 ) .AND.
           IfValidAnd( ThrmlZnRef:HasClg = 0 ) )
-      then CondFlrArea
+      then CondFlrAreaWithMult
       else 0
       endif
     else 0
@@ -156,7 +156,7 @@ RULE NEW Spc:CompRmArea
     NotInput
   DEFAULT : T24N
     if( IfValidAnd( SpcFunc = "Computer Room" ) )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
   DEFAULT : S901G ECBC
@@ -177,39 +177,27 @@ RULE NEW Spc:LabArea
     if( ( IfValidAnd( SpcFunc = "Laboratory, Scientific" ) .OR.
           IfValidAnd( SpcFunc = "Laboratory, Equipment Room" ) ) 
          .AND. HasProcExh > 0 )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
   DEFAULT : T24N_2019
     if( IfValidAnd( SpcFunc = "Scientific Laboratory Area" ) .AND. HasProcExh > 0 )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
   DEFAULT : T24N
     if( IfValidAnd( SpcFunc = "Laboratory, Scientific" ) .AND. HasProcExh > 0 ) ; JP 211130 space type name change (tic #3301)
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
   DEFAULT : S901G ECBC
     if( IfValidAnd( SpcFunc = "Laboratory - For Classrooms" ) .OR.
         IfValidAnd( SpcFunc = "Laboratory - For Medical/Industrial/Research" ) )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
-RULE NEW Spc:SchoolLabArea
-  DATATYPE
-    Float
-  LONGFORM
-    SchoolLaboratoryArea
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    If( Spc:VentSpcFunc = "Education - University/college laboratories" )
-    then CondFlrArea
-    else 0
-    endif
-ENDRULE
+
 // Commercial Kitchen
 // -----------------------------------------------------------------------------
 RULE NEW Spc:CommKitArea
@@ -222,12 +210,12 @@ RULE NEW Spc:CommKitArea
   DEFAULT : T24N_2016
     if( IfValidAnd( SpcFunc = "Kitchen, Commercial Food Preparation" ) 
          .AND. HasProcExh > 0 )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
   DEFAULT : T24N
     if( IfValidAnd( SpcFunc = "Kitchen/Food Preparation Area" ) .AND. HasProcExh > 0 )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
   DEFAULT : S901G ECBC
@@ -266,26 +254,26 @@ RULE NEW Spc:PrkgGarArea
           IfValidAnd( SpcFunc = "Parking Garage Area Dedicated Ramps" ) .OR. 
           IfValidAnd( SpcFunc = "Parking Garage Area Daylight Adaptation Zones" ) )
          .AND. HasProcExh > 0 )
-    then FlrArea
+    then FlrAreaWithMult
     else 0
     endif
   DEFAULT : T24N_2019
     if( IfValidAnd( SpcFunc = "Parking Garage Area (Parking Zone)" ) .OR.
         IfValidAnd( SpcFunc = "Parking Garage Area (Dedicated Ramps)" ) .OR. 
         IfValidAnd( SpcFunc = "Parking Garage Area (Daylight Adaptation Zones)" ) )
-    then FlrArea
+    then FlrAreaWithMult
     else 0
     endif
   DEFAULT : T24N
     if( ( IfValidAnd( SpcFunc = "Parking Garage Area (Parking Zone and Ramps)" ) .OR. ; JP 211130 space type name change (tic #3301)
           IfValidAnd( SpcFunc = "Parking Garage Area (Daylight Adaptation Zones)" ) )
           .AND. HasProcExh > 0 )
-    then FlrArea
+    then FlrAreaWithMult
     else 0
     endif
   DEFAULT : S901G ECBC
     if( IfValidAnd( SpcFunc = "Parking Garage - Garage Area" ) )
-    then FlrArea
+    then FlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -304,7 +292,7 @@ RULE NEW Spc:FactoryArea
           IfValidAnd( SpcFunc = "Manufacturing, Commercial & Industrial Work Area (High Bay)" ) .OR. 
           IfValidAnd( SpcFunc = "Manufacturing, Commercial & Industrial Work Area (Precision)" ) )
         .AND. HasProcExh > 0 )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -397,7 +385,7 @@ RULE NEW Spc:HlthCareArea
     0 // Healthcare exception does not apply to 2016
   DEFAULT
     if( IsHlthCare > 0 .AND. HlthCareEligible > 0 .AND. HasUnknownHVAC = 0 )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -481,7 +469,7 @@ RULE NEW Spc:ResCommonArea
     0 // Not used for 2016
   DEFAULT
     if( IfValidAnd( IsResCommon > 0 ) .AND. ResCommonEligible = 1 )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ;  SIZING_PROPOSED
@@ -564,11 +552,11 @@ RULE NEW Story:IsResCommon
   DEFAULT : T24N_2016 S901G
     0  
   DEFAULT : T24N
-    if( IfValidAnd( ResCommonAreaNew > 0 ) .AND. 
+    if( IfValidAnd( ResCommonAreaNew > 0 ) / Mult .AND. 
         ( ValidOr( NonResFlrAreaNewWithMult, 0 ) / Mult -
-          ValidOr( HlthCareArea, 0 ) -
-          ValidOr( ProcAreaNew, 0 ) - // Lab, CompRm, CommKit
-          ValidOr( RetailAreaNew, 0 ) ) < ValidOr( ResCommonAreaNew, 0 ) * 1.001 ) // Allow for small tol on diff
+          ValidOr( HlthCareArea, 0 ) / Mult -
+          ValidOr( ProcAreaNew, 0 ) / Mult - // Lab, CompRm, CommKit
+          ValidOr( RetailAreaNew, 0 ) / Mult ) < ValidOr( ResCommonAreaNew, 0 ) * 1.001 ) // Allow for small tol on diff
     then 1
     else 0
     endif
@@ -729,7 +717,7 @@ RULE NEW Spc:FlrAreaForPredominantCalc
   DEFAULT
     if( IfValidAnd( ExcludeSpcFromPredominantCalc > 0 ) )
     then 0
-    else CondFlrArea
+    else CondFlrAreaWithMult
     endif
 ENDRULE
 // Sum up FlrArea eligible for PredominantCalc to Story
@@ -744,16 +732,6 @@ RULE NEW Story:FlrAreaForPredominantCalc
 // Sum up FlrArea eligible for PredominantCalc; excludes common building area spaces
     SumChildren( Spc:FlrAreaForPredominantCalc )
 ENDRULE
-RULE NEW Story:FlrAreaForPredominantCalcWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FloorAreaForPredominantCalcWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FlrAreaForPredominantCalc * Mult
-ENDRULE
 
 RULE NEW Story:FuncGrpAreaAssembly
   DATATYPE
@@ -765,16 +743,6 @@ RULE NEW Story:FuncGrpAreaAssembly
   DEFAULT
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "Assembly" )
 ENDRULE
-RULE NEW Story:FuncGrpAreaAssemblyWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaAssemblyWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaAssembly * Mult
-ENDRULE
 RULE NEW Story:FuncGrpAreaData
   DATATYPE
     Float
@@ -784,16 +752,6 @@ RULE NEW Story:FuncGrpAreaData
     NotInput
   DEFAULT
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "Data" )
-ENDRULE
-RULE NEW Story:FuncGrpAreaDataWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaDataWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaData * Mult
 ENDRULE
 RULE NEW Story:FuncGrpAreaHealth
   DATATYPE
@@ -805,16 +763,6 @@ RULE NEW Story:FuncGrpAreaHealth
   DEFAULT
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "Health" )
 ENDRULE
-RULE NEW Story:FuncGrpAreaHealthWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaHealthWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaHealth * Mult
-ENDRULE
 RULE NEW Story:FuncGrpAreaLab
   DATATYPE
     Float
@@ -824,16 +772,6 @@ RULE NEW Story:FuncGrpAreaLab
     NotInput
   DEFAULT
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "Lab" )
-ENDRULE
-RULE NEW Story:FuncGrpAreaLabWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaLabWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaLab * Mult
 ENDRULE
 RULE NEW Story:FuncGrpAreaManufacturing
   DATATYPE
@@ -845,16 +783,6 @@ RULE NEW Story:FuncGrpAreaManufacturing
   DEFAULT
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "Manufacturing" )
 ENDRULE
-RULE NEW Story:FuncGrpAreaManufacturingWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaManufacturingWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaManufacturing * Mult
-ENDRULE
 RULE NEW Story:FuncGrpAreaOffice
   DATATYPE
     Float
@@ -864,16 +792,6 @@ RULE NEW Story:FuncGrpAreaOffice
     NotInput
   DEFAULT
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "Office" )
-ENDRULE
-RULE NEW Story:FuncGrpAreaOfficeWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaOfficeWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaOffice * Mult
 ENDRULE
 RULE NEW Story:FuncGrpAreaParking
   DATATYPE
@@ -886,16 +804,6 @@ RULE NEW Story:FuncGrpAreaParking
 // Sum CondFlrArea
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "Parking" )
 ENDRULE
-RULE NEW Story:FuncGrpAreaParkingWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaParkingWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaParking * Mult
-ENDRULE
 RULE NEW Story:FuncGrpAreaResidentialCommon
   DATATYPE
     Float
@@ -905,16 +813,6 @@ RULE NEW Story:FuncGrpAreaResidentialCommon
     NotInput
   DEFAULT
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "ResidentialCommon" )
-ENDRULE
-RULE NEW Story:FuncGrpAreaResidentialCommonWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaResidentialCommonWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaResidentialCommon * Mult
 ENDRULE
 RULE NEW Story:FuncGrpAreaResidentialLiving
   DATATYPE
@@ -926,16 +824,6 @@ RULE NEW Story:FuncGrpAreaResidentialLiving
   DEFAULT
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "ResidentialLiving" )
 ENDRULE
-RULE NEW Story:FuncGrpAreaResidentialLivingWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaResidentialLivingWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaResidentialLiving * Mult
-ENDRULE
 RULE NEW Story:FuncGrpAreaRestaurant
   DATATYPE
     Float
@@ -945,16 +833,6 @@ RULE NEW Story:FuncGrpAreaRestaurant
     NotInput
   DEFAULT
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "Restaurant" )
-ENDRULE
-RULE NEW Story:FuncGrpAreaRestaurantWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaRestaurantWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaRestaurant * Mult
 ENDRULE
 RULE NEW Story:FuncGrpAreaRetail
   DATATYPE
@@ -966,16 +844,6 @@ RULE NEW Story:FuncGrpAreaRetail
   DEFAULT
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "Retail" )
 ENDRULE
-RULE NEW Story:FuncGrpAreaRetailWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaRetailWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaRetail * Mult
-ENDRULE
 RULE NEW Story:FuncGrpAreaSchool
   DATATYPE
     Float
@@ -984,18 +852,7 @@ RULE NEW Story:FuncGrpAreaSchool
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "School" ) +
-    SumChildrenIf( Spc:LabArea, Spc:VentSpcFunc = "Education - University/college laboratories" )
-ENDRULE
-RULE NEW Story:FuncGrpAreaSchoolWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaSchoolWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaSchool * Mult
+    SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "School" )
 ENDRULE
 RULE NEW Story:FuncGrpAreaWarehouse
   DATATYPE
@@ -1006,16 +863,6 @@ RULE NEW Story:FuncGrpAreaWarehouse
     NotInput
   DEFAULT
     SumChildrenIf( Spc:FlrAreaForPredominantCalc, Spc:FuncSchGrp = "Warehouse" )
-ENDRULE
-RULE NEW Story:FuncGrpAreaWarehouseWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    FunctionGroupAreaWarehouseWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    FuncGrpAreaWarehouse * Mult
 ENDRULE
 
 // Step 2:  Calculate the FuncSchGrp classification with the most area on each Story
@@ -1067,7 +914,7 @@ RULE NEW Story:PredominantFuncGrp
     then
       if( IfValidAnd( Story:ResFlrAreaNewWithMult > 0 ) ) 
       then "ResidentialCommon" // for apartment/hotel
-      else if( IfValidAnd( Story:LabAreaWithMult > 0 ) )
+      else if( IfValidAnd( Story:LabArea > 0 ) )
       then "Laboratory" // for laboratory
       else "Office" // for other cases where MaxFuncGrpArea = 0, such as data and parking
       endif endif
@@ -1104,7 +951,7 @@ RULE NEW Bldg:FuncGrpAreaAssembly
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaAssemblyWithMult )
+    SumChildren( Story:FuncGrpAreaAssembly )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaData
   DATATYPE
@@ -1114,7 +961,7 @@ RULE NEW Bldg:FuncGrpAreaData
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaDataWithMult )
+    SumChildren( Story:FuncGrpAreaData )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaHealth
   DATATYPE
@@ -1124,7 +971,7 @@ RULE NEW Bldg:FuncGrpAreaHealth
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaHealthWithMult )
+    SumChildren( Story:FuncGrpAreaHealth )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaLab
   DATATYPE
@@ -1134,7 +981,7 @@ RULE NEW Bldg:FuncGrpAreaLab
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaLabWithMult )
+    SumChildren( Story:FuncGrpAreaLab )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaManufacturing
   DATATYPE
@@ -1144,7 +991,7 @@ RULE NEW Bldg:FuncGrpAreaManufacturing
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaManufacturingWithMult )
+    SumChildren( Story:FuncGrpAreaManufacturing )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaOffice
   DATATYPE
@@ -1154,7 +1001,7 @@ RULE NEW Bldg:FuncGrpAreaOffice
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaOfficeWithMult )
+    SumChildren( Story:FuncGrpAreaOffice )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaParking
   DATATYPE
@@ -1165,7 +1012,7 @@ RULE NEW Bldg:FuncGrpAreaParking
     NotInput
   DEFAULT
 // Sum CondFlrArea
-    SumChildren( Story:FuncGrpAreaParkingWithMult )
+    SumChildren( Story:FuncGrpAreaParking )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaResidentialCommon
   DATATYPE
@@ -1175,7 +1022,7 @@ RULE NEW Bldg:FuncGrpAreaResidentialCommon
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaResidentialCommonWithMult )
+    SumChildren( Story:FuncGrpAreaResidentialCommon )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaResidentialLiving
   DATATYPE
@@ -1185,7 +1032,7 @@ RULE NEW Bldg:FuncGrpAreaResidentialLiving
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaResidentialLivingWithMult )
+    SumChildren( Story:FuncGrpAreaResidentialLiving )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaRestaurant
   DATATYPE
@@ -1195,7 +1042,7 @@ RULE NEW Bldg:FuncGrpAreaRestaurant
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaRestaurantWithMult )
+    SumChildren( Story:FuncGrpAreaRestaurant )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaRetail
   DATATYPE
@@ -1205,7 +1052,7 @@ RULE NEW Bldg:FuncGrpAreaRetail
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaRetailWithMult )
+    SumChildren( Story:FuncGrpAreaRetail )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaSchool
   DATATYPE
@@ -1215,7 +1062,7 @@ RULE NEW Bldg:FuncGrpAreaSchool
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaSchoolWithMult )
+    SumChildren( Story:FuncGrpAreaSchool )
 ENDRULE
 RULE NEW Bldg:FuncGrpAreaWarehouse
   DATATYPE
@@ -1225,7 +1072,7 @@ RULE NEW Bldg:FuncGrpAreaWarehouse
   INPUTCLASS 
     NotInput
   DEFAULT
-    SumChildren( Story:FuncGrpAreaWarehouseWithMult )
+    SumChildren( Story:FuncGrpAreaWarehouse )
 ENDRULE
 
 // Step 3c:  Calculate the FuncSchGrp classification with the most area for the Building
@@ -1355,7 +1202,7 @@ RULE NEW Spc:FuncGrpAreaAssembly
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "Assembly" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1368,7 +1215,7 @@ RULE NEW Spc:FuncGrpAreaData
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "Data" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1381,7 +1228,7 @@ RULE NEW Spc:FuncGrpAreaHealth
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "Health" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1394,7 +1241,7 @@ RULE NEW Spc:FuncGrpAreaLab
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "Laboratory" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1407,7 +1254,7 @@ RULE NEW Spc:FuncGrpAreaManufacturing
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "Manufacturing" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1420,7 +1267,7 @@ RULE NEW Spc:FuncGrpAreaOffice
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "Office" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1433,7 +1280,7 @@ RULE NEW Spc:FuncGrpAreaParking
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "Parking" )
-    then CondFlrArea + FlrAreaWithMult
+    then CondFlrAreaWithMult + FlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1446,7 +1293,7 @@ RULE NEW Spc:FuncGrpAreaResidentialCommon
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "ResidentialCommon" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1459,7 +1306,7 @@ RULE NEW Spc:FuncGrpAreaResidentialLiving
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "ResidentialLiving" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1472,7 +1319,7 @@ RULE NEW Spc:FuncGrpAreaRestaurant
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "Restaurant" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1485,7 +1332,7 @@ RULE NEW Spc:FuncGrpAreaRetail
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "Retail" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1498,7 +1345,7 @@ RULE NEW Spc:FuncGrpAreaSchool
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "School" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1511,7 +1358,7 @@ RULE NEW Spc:FuncGrpAreaWarehouse
     NotInput
   DEFAULT
     if( FuncSchGrpSim = "Warehouse" )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1557,7 +1404,7 @@ RULE NEW Spc:RetailArea
   SIZING_PROPOSED : T24N_2019
     if( IfValidAnd( Story:PredominantFuncGrp = "Retail" ) .AND.
         IfValidAnd( Bldg:AboveGrdStoryCnt <= 2 ) )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
   SIZING_PROPOSED
@@ -1567,7 +1414,7 @@ RULE NEW Spc:RetailArea
         IfValidAnd( SpcFunc != "Sports Arena - Playing Area (2,000 - 5,000 Spectators)" ) .AND.
         IfValidAnd( SpcFunc != "Sports Arena - Playing Area (< 2,000 Spectators)" ) .AND.
         IfValidAnd( SpcFunc != "Sports Arena - Playing Area (Recreational)" ) )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE
@@ -1586,17 +1433,7 @@ RULE NEW Story:SchoolAreaForWtrHtr
   DEFAULT
 // Sum up "Classroom, Lecture, Training, Vocational Areas" area to Story (this is only SpcFunc that has 
 // FuncSchGrpSim = 'School'
-    SumChildrenIf( Spc:CondFlrArea, Spc:SpcFunc = "Classroom, Lecture, Training, Vocational Areas" )
-ENDRULE
-RULE NEW Story:SchoolAreaForWtrHtrWithMult
-  DATATYPE
-    Float
-  LONGFORM
-    SchoolAreaForWtrHtrWithMultiplier
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    SchoolAreaForWtrHtr * Mult
+    SumChildrenIf( Spc:CondFlrAreaWithMult, Spc:SpcFunc = "Classroom, Lecture, Training, Vocational Areas" )
 ENDRULE
 RULE NEW Bldg:IsSchoolBldgForWtrHtr
   DATATYPE
@@ -1610,10 +1447,10 @@ RULE NEW Bldg:IsSchoolBldgForWtrHtr
 // FuncSchGrpSim = 'School'
     if ( IfValidAnd(Proj:CliZnNum > 1 ) .AND. IfValidAnd(Proj:CliZnNum < 16 ) .AND. IfValidAnd(Bldg:TotFlrArea < 250000) .AND. IfValidAnd( AboveGrdStoryCnt <= 3 ) )
     then
-    if( SumChildren( Story:FlrAreaForPredominantCalcWithMult ) > 0 .AND.
-        SumChildren( Story:SchoolAreaForWtrHtrWithMult ) > 0 )
+    if( SumChildren( Story:FlrAreaForPredominantCalc ) > 0 .AND.
+        SumChildren( Story:SchoolAreaForWtrHtr ) > 0 )
     then
-      if( SumChildren( Story:SchoolAreaForWtrHtrWithMult ) / SumChildren( Story:FlrAreaForPredominantCalcWithMult ) > 0.5 )
+      if( SumChildren( Story:SchoolAreaForWtrHtr ) / SumChildren( Story:FlrAreaForPredominantCalc ) > 0.5 )
       then 1 // more than 50% of the eligible conditioned area is 'School'
       else 0
       endif
@@ -1661,7 +1498,7 @@ RULE NEW Spc:SchoolArea
     0 // 2016/2019 does not have separate School system
   SIZING_PROPOSED
     if( IfValidAnd( Story:PredominantFuncGrp = "School" ) )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif     
 ENDRULE
@@ -1706,7 +1543,7 @@ RULE NEW Spc:OfficeArea
     0 // 2016/2019 does not have separate Office system
   SIZING_PROPOSED
     if( IfValidAnd( Story:PredominantFuncGrp = "Office" ) )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif     
 ENDRULE
@@ -1752,7 +1589,7 @@ RULE NEW Spc:WarehouseOfficeArea
   SIZING_PROPOSED
     if( IfValidAnd( Bldg:IsWarehouseBldg > 0 ) .AND.
         IfValidAnd( FuncSchGrp = "Office" ) )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif     
 ENDRULE
@@ -1770,7 +1607,7 @@ RULE NEW Spc:Is24HrArea
     0
   DEFAULT
     if( IfValidAnd( Story:Is24Hr > 0 ) )
-    then CondFlrArea
+    then CondFlrAreaWithMult
     else 0
     endif
 ENDRULE

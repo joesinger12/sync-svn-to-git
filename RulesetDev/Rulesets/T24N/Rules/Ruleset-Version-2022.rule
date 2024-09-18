@@ -38,7 +38,7 @@ RULE Proj:CompManagerVersion
   DESCRIPTION
     "Version of Compliance Manager software"
   DEFAULT 
-    Format( "BEMCmpMgr 2022.3.1 (%g)", RuleRepoRev )
+    Format( "BEMCmpMgr 2022.3.0 SP2 (%g)", RuleRepoRev )
   SIZING
     u:CompManagerVersion
   ANNUAL
@@ -128,7 +128,7 @@ RULE Proj:RptGenUIVer
   INPUTCLASS
     Prescribed
   DEFAULT 
-    "31"
+    "301"
   SIZING
     u:RptGenUIVer
   ANNUAL
@@ -201,7 +201,7 @@ RULE NEW Proj:NRCC_RptGenApp
   INPUTCLASS
     Prescribed
   DEFAULT 
-    "ReportGeneratorCom2022.3.1"
+    "ReportGeneratorCom2022.3.0-SP1"
   SIZING
     u:NRCC_RptGenApp
   ANNUAL

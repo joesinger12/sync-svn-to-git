@@ -207,10 +207,6 @@ RULELIST "CSE_SimulationPrep_Res" 1 0 0 1
    "call subordinate rulelist to setup remaininf export & report objects, if not simulating only PV & Battery"    Proj:Action =     ; SAC 01/12/22
       {  EvalRulelist( "CSE_SimulationPrep_MetersAndReports" )  }
 
-   "call rulelist to export ZONE surface areas to CSV"      ResProj:Action =        ; SAC 02/01/24
-      {  EvalRulelist( "CSE_SimulationPrep_ZoneSurfaceAreas" )  }
-     ; {  if (IfValidAnd( ResDwellUnits > 0 )==0) then  UNCHANGED
-     ;    else  EvalRulelist( "CSE_SimulationPrep_ZoneSurfaceAreas" )  endif  }
 END
 ;*************************************************************************
 
@@ -327,12 +323,10 @@ RULELIST "CSE_Defaulting_Project" 1 0 0 1
 ;      cseTOP:runSerial = { if (IfValidAnd( ResProj:RunNumber >= 0 )) then  ResProj:RunNumber  else  UNDEFINED  endif  }
 
    "Set cseTOP:doMainSim"     cseTOP:doMainSim  =        ; Main/annual (YES) vs. HVAC Sizing (NO) - SAC 05/09/22
-      {  UNDEFINED  }
-   ; removed old logic that prevents sim of PV/Battery when E+ HVAC autosizing toggled on in Proj object - SAC 05/09/24
-   ;   {  if (Proj:IsComRuleset)
-   ;      then  if (IfValidAnd( Proj:HVACAutoSizing > 0 ))
-   ;            then  "NO"  else  UNDEFINED  endif
-   ;      else  UNDEFINED  endif  }
+      {  if (Proj:IsComRuleset)
+         then  if (IfValidAnd( Proj:HVACAutoSizing > 0 ))
+               then  "NO"  else  UNDEFINED  endif
+         else  UNDEFINED  endif  }
 
 ;	"Default cseTOP:begDay=Jan 1                     //
 ;	"Default cseTOP:endDay=Dec 31                    //

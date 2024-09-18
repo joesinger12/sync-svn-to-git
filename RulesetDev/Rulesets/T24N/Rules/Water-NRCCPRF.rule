@@ -517,7 +517,6 @@ RULE nrcctblRowWater:Water15_HeatPumpWaterHeaterBrandNEEA
          then  switch( noXMLoutput_ResWtrHtrRef:HPWHBrand )
                         case "A. O. Smith"     :  "AOSmith"
                         case "American"        :  "American"
-                        case "AquaThermAire"   :  "AquaThermAire"       ; RJH 02/15/24
                         case "Bradford White"  :  "BradfordWhite"
                         case "Direct Energy"   :  "DirectEnergy"
                         case "EcoSense"        :  "EcoSense"
@@ -553,7 +552,6 @@ ENDRULE
 ; added 40 new Rheem (and related) NEEA HPWH entries - SAC 12/29/22
 ; added 18 new AOSmith (and related) NEEA HPWH entries - SAC 01/19/23
 ; replced long switch w/ table look-up - SAC 01/19/23
-; added 4 new AquaThermAire NEEA HPWH entries - RJH 02/15/24
 RULE nrcctblRowWater:Water16_HeatPumpWaterHeaterModelNEEA
   ANNUAL_PROPOSED
     if ( IfValidAnd( Proj:IsLowRiseMFam > 0 ) .AND.
@@ -611,10 +609,10 @@ RULE nrcctblRowWater:Water17_HeatPumpWaterHeaterSimulationGroup
                                     case "Stiebel 220E"     :  "Stiebel220E"
                                  ;   case "GE2012 50"        :  "GE201250"
                                     case "GE2012 50"        :  "AOSmithSHPT50"     ; SAC 5/28/19
-                                    case "AWHSTier3Generic40" :  "Tier3Generic40"  ; SAC 06/17/21  ; remove leading AWHS - SAC 04/26/24
-                                    case "AWHSTier3Generic50" :  "Tier3Generic50"
-                                    case "AWHSTier3Generic65" :  "Tier3Generic65"
-                                    case "AWHSTier3Generic80" :  "Tier3Generic80"
+                                    case "AWHSTier3Generic40" :  "AWHSTier3Generic40"  ; SAC 06/17/21
+                                    case "AWHSTier3Generic50" :  "AWHSTier3Generic50"
+                                    case "AWHSTier3Generic65" :  "AWHSTier3Generic65"
+                                    case "AWHSTier3Generic80" :  "AWHSTier3Generic80"
                                     case "Rheem HB 50"      :  "RheemHB50"          ; added missing mapping to 'RheemHB50' - SAC 06/04/21
                                     case "Rheem HBDR-45-50" :  "RheemHBDR4550"
                                     case "Rheem HBDR-45-65" :  "RheemHBDR4565"
@@ -659,11 +657,6 @@ RULE nrcctblRowWater:Water17_HeatPumpWaterHeaterSimulationGroup
                                     case "AOSmithHPTS50"  :  "AOSmithHPTS50"     ; SAC 01/19/23
                                     case "AOSmithHPTS66"  :  "AOSmithHPTS66"
                                     case "AOSmithHPTS80"  :  "AOSmithHPTS80"
-                                    case "AquaThermAire"           :  "AquaThermAire"     ; RJH 02/15/24
-                                    case "AWHSTier4Generic40" :  "Tier4Generic40"    ; NEEA generic tier 4 options - SAC 04/25/24 (tic #3595)  ; remove leading AWHS - SAC 04/26/24
-                                    case "AWHSTier4Generic50" :  "Tier4Generic50"
-                                    case "AWHSTier4Generic65" :  "Tier4Generic65"
-                                    case "AWHSTier4Generic80" :  "Tier4Generic80"
                         default  :  UNDEFINED
                     endswitch
          else UNDEFINED
@@ -830,13 +823,6 @@ RULE nrcctblRowWaterMF:WaterMF06_ResidentialDHWDwellingUnitDistributionType
             case	"(HERS req'd) Parallel Piping"		                          :	"StandardDistributionCentralParallelPipingHERS"
             case	"(HERS req'd) Recirculation, Demand Control Push Button"	  :	"DemandRecirculationManualControlHERS"
             case	"(HERS req'd) Recirculation, Demand Control Occupancy/Motion" :	"DemandRecirculationSensorControlsHERS"
-            case	"Central Parallel Piping"	                                  :	"StandardDistributionCentralParallelPiping"         ; RJH 4/24/24 2022-LRMF-Schema Issue 104
-            case	"Recirculation with non-demand control (continuous pumping)"  :	"RecirculationNonDemand"                            ; RJH 4/24/24 2022-LRMF-Schema Issue 104
-            case	"Recirculation with demand control, push button"	          :	"DemandRecirculationManualControl"                  ; RJH 4/24/24 2022-LRMF-Schema Issue 104
-            case	"Recirculation with demand control, occupancy/motion sensor"  :	"DemandRecirculationSensorControls"                 ; RJH 4/24/24 2022-LRMF-Schema Issue 104
-            case	"(HERS req'd) Central Parallel Piping"	                      :	"StandardDistributionCentralParallelPipingHERS"     ; RJH 4/24/24 2022-LRMF-Schema Issue 104
-            case	"(HERS req'd) Recirculation with demand control, push button" :	"DemandRecirculationManualControlHERS"              ; RJH 4/24/24 2022-LRMF-Schema Issue 104
-            case	"(HERS req'd) Recirculation with demand control, occupancy/motion sensor" :	"DemandRecirculationSensorControlsHERS" ; RJH 4/24/24 2022-LRMF-Schema Issue 104
             default :  UNDEFINED
          endswitch
     else UNDEFINED
@@ -849,9 +835,6 @@ RULE nrcctblRowWaterMF:WaterMF06_NotApplicableMessage
     else "NotApplicable"
     endif
 ENDRULE
-
-
-
 
 ; NRCC Res DHW
 RULE nrcctblRowWaterMF:WaterMF07_WaterHeatingSystemName
@@ -1287,7 +1270,6 @@ RULE nrccWaterCHPWH02:WaterCHPWH02_HeatPumpWaterHeaterBrand
             then switch (noXMLoutput_ResDHWSysRef:CHPWHNEEABrand)
                     case	"A. O. Smith"	 :	"AOSmith"
                     case	"American"		 :	"American"
-                    case    "AquaThermAire"  :  "AquaThermAire"       ; RJH 02/15/24
                     case	"Bradford White" :	"BradfordWhite"
                     case	"Direct Energy"	 :	"DirectEnergy"
                     case	"EcoSense"		 :	"EcoSense"
@@ -1344,7 +1326,6 @@ RULE nrcctblRowCHPWH:afterchildren_WaterCHPWH02a_HeatPumpWaterHeaterSimulationGr
             case 33 :  "AOSmithSHPT66"    ; "AO Smith SHPT 66"      ; AOSmithSHPT66
             case 34 :  "AOSmithSHPT80"    ; "AO Smith SHPT 80"      ; AOSmithSHPT80
             case 72 :  "AOSmithCAHP120"   ; "AO Smith CAHP-120"     ; SAC 01/30/21 (tic #1260)
-            case 86 :  "AquaThermAire"    ; "AquaThermAire"        ; RJH 02/15/24
             case 19 :  "GE201450"         ; "GE2014 50"
             case 23 :  "GE201480"         ; "GE2014 80"
             case 36 :  "GE201480"         ; "GE2014 80 Eff DR"      ; GE2014_80DR          -- DR ???
@@ -1353,10 +1334,10 @@ RULE nrcctblRowCHPWH:afterchildren_WaterCHPWH02a_HeatPumpWaterHeaterSimulationGr
             case 17 :  "Sanden80"         ; "Sanden 80"
             case 22 :  "Stiebel220E"      ; "Stiebel 220E"
             case 38 :  "GE201250"         ; "GE2012 50"
-            case 73 :  "Tier3Generic40"   ; "Tier3Generic40"    ; NEEA generic tier 3 options - SAC 06/17/21  ; remove leading AWHS - SAC 04/26/24
-            case 74 :  "Tier3Generic50"   ; "Tier3Generic50"
-            case 75 :  "Tier3Generic65"   ; "Tier3Generic65"
-            case 76 :  "Tier3Generic80"   ; "Tier3Generic80"
+            case 73 :  "Tier3Generic40"   ; "AWHSTier3Generic40"    ; NEEA generic tier 3 options - SAC 06/17/21
+            case 74 :  "Tier3Generic50"   ; "AWHSTier3Generic50"
+            case 75 :  "Tier3Generic65"   ; "AWHSTier3Generic65"
+            case 76 :  "Tier3Generic80"   ; "AWHSTier3Generic80"
             case 39 :  "RheemHBDR4550"    ; "Rheem HBDR-45-50"
             case 40 :  "RheemHBDR4565"    ; "Rheem HBDR-45-65"
             case 41 :  "RheemHBDR4580"    ; "Rheem HBDR-45-80"
@@ -1416,10 +1397,6 @@ RULE nrcctblRowCHPWH:afterchildren_WaterCHPWH02a_HeatPumpWaterHeaterSimulationGr
             case 127 :  "NyleC125A_CWPMP" ; "Nyle C125A-CWP (MP)"
             case 128 :  "NyleC185A_CWPMP" ; "Nyle C185A-CWP (MP)"
             case 129 :  "NyleC250A_CWPMP" ; "Nyle C250A-CWP (MP)"
-            case 87 :  "Tier4Generic40"   ; "Tier4Generic40"    ; NEEA generic tier 4 options - SAC 04/25/24 (tic #3595)  ; remove leading AWHS - SAC 04/26/24
-            case 88 :  "Tier4Generic50"   ; "Tier4Generic50"
-            case 89 :  "Tier4Generic65"   ; "Tier4Generic65"
-            case 90 :  "Tier4Generic80"   ; "Tier4Generic80"
             default :  UNDEFINED
           endswitch
     endif
@@ -1722,7 +1699,6 @@ RULE nrccLpTank02:LpTank02_HeatPumpWaterHeaterBrand
             then switch (noXMLoutput_ResDHWSysRef:CHPWHLoopTankNEEABrand)
                     case	"A. O. Smith"	 :	"AOSmith"
                     case	"American"		 :	"American"
-                    case    "AquaThermAire"  :  "AquaThermAire"       ; RJH 02/15/24
                     case	"Bradford White" :	"BradfordWhite"
                     case	"Direct Energy"	 :	"DirectEnergy"
                     case	"EcoSense"		 :	"EcoSense"

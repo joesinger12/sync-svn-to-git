@@ -32,16 +32,16 @@
 // -------------------------------------------------------------------------
 //  
 
-// This is no longer needed, see Ticket 3582
+
 // Re-eval Proj:HasBaseHVAC here so capture additional AddClgToProp zones when required by rules
 // --------------------------------------------------------------------------------------------------
-//RULE NEW Proj:HasBaseHVAC
-//  SIZING_PROPOSED
-//    if( SumAll( ThrmlZn:HasUnknownHVAC ) > 0 )
-//    then 1 // Some zones have unknown HVAC or will add baseline zonal cooling
-//    else 0 // The proposed HVAC is user defined in all other cases
-//    endif
-//ENDRULE
+RULE NEW Proj:HasBaseHVAC
+  SIZING_PROPOSED
+    if( SumAll( ThrmlZn:HasUnknownHVAC ) > 0 )
+    then 1 // Some zones have unknown HVAC or will add baseline zonal cooling
+    else 0 // The proposed HVAC is user defined in all other cases
+    endif
+ENDRULE
 
 RULE NEW Proj:CreateBaseHVAC
   DATATYPE
@@ -283,28 +283,7 @@ RULE NEW Bldg:CoveredProcHasFluidSys
     endif endif
   SIZING_PROPOSED
     if( ( CompRmPwrNew + CompRmPwrAltered ) > 800 )
-    then
-      if( ( LabAreaNew + LabAreaAltered ) > 0 )
-      then // has Lab systems
-        if( LabExhFlow < 15000 )
-        then // Lab exhaust is 15000 cfm, use NonRes System map
-          if( AboveGrdStoryCntForBaseSysMap > 3 .OR. 
-              NonResAreaForBaseSysMap >= 25000 )
-          then  // Lab system will need plant
-            if( AboveGrdStoryCntForBaseSysMap > 5 .OR. 
-                NonResAreaForBaseSysMap >= 150000 )
-            then 3 // Lab is VAV, create HW and ChW/CW systems
-            else 3 // Lab is PVAV, create HW system + CompRm is CRAH, create Chw/CW system
-            endif
-          else 1 // Lab will be SZVAV + CompRm is CRAH, create Chw/CW system
-          endif
-        else // Use special lab system map
-        if( NonResAreaForBaseSysMap < 150000 )
-        then 3 // Lab is PVAV, create HW system + CompRm is CRAH, create Chw/CW system
-        else 3 // Lab is VAV, create HW and ChW/CW systems
-        endif endif
-      else 1 // CompRm system only and is CRAH, create Chw/CW system
-      endif
+    then 1 // Create ChW/CW system only
     else
     if( ( LabAreaNew + LabAreaAltered ) > 0 )
     then // has Lab systems
@@ -548,8 +527,7 @@ RULE NEW Story:BaseHVACAreaForFlrSys
       SumChildrenIf( Spc:SchoolArea, Spc:IsNewHVAC = -999 ) -              // School
       SumChildrenIf( Spc:OfficeArea, Spc:IsNewHVAC = -999 ) -              // Office
       SumChildrenIf( Spc:WarehouseOfficeArea, Spc:IsNewHVAC = -999 ) -     // WarehouseOffice
-      SumChildrenIf( Spc:HlthCareArea, Spc:IsNewHVAC = -999 ) +            // Healthcare
-      SumChildrenIf( Spc:SchoolLabArea, Spc:IsNewHVAC = -999 )             // School Lab (add back since it was subtracted twice)
+      SumChildrenIf( Spc:HlthCareArea, Spc:IsNewHVAC = -999 )              // Healthcare
 // Old: Subtract out slave zone area baseline multizone systems tracks proposed
 // control/slave zone relationship
 //      - SumChildrenIf( Spc:CondFlrArea, Spc:IsCtrlZn = -1 )
@@ -561,8 +539,7 @@ RULE NEW Story:BaseHVACAreaForFlrSys
       SumChildrenIf( Spc:SchoolArea, Spc:HasUnknownHVAC = 1 ) -            // School
       SumChildrenIf( Spc:OfficeArea, Spc:HasUnknownHVAC = 1) -             // Office
       SumChildrenIf( Spc:WarehouseOfficeArea, Spc:HasUnknownHVAC = 1) -    // WarehouseOffice
-      SumChildrenIf( Spc:HlthCareArea, Spc:HasUnknownHVAC = 1 ) +          // Healthcare
-      SumChildrenIf( Spc:SchoolLabArea, Spc:HasUnknownHVAC = 1 )           // School Lab (add back since it was subtracted twice)
+      SumChildrenIf( Spc:HlthCareArea, Spc:HasUnknownHVAC = 1 )            // Healthcare
     endif
   SIZING_BASELINE
 // Ticket 3411: Update floor area calc to use NonResDirectCondArea
@@ -585,9 +562,7 @@ RULE NEW Story:BaseHVACAreaForFlrSys
       ( SumChildrenIf( Spc:WarehouseOfficeArea, Spc:IsNewHVAC = 1 ) + 
         SumChildrenIf( Spc:WarehouseOfficeArea, Spc:HasUnknownHVAC = 1 ) ) - // WarehouseOffice
       ( SumChildrenIf( Spc:HlthCareArea, Spc:IsNewHVAC = 1 ) + 
-        SumChildrenIf( Spc:HlthCareArea, Spc:HasUnknownHVAC = 1 ) ) +      // Healthcare
-      ( SumChildrenIf( Spc:SchoolLabArea, Spc:IsNewHVAC = 1 ) + 
-        SumChildrenIf( Spc:SchoolLabArea, Spc:HasUnknownHVAC = 1 ) )       // School Lab (add back since it was subtracted twice)
+        SumChildrenIf( Spc:HlthCareArea, Spc:HasUnknownHVAC = 1 ) )        // Healthcare
     endif
 ;   if( Proj:IsNoMech > 0 .OR. Proj:IsNoAddMech > 0 )
 ;   then // Is an envelope only (no mechanical) compliance case, proposed = baseline
@@ -670,7 +645,7 @@ RULE NEW Story:LabFlrSysRef
         LocalCompAssigned ( LabFlrSysRef ) = 0 .AND. 
         BaseHVACAreaForLabFlrSys > 0 .AND.  // See Ticket 3154
         ( Bldg:LabAreaNew + Bldg:LabAreaAltered ) >= 10000 .AND.
-        Max( Story:LabAreaNewWithMult, Story:LabAreaAlteredWithMult ) > 0 )
+        Max( Story:LabAreaNew, Story:LabAreaAltered ) > 0 )
     then
       RuleLibrary( AirSys, "BaseAirSys12a", 1 ) ; LAB (PVAV)
     else zp:LabFlrSysRef
@@ -682,7 +657,7 @@ RULE NEW Story:LabFlrSysRef
         ( Bldg:LabExhFlow > 15000 .OR. 
           AboveGrdStoryCntForBaseSysMap > 3 .OR. 
           NonResAreaForBaseSysMap >= 25000 ) .AND.
-        Max( Story:LabAreaNewWithMult, Story:LabAreaAlteredWithMult ) > 0 )
+        Max( Story:LabAreaNew, Story:LabAreaAltered ) > 0 )
     then // Building has lab exh flow > 15000cfm, or NonRes system map would be system 5 (PVAV) or 6 (VAV)
          // Create separate floor VAV system for lab areas. 
       RuleLibrary( AirSys, "BaseAirSys12a", 1 )
@@ -963,13 +938,13 @@ RULE NEW ThrmlZn:BaseZnAirSysRef
       else
       if( CompRmArea > 0 )
       then // Zone is a Computer Room
-        if( ( Max( Bldg:CompRmPwrNew, Bldg:CompRmPwrAltered ) > 0 .OR. HasUnknownHVAC > 0 ) .AND.
-              ( Bldg:CompRmPwrNew + Bldg:CompRmPwrAltered ) < 800 )
+        if( ( Max( Bldg:CompRmPwrNew, Bldg:CompRmPwrAltered ) > 0 .AND.
+              ( Bldg:CompRmPwrNew + Bldg:CompRmPwrAltered ) < 800 ) .OR. HasUnknownHVAC > 0 )
         then // Zone is a Computer Room and Bldg < 800 kW computer power, use CRAC
           RuleLibrary( AirSys, "BaseAirSys11", 1 ) ; CRAC
         else 
-        if( ( Max( CompRmAreaNew, CompRmAreaAltered ) > 0 .OR. HasUnknownHVAC > 0 ) .AND. 
-              ( Bldg:CompRmPwrNew + Bldg:CompRmPwrAltered ) >= 800 )
+        if( ( Max( CompRmAreaNew, CompRmAreaAltered ) > 0 .AND. 
+              ( Bldg:CompRmPwrNew + Bldg:CompRmPwrAltered ) >= 800 ) .OR. HasUnknownHVAC > 0 )
         then // Zone is a Computer Room and Bldg >= 800 kW computer power, use CRAH
           RuleLibrary( AirSys, "BaseAirSys10", 1 ) 
         else UNDEFINED
@@ -977,11 +952,11 @@ RULE NEW ThrmlZn:BaseZnAirSysRef
       else
       if( LabArea > 0 )
       then // Zone is lab in building below total exhaust threshold
-        if( ( Max( LabAreaNew, LabAreaAltered ) > 0 .OR.
-              ( HasUnknownHVAC > 0 .AND. LocalCompAssigned( StoryRef:LabFlrSysRef ) = 0 ) ) .AND. 
-            Bldg:BaseNonResSysNum != 5 .AND.
-            Bldg:BaseNonResSysNum != 6 .AND.
-            Bldg:LabExhFlow < 15000 )
+        if( ( Max( LabAreaNew, LabAreaAltered ) > 0 .AND. 
+              Bldg:BaseNonResSysNum != 5 .AND.
+              Bldg:BaseNonResSysNum != 6 .AND.
+              Bldg:LabExhFlow < 15000 ) .OR. 
+            ( HasUnknownHVAC > 0 .AND. LocalCompAssigned( StoryRef:LabFlrSysRef ) = 0 ) )
         then // Use SZAC if NonRes system map is not PVAV/VAV and 
              // building lab exhaust is below threshold
           RuleLibrary( AirSys, "BaseAirSys12b", 1 )

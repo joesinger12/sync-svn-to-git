@@ -805,21 +805,20 @@ RULE NEW Spc:ExhSpecMthd
 
 
      Maximum = The maximum of all the various input values. This method is used
-     if the Ventilation Specification Method is 'Maximum' or 'NoVentilation'.
+     if the Ventilation Specification Method is 'Maximum'.
 
 
-     Sum = The sum of all the various input values. This method is used if 
-            Ventilation Specification Method is 'Sum'."
+     Sum = The sum of all the various input values. This method is used in all
+     other cases."
   INPUTCLASS
     NotInput
   OPTION
-    NoExhaust
     Maximum
     Sum
   DEFAULT
-    if( VentSpecMthd = "Sum" ) 
-    then "Sum"
-    else "Maximum"
+    if( VentSpecMthd = "Maximum" )
+    then "Maximum"
+    else "Sum"
     endif
 ENDRULE
 
@@ -1874,8 +1873,7 @@ RULE Spc:InfMthd[2]
     else
     if( PropVentSysIsExh = 1 .OR. Max( TotExhFlow - MechOAFlow, 0 ) > 0 )
     then // General exhaust-based ventilation system or has exhaust that requires direct makeup
-      if( ThrmlZnRef:ExhSrc = "DirectOutsideAir" .OR.
-          Story:OAExhBalRat < ( 1 - Proj:BalancedVentTolNonRes ) )
+      if( Story:OAExhBalRat < ( 1 - Proj:BalancedVentTolNonRes ) )
       then "FlowSpace"
       else UNDEFINED
       endif
@@ -1905,8 +1903,7 @@ RULE Spc:InfMthd[2]
     else
     if( BaseVentSysIsExh = 1 .OR. Max( TotExhFlow - MechOAFlow, 0 ) > 0 )
     then // General exhaust-based ventilation system or has exhaust that requires direct makeup
-      if( ThrmlZnRef:ExhSrc = "DirectOutsideAir" .OR.
-          Story:OAExhBalRat < ( 1 - Proj:BalancedVentTolNonRes ) )
+      if( Story:OAExhBalRat < ( 1 - Proj:BalancedVentTolNonRes ) )
       then "FlowSpace"
       else UNDEFINED
       endif

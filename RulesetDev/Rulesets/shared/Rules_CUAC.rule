@@ -475,13 +475,8 @@ RULELIST "CUAC_InputErrorCheck" 0 0 0 0
          else  1  endif  }
       ;   else  CUAC_UtilityRates:IsValid( "RateID", GasTariff )   endif  }
 
-   "Set CUAC:GasTariffReqd"         CUAC:GasTariffReqd      =        ; SAC 03/08/24  ; fixed - SAC 03/13/24
-      {  if (IfValidAnd( ResProj:AffordableDwellingGasFueled[1] > 0 )) then  1
-         else  0  endif  }
-
       ;"dbg" CUAC:Action = { PostMessageToLog( "GasUtility %g / G2GasTerritory %g / G2GasTariff %g", ValidOr( GasUtility, -999 ), ValidOr( G2GasTerritory, -999 ), ValidOr( G2GasTariff, -999 ) ) }
 
-   ; removed check preventing analysis of ResZns where some/all dwellings assign central laundry zones - SAC 02/08/24
    "Set CUAC:ErrorMsg"     CUAC:ErrorMsg =      ; add central laundry check - SAC 12/20/22  ; prevent Utility valid errors on utilities added in Gen2 - SAC 09/13/23
       {  if (IfValidAnd( Proj:ResDwellUnits > 0 )==0 .OR. IfValidAnd( Proj:CUACReport > 0 )==0)
          then  "Error: Res dwelling units and CUAC not all selected"
@@ -493,8 +488,8 @@ RULELIST "CUAC_InputErrorCheck" 0 0 0 0
          then  Format( "Error: %g Res Zone(s) have dwellings with more than 6 bedrooms", SumAcrossIf( ResZn:AffordableHousing, ResZn:AffordableUnitsByBedrmsWithMult[8] > 0 ) )
          ; else if (SumAcrossIf( ResZn:CentralDHWDUCount, ResZn:AffordableHousing > 0 ) > 0)
          ; then  Format( "Error: %g Res dwelling units are served by central DHW systems", SumAcrossIf( ResZn:CentralDHWDUCount, ResZn:AffordableHousing > 0 ) )
-         ; else if (SumAll( ResZn:NumAffordableCentralLaundryAssignments ) > 0)
-         ; then  Format( "Error: Res dwelling units of %g zone(s) use central laundry facilities", SumAll( ResZn:NumAffordableCentralLaundryAssignments ) )
+         else if (SumAll( ResZn:NumAffordableCentralLaundryAssignments ) > 0)
+         then  Format( "Error: Res dwelling units of %g zone(s) use central laundry facilities", SumAll( ResZn:NumAffordableCentralLaundryAssignments ) )
 
          else if (GlobalStatus( Proj:StAddress ) < 4)
          then  "Error: Project street address not specified"
@@ -532,8 +527,6 @@ RULELIST "CUAC_InputErrorCheck" 0 0 0 0
          else if (IfValidAnd( CUAC_OldAccessDB > 0 ) .AND. IfValidAnd( ElecTariffIsTOU > 0 ))
          then  "Error: Electric Tariff/Rate is not compatible (Time-of-Use rate)"
 
-         else if (GasTariffReqd > 0 .AND. (GasUtility == 0 .OR. GasUtility == 999))    ; SAC 03/08/24
-         then  "Error: Gas Tariff Required but Utility/Territory/Tariff not selected"
          else if (GasUtility == 0)
          then  "Error: Gas Utility or 'no gas service' must be selected"
          else if (GasUtilitySelected .AND. (G2GasTerritory < 1 .OR. G2GasTariff < 1))
@@ -547,7 +540,7 @@ RULELIST "CUAC_InputErrorCheck" 0 0 0 0
          else if (IfValidAnd( CUAC_OldAccessDB > 0 ) .AND. IfValidAnd( GasTariffIsTOU > 0 ))
          then  "Error: Gas Tariff/Rate is not compatible (Time-of-Use rate)"
 
-         else  UNDEFINED  endif endif endif endif   endif endif endif   endif endif endif endif   endif endif endif endif endif   endif endif endif endif endif endif  }
+         else  UNDEFINED  endif endif endif endif endif   endif endif endif   endif endif endif endif   endif endif endif endif endif   endif endif endif endif endif  }
 
    "Set CUAC:ErrorInfo"    CUAC:ErrorInfo =
       {  if (IfValidAnd( Proj:ResDwellUnits > 0 )==0 .OR. IfValidAnd( Proj:CUACReport > 0 )==0)
@@ -560,8 +553,8 @@ RULELIST "CUAC_InputErrorCheck" 0 0 0 0
          then  Format( "The largest CUAC reporting dwelling type is 6 bedrooms. %g Res Zone(s) have dwellings that exceed that limit.", SumAcrossIf( ResZn:AffordableHousing, ResZn:AffordableUnitsByBedrmsWithMult[8] > 0 ) )
          ; else if (SumAcrossIf( ResZn:CentralDHWDUCount, ResZn:AffordableHousing > 0 ) > 0)
          ; then  Format( "Affordable (CUAC) dwelling units must be served by individual (dwelling) DHW systems. %g are served by central DHW systems.", SumAcrossIf( ResZn:CentralDHWDUCount, ResZn:AffordableHousing > 0 ) )
-         ; else if (SumAll( ResZn:NumAffordableCentralLaundryAssignments ) > 0)
-         ; then  Format( "Laundry equipment must be removed from or switched to in-unit for Res dwelling units of the following zones: %s", ListRevRefIf( ResZn:CUACRef, ResZn:NumAffordableCentralLaundryAssignments > 0, " '%s'", ", '%s'", ", '%s'", ResZn:Name ) )
+         else if (SumAll( ResZn:NumAffordableCentralLaundryAssignments ) > 0)
+         then  Format( "Laundry equipment must be removed from or switched to in-unit for Res dwelling units of the following zones: %s", ListRevRefIf( ResZn:CUACRef, ResZn:NumAffordableCentralLaundryAssignments > 0, " '%s'", ", '%s'", ", '%s'", ResZn:Name ) )
 
          else if (GlobalStatus( Proj:StAddress ) < 4)
          then  "Project street address (on 'Project' tab) must be specified"
@@ -599,8 +592,6 @@ RULELIST "CUAC_InputErrorCheck" 0 0 0 0
          else if (IfValidAnd( CUAC_OldAccessDB > 0 ) .AND. IfValidAnd( ElecTariffIsTOU > 0 ))
          then  Format( "Electric Tariff/Rate '%s' is a Time-of-Use rate, and as such, is not compatible with old projects containing only monthly energy use data", EnumString( G2ElecTariff ) )
 
-         else if (GasTariffReqd > 0 .AND. (GasUtility == 0 .OR. GasUtility == 999))    ; SAC 03/08/24
-         then  UNDEFINED   ; requires RuleList eval
          else if (GasUtility == 0)
          then  "Gas Utility or 'no gas service' must be selected before performing analysis/reporting."
          else if (GasUtilitySelected .AND. (G2GasTerritory < 1 .OR. G2GasTariff < 1))
@@ -614,11 +605,7 @@ RULELIST "CUAC_InputErrorCheck" 0 0 0 0
          else if (IfValidAnd( CUAC_OldAccessDB > 0 ) .AND. IfValidAnd( GasTariffIsTOU > 0 ))
          then  Format( "Gas Tariff/Rate '%s' is a Time-of-Use rate, and as such, is not compatible with old projects containing only monthly energy use data", EnumString( G2GasTariff ) )
 
-         else  UNDEFINED  endif endif endif endif         endif endif endif   endif endif endif endif   endif endif endif endif endif   endif endif endif endif endif endif  }
-   "Set CUAC:ErrorInfo (Gas Tariff Required but not specified)"      CUAC:Action =        ; SAC 03/08/24
-      {  if (LocalStatus( ErrorInfo ) < 1 .AND. GasTariffReqd > 0 .AND. (GasUtility == 0 .OR. GasUtility == 999))
-         then  EvalRulelist( "SetCUACErrorInfo_GasTariffReqd" )
-         else  UNCHANGED  endif  }
+         else  UNDEFINED  endif endif endif endif endif   endif endif endif   endif endif endif endif   endif endif endif endif endif   endif endif endif endif endif  }
    "Set CUAC:HaveErrorInfo"      CUAC:HaveErrorInfo = {  if (LocalStatus( ErrorInfo ) > 0) then  1  else  UNDEFINED  endif  }
 
    "Set CUAC:TreeDescrip"  CUAC:TreeDescrip =
@@ -632,8 +619,8 @@ RULELIST "CUAC_InputErrorCheck" 0 0 0 0
          then  Format( "%g Res zone(s) have dwellings with too many bedrooms", SumAcrossIf( ResZn:AffordableHousing, ResZn:AffordableUnitsByBedrmsWithMult[8] > 0 ) )
          ; else if (SumAcrossIf( ResZn:CentralDHWDUCount, ResZn:AffordableHousing > 0 ) > 0)
          ; then  Format( "%g Res dwelling units are served by central DHW systems", SumAcrossIf( ResZn:CentralDHWDUCount, ResZn:AffordableHousing > 0 ) )
-         ; else if (SumAll( ResZn:NumAffordableCentralLaundryAssignments ) > 0)
-         ; then  Format( "Res dwelling units of %g zone(s) use central laundry facilities", SumAll( ResZn:NumAffordableCentralLaundryAssignments ) )
+         else if (SumAll( ResZn:NumAffordableCentralLaundryAssignments ) > 0)
+         then  Format( "Res dwelling units of %g zone(s) use central laundry facilities", SumAll( ResZn:NumAffordableCentralLaundryAssignments ) )
 
          else if (IfValidAnd( AffordablePVDCSysSizeFrac > 1.01 ))
          then  Format( "Affordable portion of PV system (%g kW) exceeds building total", AffordablePVDCSysSize )
@@ -643,7 +630,7 @@ RULELIST "CUAC_InputErrorCheck" 0 0 0 0
          else  Format( "%g zones, %g dwellings, %s ft2", SumAcrossIf( ResZn:AffordableHousing, ResZn:NumAffordableUnitTypes = 1 ),
                                                   SumAcrossIf( ResZn:NumDwellingUnitsWithMult, ResZn:NumAffordableUnitTypes = 1 ), 
                                                    FltToStr( SumAcrossIf( ResZn:CondFloorArea, ResZn:NumAffordableUnitTypes = 1 ) ) ) 
-         endif endif endif endif endif endif  }
+         endif endif endif endif endif endif endif  }
 
 
    "Set Proj:CUACUIFlag"      Proj:CUACUIFlag =       ; SAC 08/19/22 (CUAC)
@@ -655,13 +642,13 @@ RULELIST "CUAC_InputErrorCheck" 0 0 0 0
          then  2   ; shouldn't ever happen??
          else if ((IfValidAnd( CUAC_OldAccessDB > 0 )==0 .AND. SumAll( ResZn:AffordableHousing ) < 1) .OR.
                   SumAcrossIf( ResZn:AffordableHousing, ResZn:NumAffordableUnitTypes > 1 ) > 0 .OR.
-                  SumAcrossIf( ResZn:AffordableHousing, ResZn:AffordableUnitsByBedrmsWithMult[8] > 0 ) > 0)
+                  SumAcrossIf( ResZn:AffordableHousing, ResZn:AffordableUnitsByBedrmsWithMult[8] > 0 ) > 0 .OR.
+                  SumAll( ResZn:NumAffordableCentralLaundryAssignments ) > 0)
          then  10  ; show error & summary info only
          else if (GlobalStatus( CUAC:ErrorMsg ) > 0)
          then  11  ; show complete CUAC UI, but disable Calc button
          else  12  ; show complete CUAC UI
          endif endif endif endif endif  }
-      ;            SumAll( ResZn:NumAffordableCentralLaundryAssignments ) > 0)
 
    "Set CUAC:ShowPVAllocGrid"    CUAC:ShowPVAllocGrid =        ; SAC 10/02/23
       {  if (Proj:CUACUIFlag > 9 .AND. (IfValidAnd( Proj:PVSizeSum > 0 ) .OR. IfValidAnd( UseCommunitySolar > 0 )))
@@ -725,28 +712,6 @@ RULELIST "CUAC_InputErrorCheck" 0 0 0 0
 ;           "PerformCalcs",                      BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1044, "PerformCalculations",  ""   ; "boolean (0/1) whether calcs/reporting are to be performed (=> no errors)",  ""    ; SAC 08/07/22
 
 
-END
-;*************************************************************************
-
-
-;************************************************************************* SAC 03/08/24
-RULELIST "SetCUACErrorInfo_GasTariffReqd"  0 0 0 0
-   "Set CUAC:ErrorInfo"    CUAC:ErrorInfo =
-      {  if (GasUtility == 0 .OR. GasUtility == 999)
-         then  "Gas Utility must be selected before performing analysis/reporting."
-         else if (GasUtilitySelected .AND. (G2GasTerritory < 1 .OR. G2GasTariff < 1))
-         then  "Gas Territory and Tariff must be selected before performing analysis/reporting."
-         ; else if (GasUtilitySelected .AND. CUAC_UtilityCompanies:IsValid( "UtilityID", GasUtility ) < 1)
-         ; then  Format( "Gas Utility '%s' not found in ruleset look-up table.", EnumString( GasUtility ) )
-         else if (GasUtilitySelected .AND. IfValidAnd( GasTerritoryValid > 0 )==0)
-         then  Format( "Gas Territory '%s' not found in ruleset look-up table.", EnumString( G2GasTerritory ) )
-         else if (GasUtilitySelected .AND. IfValidAnd( GasTariffValid > 0 )==0)
-         then  Format( "Gas Tariff/Rate '%s' not found in ruleset look-up table.", EnumString( G2GasTariff ) )
-         else if (IfValidAnd( CUAC_OldAccessDB > 0 ) .AND. IfValidAnd( GasTariffIsTOU > 0 ))
-         then  Format( "Gas Tariff/Rate '%s' is a Time-of-Use rate, and as such, is not compatible with old projects containing only monthly energy use data.", EnumString( G2GasTariff ) )
-         else  UNDEFINED  endif endif endif endif endif  }
-   "Set CUAC:ErrorInfo - DwellUnitType listing"    CUAC:ErrorInfo =
-      {  ErrorInfo + ListRevRef( DwellUnitType:CUACRef, "\r\n%s", "\r\n%s", "\r\n%s", DwellUnitType:GasFueledErrMsg )  }
 END
 ;*************************************************************************
 
@@ -1434,16 +1399,15 @@ RULELIST "CUAC_WriteInputOutputCSV" 1 0 0 0
    "Replace '\' w/ '/' in CUAC:ModelPathFwdSlash"     CUAC:ModelPathFwdSlash = {  ReplaceInString( "\", "/" )  }
 
 ;   "Write CUAC I/O CSV Header-1"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "10,1,Row/Col hourly use data begin\n" )  }
-   "Write CUAC I/O CSV Header-2"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "2,format index\n" )  }    ; increment w/ each CHANGE to file contents/organization  ; 1->2 - SAC 01/25/24
+   "Write CUAC I/O CSV Header-2"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "1,format index\n" )  }    ; increment w/ each CHANGE to file contents/organization
    "Write CUAC I/O CSV Header-3"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "CUAC Analysis Inputs and Results Report\n" )  }
    "Write CUAC I/O CSV Header-4"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, ",Software:,%c%s%c\n",     34, ValidOr( Proj:SoftwareVersion,    "" ), 34 )  }
    "Write CUAC I/O CSV Header-5"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, ",Ruleset:,%c%s%c\n",      34, ValidOr( Proj:CompManagerVersion, "" ), 34 )  }
    "Write CUAC I/O CSV Header-6"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, ",CSE:,%c%s%c\n",          34, ValidOr( Proj:DHWSimEngVersion,   "" ), 34 )  }
-   "Write CUAC I/O CSV Header-7"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, ",Tariff Date:,%c%s%c\n",  34, ValidOr( TariffDate,              "" ), 34 )  }      ; SAC 01/25/24
-   "Write CUAC I/O CSV Header-8"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "Run Title:,,%c%s%c\n",    34, ValidOr( Proj:RunTitle,           "" ), 34 )  }
-   "Write CUAC I/O CSV Header-9"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "Run Date/Time:,,%s\n",        ValidOr( Proj:RunDateISO,   "" ) )  }
-   "Write CUAC I/O CSV Header-10"   CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "Model File:,,%c%s%s%c\n", 34, ValidOr( ModelPathFwdSlash, "" ), ValidOr( Proj:ModelFile, "" ), 34 )  }
-   "Write CUAC I/O CSV Header-11"   CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "Weather File:,,%c%s%c\n", 34, ValidOr( Proj:AnnualWeatherFileNoPath, "" ), 34 )  }
+   "Write CUAC I/O CSV Header-7"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "Run Title:,,%c%s%c\n",    34, ValidOr( Proj:RunTitle,           "" ), 34 )  }
+   "Write CUAC I/O CSV Header-8"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "Run Date/Time:,,%s\n",        ValidOr( Proj:RunDateISO,   "" ) )  }
+   "Write CUAC I/O CSV Header-9"    CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "Model File:,,%c%s%s%c\n", 34, ValidOr( ModelPathFwdSlash, "" ), ValidOr( Proj:ModelFile, "" ), 34 )  }
+   "Write CUAC I/O CSV Header-10"   CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, "Weather File:,,%c%s%c\n", 34, ValidOr( Proj:AnnualWeatherFileNoPath, "" ), 34 )  }
 
    "Set CUAC:UnitTypeLabels[1]"  CUAC:UnitTypeLabels[1] = { if (IfValidAnd( AffordableUnitsByBedrms[1] > 0 )==0) then  UNDEFINED  else  "Studio"     endif  }
    "Set CUAC:UnitTypeLabels[2]"  CUAC:UnitTypeLabels[2] = { if (IfValidAnd( AffordableUnitsByBedrms[2] > 0 )==0) then  UNDEFINED  else  "1 Bedroom"  endif  }
@@ -1461,14 +1425,14 @@ RULELIST "CUAC_WriteInputOutputCSV" 1 0 0 0
                                                                else  WriteToExportFile( InOutCSVFileIdx, ",,  Total,,%g\n", NumAffordableDwellingUnits )  endif  }
 
       ; updated ElecTerritory & ElecTariff to G2* - SAC 09/11/23
-   "Write CUAC I/O CSV inputs"   CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, ",Electric Utility:,,%c%s%c,,,,,,Territory:,%c%s%c,,,Tariff:,%c%s%c,,,,,Type:,%c%s%c,,Adjustment:,%c%s%c\n",
-                                                               34, EnumString( ElecUtility ), 34, 34, EnumString( G2ElecTerritory ), 34, 34, EnumString( G2ElecTariff ), 34, 34, EnumString( ElecTariffType ), 34, 34, EnumString( ElecTariffAdj ), 34 )  }
+   "Write CUAC I/O CSV inputs"   CUAC:Action  = {  WriteToExportFile( InOutCSVFileIdx, ",Electric Utility:,,%c%s%c,,,,,,Territory:,%c%s%c,,,Tariff:,%c%s%c\n",
+                                                               34, EnumString( ElecUtility ), 34, 34, EnumString( G2ElecTerritory ), 34, 34, EnumString( G2ElecTariff ), 34 )  }
 
       ; updated GasTerritory & GasTariff to G2* - SAC 09/11/23
    "Write CUAC I/O CSV inputs"   CUAC:Action  = {  if (GasUtility > 998)
                                                    then  WriteToExportFile( InOutCSVFileIdx, ",Gas Utility:,,%c%s%c,\n", 34, EnumString( GasUtility ), 34 )
-                                                   else  WriteToExportFile( InOutCSVFileIdx, ",Gas Utility:,,%c%s%c,,,,,,Territory:,%c%s%c,,,Tariff:,%c%s%c,,,,,Type:,%c%s%c\n",
-                                                               34, EnumString( GasUtility ), 34, 34, EnumString( G2GasTerritory ), 34, 34, EnumString( G2GasTariff ), 34, 34, EnumString( GasTariffType ), 34 )  endif  }
+                                                   else  WriteToExportFile( InOutCSVFileIdx, ",Gas Utility:,,%c%s%c,,,,,,Territory:,%c%s%c,,,Tariff:,%c%s%c\n",
+                                                               34, EnumString( GasUtility ), 34, 34, EnumString( G2GasTerritory ), 34, 34, EnumString( G2GasTariff ), 34 )  endif  }
 
    "Write CUAC I/O CSV inputs"   CUAC:Action  = {  switch (WaterRateType)
                                                       case  0 :  WriteToExportFile( InOutCSVFileIdx, ",Water Bill:,,%c%s%c,\n", 34, EnumString( WaterRateType ), 34 )
@@ -1639,7 +1603,6 @@ RULELIST "CUAC_WriteInputOutputCSV_ElecEndUse_1" 1 0 0 0
 END
 ;*************************************************************************
 RULELIST "CUAC_WriteInputOutputCSV_ElecEndUse_2" 1 0 0 0
-         ;"store BEMProc details" CUAC:Action = { StoreBEMProc( "CUACb4crash", 0 ) }
    "Write CUAC I/O CSV results"  for:#U=(2to2)   CUAC:Action =
                {  WriteToExportFile( InOutCSVFileIdx, ",,%s,Cooking,%.2f,%.0f,,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f,%.1f\n",     UnitTypeLabels[#U], CUACResultsRef[#U]:CkgElecUse[14], CUACResultsRef[#U]:CkgElecUse[13],
                               CUACResultsRef[#U]:CkgElecUse[1], CUACResultsRef[#U]:CkgElecUse[2], CUACResultsRef[#U]:CkgElecUse[3], CUACResultsRef[#U]:CkgElecUse[4],  CUACResultsRef[#U]:CkgElecUse[5],  CUACResultsRef[#U]:CkgElecUse[6],

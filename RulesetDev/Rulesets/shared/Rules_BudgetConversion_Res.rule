@@ -107,9 +107,7 @@ RULELIST  "BudgetConversion" 1 0 1 0
   "Convert ResZn central HVAC system status from Altered to New" ResZn:Action =
     {  if( HVACSysStatus = 2 .AND. ActiveHVACSystem:Type = 4 ) then EvalRulelist( "ConvertResZnHVACAlteredToNew", 1 ) else UNCHANGED endif }    
   "Convert ResOtherZn central HVAC system status from Altered to New" ResOtherZn:Action =
-    {  if( HVACSysStatus = 2 .AND. ( ( ServedByAirSys = 0 .AND. ActiveHVACSystem:Type = 4 ) .OR. ServedByAirSys = 1 ) ) then EvalRulelist( "ConvertResOtherZnHVACAlteredToNew", 1 ) else UNCHANGED endif }
-  "Convert central ResHVACSystem status from Altered to New" ResHVACSys:Status =
-    { if( Type = 4 .AND. Status = 2 ) then 3 else UNCHANGED endif }
+    {  if( HVACSysStatus = 2 .AND. ActiveHVACSystem:Type = 4 ) then EvalRulelist( "ConvertResOtherZnHVACAlteredToNew", 1 ) else UNCHANGED endif }
 
    ; added rule to fix problem where Std design HVAC system not properly setup in EAA models - SAC 10/03/22 (Res tic #1301) - merged from Res - SAC 10/09/22
    "Transform HVACSys settings in EAA models where needed"     HVACSys:Action =
@@ -1772,6 +1770,7 @@ END
 RULELIST  "ConvertResOtherZnHVACAlteredToNew" 1 0 1 0
 ;*************************************************************************
   "Set ResOtherZn:HVACStatus"           ResOtherZn:HVACSysStatus = { 3 }
+  "Set ResOtherZn:AltHVACSystem:Status" ResOtherZn:AltHVACSystem:Status = { 3 }
   "Set ResOtherZn:ozHVACSystem"         ResOtherZn:ozHVACSystem = { ActiveHVACSystem }
   "Set ResOtherZn:AltHVACSystem"        ResOtherZn:AltHVACSystem = { UNDEFINED }  
 END
@@ -1785,8 +1784,7 @@ RULELIST  "BudgetConversion_Res_MFamCathClg" 1 0 1 0
 ;         then  RuleLibrary(Cons, T24RClimateZoneCodeBase:StdWdFrameCathClgCons( "ClimateZone", Proj:CliZnNum, "CodeBase", Proj:CompCodeBase, "BldgType", Proj:BldgTypeTblStr ) )
 ;         else UNCHANGED endif	}	
 ; replaced above w/ following that takes into account Altered & small Addition-Alone cases - SAC 07/01/23 (tic #3479)
-   ; add assignment of CathClgCons consistent w/ 2022 Res ACM Table 27 - SAC 01/09/22 (tic #1302)
-   "Set CathedralCeiling:Construction for ceilings of conditioned zones (2022, EAA or AddALone <=700SF)"    ; add logic to prevent assignment of StdWdFrameCathClgCons cons for Existing CathedralCeiling objects - SAC 06/24/24 (user support)
+   "Set CathedralCeiling:Construction for ceilings of conditioned zones (2022, EAA or AddALone <=700SF)"    ; add assignment of CathClgCons consistent w/ 2022 Res ACM Table 27 - SAC 01/09/22 (tic #1302)
       CathedralCeiling:Construction	=
          {  if ( (ParentComponentType() == "ResZn" .OR. ParentComponentType() == "ResOtherZn") .AND. Proj:StdDesignBase >= 2022 )
             then	if (Parent( Type ) < 10)
@@ -1795,10 +1793,8 @@ RULELIST  "BudgetConversion_Res_MFamCathClg" 1 0 1 0
                         else if (IsNew .AND. ((Proj:ResCompOpt == 3 .AND. IfValidAnd( ResProj:CondAdditionSize > 0.1 ) .AND. IfValidAnd( ResProj:CondAdditionSize <= 700 )) .OR.
                                               (Proj:ResCompOpt == 2 .AND. IfValidAnd( ResProj:AddAloneAddedArea <= 700 ))) )
                         then  RuleLibrary(Cons, "T24-2022 R22 Addition CathedralCeiling" )
-                        else if (IsNew .OR. IsAltered)
-                        then  RuleLibrary(Cons, T24RClimateZoneCodeBase:StdWdFrameCathClgCons( "ClimateZone", Proj:CliZnNum, "CodeBase", Proj:CompCodeBase, "BldgType", Proj:BldgTypeTblStr ) )
-                        else  UNCHANGED
-                        endif endif endif
+                        else  RuleLibrary(Cons, T24RClimateZoneCodeBase:StdWdFrameCathClgCons( "ClimateZone", Proj:CliZnNum, "CodeBase", Proj:CompCodeBase, "BldgType", Proj:BldgTypeTblStr ) )
+                        endif endif
                   else  UNCHANGED  endif
             else  UNCHANGED  endif  }
 	"Set CathedralCeiling:Construction:AbvDeckInsulLayer"    CathedralCeiling:Construction:AbvDeckInsulLayer	=     ; add AbvDeckInsulLayer for altered, low slope CathClgs - SAC 01/09/23 (tic #1302)
@@ -1809,12 +1805,7 @@ RULELIST  "BudgetConversion_Res_MFamCathClg" 1 0 1 0
                         else  UNCHANGED  endif
                   else  UNCHANGED  endif
             else  UNCHANGED  endif  }
-	"Set CathedralCeiling:Construction:AbvDeckInsulLayerRpt"	CathedralCeiling:Construction:AbvDeckInsulLayerRpt	=    ; {  Construction:AbvDeckInsulLayer  } - revised to fix rule val error when Cons assigned is nonres - SAC 02/05/24
-      {  if (LocalCompAssigned( Construction ) == ComponentType( "ResConsAssm" ))
-         then  if (LocalStatus( Construction:AbvDeckInsulLayer ) > 0)
-               then  Construction:AbvDeckInsulLayer
-               else  UNCHANGED  endif
-         else  UNCHANGED  endif  } 
+	"Set CathedralCeiling:Construction:AbvDeckInsulLayerRpt"	CathedralCeiling:Construction:AbvDeckInsulLayerRpt	= {  Construction:AbvDeckInsulLayer  } 
 END
 ;*************************************************************************
 RULELIST  "BudgetConversion_Res_CathClgToAttic" 1 0 1 0

@@ -3,8 +3,8 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "020012S-OffSml-CECStd22"  
    BldgEngyModelVersion = 17
    CreateDate = 1414975490
-   ModDate = 1714767656
-   RunDate = 1714767657
+   ModDate = 1697233311
+   RunDate = 1697233312
    GeometryInpType = "Simplified"
    ZipCode = 95814
    ExcptCondNoClgSys = "No"
@@ -15,7 +15,7 @@ Proj   "020012S-OffSml-CECStd22"
    IsStdModel = 0
    DefaultDayltgCtrls = 0
    AirBarrier = "Air barrier - not verified"
-   SoftwareVersion = "CBECC 2022.3.1 RC (1343)"
+   SoftwareVersion = "CBECC 2022.3.0 SP1 (1318)"
    CompReportPDF = 1
    ResultsCurrentMessage = "(not current)"
    DebugScreen = 0
@@ -162,7 +162,6 @@ Spc   "Perimeter_ZN_1"
    SpcFunc = "Office Area (>250 square feet)"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 IntWall   "Perimeter_ZN_1_wall_east"  
@@ -230,7 +229,6 @@ Spc   "Perimeter_ZN_2"
    SpcFunc = "Office Area (>250 square feet)"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 ExtWall   "Perimeter_ZN_2_wall_east"  
@@ -271,7 +269,6 @@ Spc   "Perimeter_ZN_3"
    SpcFunc = "Office Area (>250 square feet)"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 UndgrFlr   "Perimeter_ZN_3_floor"  
@@ -334,7 +331,6 @@ Spc   "Perimeter_ZN_4"
    SpcFunc = "Office Area (>250 square feet)"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 IntWall   "Perimeter_ZN_4_wall_south"  
@@ -392,7 +388,6 @@ Spc   "Core_ZN"
    Area = 1610.9
    SpcFunc = "Office Area (>250 square feet)"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 UndgrFlr   "Core_ZN_floor"  
@@ -412,7 +407,6 @@ Spc   "Attic"
    ThrmlZnRef = "Attic Thermal Zone"
    Area = 6113.67
    SpcFunc = "Unoccupied-Exclude from Gross Floor Area"
-   OccSensorCtrl = 1
    ..
 
 Roof   "Attic_roof_north"  
@@ -548,6 +542,7 @@ CoilHtg   "CoreZnHeatingCoil"
    HtPumpCOP = 3.19
    HtPumpSuppCoilHtgRef = "CoreZnSupplyHeatingCoil"
    HtPumpCprsrLockoutTemp = 17
+   HtPumpSuppTemp = 40
    ..
 
 CoilHtg   "CoreZnSupplyHeatingCoil"  
@@ -607,6 +602,7 @@ CoilHtg   "Perim1ZnHeatingCoil"
    HtPumpCOP = 3.19
    HtPumpSuppCoilHtgRef = "Perim1ZnSupplyHeatingCoil"
    HtPumpCprsrLockoutTemp = 17
+   HtPumpSuppTemp = 40
    ..
 
 CoilHtg   "Perim1ZnSupplyHeatingCoil"  
@@ -670,6 +666,7 @@ CoilHtg   "Perim2ZnHeatingCoil"
    HtPumpCOP = 3.19
    HtPumpSuppCoilHtgRef = "Perim2ZnSupplyHeatingCoil"
    HtPumpCprsrLockoutTemp = 17
+   HtPumpSuppTemp = 40
    ..
 
 CoilHtg   "Perim2ZnSupplyHeatingCoil"  
@@ -730,6 +727,7 @@ CoilHtg   "Perim3ZnHeatingCoil"
    HtPumpCOP = 3.19
    HtPumpSuppCoilHtgRef = "Perim3ZnSupplyHeatingCoil"
    HtPumpCprsrLockoutTemp = 17
+   HtPumpSuppTemp = 40
    ..
 
 CoilHtg   "Perim3ZnSupplyHeatingCoil"  
@@ -947,30 +945,30 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
    Title3[22] = "Emis. (tonne)"
    Title3[23] = "Margin (tonne)"
    Enduse1[1] = "Space Heating"
-   Enduse1[2] = "2.0"
+   Enduse1[2] = "2.1"
    Enduse1[3] = "--"
-   Enduse1[4] = "12.51"
-   Enduse1[5] = "2.0"
+   Enduse1[4] = "12.64"
+   Enduse1[5] = "2.1"
    Enduse1[6] = "--"
-   Enduse1[7] = "12.51"
+   Enduse1[7] = "12.64"
    Enduse1[8] = "--"
    Enduse1[9] = "1.3"
    Enduse1[10] = "1.3"
-   Enduse1[11] = "1.80"
-   Enduse1[12] = "1.80"
+   Enduse1[11] = "1.82"
+   Enduse1[12] = "1.82"
    Enduse1[13] = "--"
-   Enduse1[17] = "0.61"
-   Enduse1[19] = "0.61"
-   Enduse1[20] = "0.61"
-   Enduse1[22] = "0.61"
+   Enduse1[17] = "0.62"
+   Enduse1[19] = "0.62"
+   Enduse1[20] = "0.62"
+   Enduse1[22] = "0.62"
    Enduse1[23] = "0.00"
    Enduse2[1] = "Space Cooling"
    Enduse2[2] = "8.4"
    Enduse2[3] = "--"
-   Enduse2[4] = "57.42"
+   Enduse2[4] = "57.43"
    Enduse2[5] = "8.4"
    Enduse2[6] = "--"
-   Enduse2[7] = "57.42"
+   Enduse2[7] = "57.43"
    Enduse2[8] = "--"
    Enduse2[9] = "0.6"
    Enduse2[10] = "0.6"
@@ -1065,22 +1063,22 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
    Enduse7[22] = "0.89"
    Enduse7[23] = "0.00"
    Enduse8[1] = "Total Compliance"
-   Enduse8[2] = "11.3"
+   Enduse8[2] = "11.4"
    Enduse8[3] = "0.0"
-   Enduse8[4] = "104.37"
-   Enduse8[5] = "11.3"
+   Enduse8[4] = "104.51"
+   Enduse8[5] = "11.4"
    Enduse8[6] = "0.0"
-   Enduse8[7] = "104.37"
+   Enduse8[7] = "104.51"
    Enduse8[8] = "--"
    Enduse8[9] = "4.3"
    Enduse8[10] = "4.3"
-   Enduse8[11] = "11.69"
-   Enduse8[12] = "11.70"
+   Enduse8[11] = "11.71"
+   Enduse8[12] = "11.72"
    Enduse8[13] = "0.01"
-   Enduse8[17] = "3.97"
-   Enduse8[19] = "3.97"
-   Enduse8[20] = "3.97"
-   Enduse8[22] = "3.97"
+   Enduse8[17] = "3.98"
+   Enduse8[19] = "3.98"
+   Enduse8[20] = "3.98"
+   Enduse8[22] = "3.98"
    Enduse8[23] = "0.00"
    Enduse9[1] = "Receptacle"
    Enduse9[2] = "23.6"
@@ -1179,40 +1177,40 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
    Enduse14[22] = "-0.46"
    Enduse14[23] = "0.00"
    Enduse15[1] = "TOTAL"
-   Enduse15[2] = "34.9"
+   Enduse15[2] = "35.0"
    Enduse15[3] = "0.0"
-   Enduse15[4] = "206.38"
-   Enduse15[5] = "34.9"
+   Enduse15[4] = "206.52"
+   Enduse15[5] = "35.0"
    Enduse15[6] = "0.0"
-   Enduse15[7] = "206.38"
+   Enduse15[7] = "206.52"
    Enduse15[8] = "--"
    Enduse15[9] = "5.4"
    Enduse15[10] = "5.4"
-   Enduse15[11] = "19.24"
-   Enduse15[12] = "19.25"
+   Enduse15[11] = "19.26"
+   Enduse15[12] = "19.27"
    Enduse15[13] = "0.01"
-   Enduse15[17] = "6.53"
-   Enduse15[19] = "6.53"
-   Enduse15[20] = "6.53"
-   Enduse15[22] = "6.53"
+   Enduse15[17] = "6.54"
+   Enduse15[19] = "6.54"
+   Enduse15[20] = "6.54"
+   Enduse15[22] = "6.54"
    Enduse15[23] = "0.00"
    Enduse16[1] = "Efficiency Compliance"
-   Enduse16[2] = "38.0"
+   Enduse16[2] = "38.1"
    Enduse16[3] = "0.0"
-   Enduse16[4] = "206.42"
-   Enduse16[5] = "38.0"
+   Enduse16[4] = "206.56"
+   Enduse16[5] = "38.1"
    Enduse16[6] = "0.0"
-   Enduse16[7] = "206.42"
+   Enduse16[7] = "206.56"
    Enduse16[8] = "--"
-   Enduse16[9] = "4.7"
-   Enduse16[10] = "4.7"
-   Enduse16[11] = "16.44"
-   Enduse16[12] = "16.44"
+   Enduse16[9] = "4.8"
+   Enduse16[10] = "4.8"
+   Enduse16[11] = "16.46"
+   Enduse16[12] = "16.46"
    Enduse16[13] = "--"
-   Enduse16[17] = "5.58"
-   Enduse16[19] = "5.58"
-   Enduse16[20] = "5.58"
-   Enduse16[22] = "5.58"
+   Enduse16[17] = "5.59"
+   Enduse16[19] = "5.59"
+   Enduse16[20] = "5.59"
+   Enduse16[22] = "5.59"
    Enduse16[23] = "0.00"
    ZoneUMLHsLoaded = ( 0, 1 )
    ZoneUMLHs = ( 
@@ -1245,22 +1243,22 @@ clg: 3  htg: 0  'Perimeter_ZN_4 Thermal Zone'" )
    PctSavTDVLbl = "-"
    PctSavEffTDVLbl = "-"
    PctSavCmpTDVLbl = "-"
-   PctSavingsSrc = 0.0519481
+   PctSavingsSrc = 0.0518941
    PctSavingsEffSrc = 0
-   PctSavingsCmpSrc = 0.0854701
+   PctSavingsCmpSrc = 0.0853242
    PctSavSrcLbl = "0.1"
    PctSavEffSrcLbl = "-"
    PctSavCmpSrcLbl = "0.1"
    MarginkW = 0
    PVBattResultsValid = 1
    PropPV_Total = 26931.5
-   PropPV_Export = 3966.23
-   PropPV_PctExport = 14.7271
+   PropPV_Export = 3966.27
+   PropPV_PctExport = 14.7273
    StdPV_Total = 26931.4
    StdPV_Export = 3967.55
-   StdPV_PctExport = 14.732
-   NRCCPRFPayldTransID = "9ceb4c1f-f9e9-43af-ba59-915bec991183"
-   NRCCPRFPayldProcDate = "2024-05-03T13:20:45"
+   StdPV_PctExport = 14.7321
+   NRCCPRFPayldTransID = "e6540054-ba7d-4d68-bb1a-dc9dbd62b2f5"
+   NRCCPRFPayldProcDate = "2023-10-13T14:41:39"
    ..
 
 

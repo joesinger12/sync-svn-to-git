@@ -3,8 +3,8 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "OffLrg-PrkgLabKitch"  
    BldgEngyModelVersion = 17
    CreateDate = 1448132440
-   ModDate = 1714770540
-   RunDate = 1714770541
+   ModDate = 1697221811
+   RunDate = 1697221812
    ZipCode = 95814
    QuickAnalysis = 0
    ExcptCondNoClgSys = "No"
@@ -15,7 +15,7 @@ Proj   "OffLrg-PrkgLabKitch"
    DefaultDayltgCtrls = 1
    AnalysisType = "Title24Compliance"
    AirBarrier = "Air barrier - not verified"
-   SoftwareVersion = "CBECC 2022.3.1 RC (1343)"
+   SoftwareVersion = "CBECC 2022.3.0 SP1 (1318)"
    CompReportPDF = 1
    ResultsCurrentMessage = "(not current)"
    ..
@@ -537,7 +537,6 @@ Spc   "GroundFloor Prkg Spc"
    ThrmlZnRef = "Basement Thermal Zone"
    Vol = 306899
    SpcFuncDefaultsRef = "ParkingGarage Defaults"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 1"  
@@ -684,7 +683,6 @@ Spc   "Core_bottom"
    ThrmlZnRef = "Core_bottom Thermal Zone"
    Vol = 245391
    SpcFuncDefaultsRef = "ParkingGarage Defaults"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 7"  
@@ -833,7 +831,6 @@ Spc   "Perimeter_bot_ZN_1"
    Vol = 30371.4
    SpcFuncDefaultsRef = "ParkingGarage Defaults"
    SpcFunc = "Parking Garage Area (Parking Zone and Ramps)"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 23"  
@@ -980,7 +977,6 @@ Spc   "Perimeter_bot_ZN_2"
    Vol = 19572.1
    SpcFuncDefaultsRef = "ParkingGarage Defaults"
    SpcFunc = "Parking Garage Area (Daylight Adaptation Zones)"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 29"  
@@ -1103,7 +1099,6 @@ Spc   "Perimeter_bot_ZN_3"
    Vol = 30370.8
    SpcFuncDefaultsRef = "ParkingGarage Defaults"
    SpcFunc = "Parking Garage Area (Daylight Adaptation Zones)"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 34"  
@@ -1225,7 +1220,6 @@ Spc   "Perimeter_bot_ZN_4"
    ThrmlZnRef = "Perimeter_bot_ZN_4 Thermal Zone"
    Vol = 19572.1
    SpcFuncDefaultsRef = "ParkingGarage Defaults"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 39"  
@@ -1323,7 +1317,6 @@ Spc   "GroundFloor_Plenum"
    ThrmlZnRef = "GroundFloor_Plenum Thermal Zone"
    Vol = 153412
    SpcFunc = "Unoccupied-Exclude from Gross Floor Area"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 13"  
@@ -1569,7 +1562,6 @@ Spc   "Core_mid_ZN_5"
    Vol = 245391
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ExhPerSpc = 800
    ..
 
@@ -1718,7 +1710,6 @@ Spc   "Perimeter_mid_ZN_1"
    Vol = 30371.4
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 95"  
@@ -1864,7 +1855,6 @@ Spc   "Perimeter_mid_ZN_2"
    Vol = 19572.1
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 101"  
@@ -1986,7 +1976,6 @@ Spc   "Perimeter_mid_ZN_3"
    Vol = 30370.8
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 106"  
@@ -2108,7 +2097,6 @@ Spc   "Perimeter_mid_ZN_4"
    Vol = 19572.1
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 111"  
@@ -2204,7 +2192,6 @@ Spc   "MidFloor_Plenum"
    CondgType = "Plenum"
    ThrmlZnRef = "MidFloor_Plenum Thermal Zone"
    Vol = 153412
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 85"  
@@ -2450,7 +2437,6 @@ Spc   "Core_hi"
    SpcFuncDefaultsRef = "Lab Defaults"
    SHWFluidSegRef = "SHWSupply1"
    VentACH = 20
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 43"  
@@ -2598,7 +2584,6 @@ Spc   "Perimeter_hi_ZN_1"
    SpcFuncDefaultsRef = "Lab Defaults"
    SHWFluidSegRef = "SHWSupply1"
    VentACH = 20
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 59"  
@@ -2744,7 +2729,6 @@ Spc   "Perimeter_hi_ZN_2"
    SpcFunc = "Laboratory, Scientific"
    SHWFluidSegRef = "SHWSupply1"
    VentACH = 20
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 65"  
@@ -2865,7 +2849,6 @@ Spc   "Perimeter_hi_ZN_3"
    Vol = 30370.8
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 70"  
@@ -2986,7 +2969,6 @@ Spc   "Perimeter_hi_ZN_4"
    Vol = 19572.1
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 75"  
@@ -3083,7 +3065,6 @@ Spc   "HiFloor_Plenum"
    ThrmlZnRef = "HiFloor_Plenum Thermal Zone"
    Vol = 153412
    SpcFunc = "Unoccupied-Exclude from Gross Floor Area"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 49"  
@@ -3327,7 +3308,6 @@ Spc   "Core_top"
    SpcFuncDefaultsRef = "Dining Defaults"
    SHWFluidSegRef = "SHWSupply1"
    VentPerArea = 0.55
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 115"  
@@ -3621,7 +3601,6 @@ Spc   "Perimeter_top_ZN_2"
    Vol = 19572.1
    SpcFuncDefaultsRef = "Dining Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 127"  
@@ -3743,7 +3722,6 @@ Spc   "Perimeter_top_ZN_3"
    SpcFunc = "Kitchen/Food Preparation Area"
    SHWFluidSegRef = "SHWSupply1"
    VentPerSpc = 1000
-   OccSensorCtrl = 1
    KitExhHoodLen[1] = 5
    KitExhHoodLen[2] = 5
    KitExhHoodStyle[1] = "BackshelfOrPassover"
@@ -3871,7 +3849,6 @@ Spc   "Perimeter_top_ZN_4"
    SpcFunc = "Kitchen/Food Preparation Area"
    SHWFluidSegRef = "SHWSupply1"
    VentPerSpc = 4000
-   OccSensorCtrl = 1
    KitExhHoodLen[1] = 10
    KitExhHoodLen[2] = 10
    KitExhHoodStyle[1] = "Eyebrow"
@@ -3973,7 +3950,6 @@ Spc   "TopFloor_Plenum"
    CondgType = "Plenum"
    ThrmlZnRef = "TopFloor_Plenum Thermal Zone"
    Vol = 153412
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 141"  
@@ -5444,172 +5420,172 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
    Title3[23] = "Margin (tonne)"
    Enduse1[1] = "Space Heating"
    Enduse1[2] = "0.4"
-   Enduse1[3] = "5,936.9"
-   Enduse1[4] = "52.14"
+   Enduse1[3] = "5,965.6"
+   Enduse1[4] = "52.39"
    Enduse1[5] = "0.4"
-   Enduse1[6] = "7,718.6"
-   Enduse1[7] = "67.32"
-   Enduse1[8] = "15.18"
+   Enduse1[6] = "7,509.0"
+   Enduse1[7] = "65.56"
+   Enduse1[8] = "13.17"
    Enduse1[9] = "0.1"
    Enduse1[10] = "0.1"
-   Enduse1[11] = "18.03"
-   Enduse1[12] = "23.43"
-   Enduse1[13] = "5.40"
+   Enduse1[11] = "18.11"
+   Enduse1[12] = "22.80"
+   Enduse1[13] = "4.69"
    Enduse1[17] = "0.10"
-   Enduse1[18] = "332.72"
-   Enduse1[19] = "332.82"
+   Enduse1[18] = "334.33"
+   Enduse1[19] = "334.43"
    Enduse1[20] = "0.11"
-   Enduse1[21] = "432.57"
-   Enduse1[22] = "432.68"
-   Enduse1[23] = "99.86"
+   Enduse1[21] = "420.82"
+   Enduse1[22] = "420.93"
+   Enduse1[23] = "86.50"
    Enduse2[1] = "Space Cooling"
-   Enduse2[2] = "732.0"
+   Enduse2[2] = "733.7"
    Enduse2[3] = "--"
-   Enduse2[4] = "82.69"
-   Enduse2[5] = "316.7"
+   Enduse2[4] = "82.87"
+   Enduse2[5] = "310.7"
    Enduse2[6] = "--"
-   Enduse2[7] = "37.35"
-   Enduse2[8] = "-45.34"
-   Enduse2[9] = "86.0"
-   Enduse2[10] = "35.9"
-   Enduse2[11] = "4.73"
-   Enduse2[12] = "2.03"
-   Enduse2[13] = "-2.70"
-   Enduse2[17] = "89.41"
-   Enduse2[19] = "89.41"
-   Enduse2[20] = "38.32"
-   Enduse2[22] = "38.32"
-   Enduse2[23] = "-51.09"
+   Enduse2[7] = "36.48"
+   Enduse2[8] = "-46.39"
+   Enduse2[9] = "86.1"
+   Enduse2[10] = "35.3"
+   Enduse2[11] = "4.74"
+   Enduse2[12] = "1.99"
+   Enduse2[13] = "-2.75"
+   Enduse2[17] = "89.58"
+   Enduse2[19] = "89.58"
+   Enduse2[20] = "37.63"
+   Enduse2[22] = "37.63"
+   Enduse2[23] = "-51.95"
    Enduse3[1] = "Indoor Fans"
-   Enduse3[2] = "596.4"
+   Enduse3[2] = "597.8"
    Enduse3[3] = "--"
-   Enduse3[4] = "53.95"
-   Enduse3[5] = "559.1"
+   Enduse3[4] = "54.09"
+   Enduse3[5] = "552.0"
    Enduse3[6] = "--"
-   Enduse3[7] = "52.45"
-   Enduse3[8] = "-1.50"
-   Enduse3[9] = "63.1"
-   Enduse3[10] = "64.5"
-   Enduse3[11] = "5.48"
-   Enduse3[12] = "5.03"
-   Enduse3[13] = "-0.45"
-   Enduse3[17] = "103.56"
-   Enduse3[19] = "103.56"
-   Enduse3[20] = "95.06"
-   Enduse3[22] = "95.06"
-   Enduse3[23] = "-8.50"
+   Enduse3[7] = "51.59"
+   Enduse3[8] = "-2.50"
+   Enduse3[9] = "63.2"
+   Enduse3[10] = "63.8"
+   Enduse3[11] = "5.49"
+   Enduse3[12] = "4.98"
+   Enduse3[13] = "-0.51"
+   Enduse3[17] = "103.79"
+   Enduse3[19] = "103.79"
+   Enduse3[20] = "94.11"
+   Enduse3[22] = "94.11"
+   Enduse3[23] = "-9.68"
    Enduse4[1] = "Heat Rejection"
    Enduse4[2] = "3.6"
    Enduse4[3] = "--"
-   Enduse4[4] = "0.63"
-   Enduse4[5] = "43.1"
+   Enduse4[4] = "0.64"
+   Enduse4[5] = "42.7"
    Enduse4[6] = "--"
-   Enduse4[7] = "6.68"
-   Enduse4[8] = "6.05"
+   Enduse4[7] = "6.60"
+   Enduse4[8] = "5.96"
    Enduse4[9] = "0.4"
-   Enduse4[10] = "6.1"
+   Enduse4[10] = "6.0"
    Enduse4[11] = "0.02"
    Enduse4[12] = "0.28"
    Enduse4[13] = "0.26"
    Enduse4[17] = "0.38"
    Enduse4[19] = "0.38"
-   Enduse4[20] = "5.29"
-   Enduse4[22] = "5.29"
-   Enduse4[23] = "4.91"
+   Enduse4[20] = "5.24"
+   Enduse4[22] = "5.24"
+   Enduse4[23] = "4.86"
    Enduse5[1] = "Pumps & Misc."
-   Enduse5[2] = "139.1"
+   Enduse5[2] = "139.3"
    Enduse5[3] = "--"
-   Enduse5[4] = "13.24"
-   Enduse5[5] = "173.4"
+   Enduse5[4] = "13.25"
+   Enduse5[5] = "170.5"
    Enduse5[6] = "--"
-   Enduse5[7] = "18.49"
-   Enduse5[8] = "5.25"
-   Enduse5[9] = "15.4"
-   Enduse5[10] = "20.8"
+   Enduse5[7] = "18.20"
+   Enduse5[8] = "4.95"
+   Enduse5[9] = "15.3"
+   Enduse5[10] = "20.6"
    Enduse5[11] = "1.05"
-   Enduse5[12] = "1.23"
-   Enduse5[13] = "0.18"
-   Enduse5[17] = "19.76"
-   Enduse5[19] = "19.76"
-   Enduse5[20] = "23.25"
-   Enduse5[22] = "23.25"
-   Enduse5[23] = "3.49"
+   Enduse5[12] = "1.21"
+   Enduse5[13] = "0.16"
+   Enduse5[17] = "19.80"
+   Enduse5[19] = "19.80"
+   Enduse5[20] = "22.92"
+   Enduse5[22] = "22.92"
+   Enduse5[23] = "3.12"
    Enduse6[1] = "Domestic Hot Water"
    Enduse6[2] = "--"
-   Enduse6[3] = "1,592.6"
-   Enduse6[4] = "13.19"
+   Enduse6[3] = "1,590.4"
+   Enduse6[4] = "13.17"
    Enduse6[5] = "28.3"
    Enduse6[6] = "1,363.8"
    Enduse6[7] = "13.85"
-   Enduse6[8] = "0.66"
+   Enduse6[8] = "0.68"
    Enduse6[9] = "--"
    Enduse6[10] = "2.8"
    Enduse6[11] = "4.83"
    Enduse6[12] = "4.39"
    Enduse6[13] = "-0.44"
-   Enduse6[18] = "89.26"
-   Enduse6[19] = "89.26"
+   Enduse6[18] = "89.13"
+   Enduse6[19] = "89.13"
    Enduse6[20] = "4.65"
    Enduse6[21] = "76.43"
    Enduse6[22] = "81.08"
-   Enduse6[23] = "-8.18"
+   Enduse6[23] = "-8.05"
    Enduse7[1] = "Indoor Lighting"
-   Enduse7[2] = "573.6"
+   Enduse7[2] = "574.1"
    Enduse7[3] = "--"
    Enduse7[4] = "48.71"
-   Enduse7[5] = "507.2"
+   Enduse7[5] = "507.6"
    Enduse7[6] = "--"
    Enduse7[7] = "43.23"
    Enduse7[8] = "-5.48"
-   Enduse7[9] = "44.1"
+   Enduse7[9] = "44.0"
    Enduse7[10] = "39.5"
    Enduse7[11] = "4.28"
    Enduse7[12] = "3.82"
    Enduse7[13] = "-0.46"
-   Enduse7[17] = "80.98"
-   Enduse7[19] = "80.98"
-   Enduse7[20] = "72.23"
-   Enduse7[22] = "72.23"
+   Enduse7[17] = "80.96"
+   Enduse7[19] = "80.96"
+   Enduse7[20] = "72.21"
+   Enduse7[22] = "72.21"
    Enduse7[23] = "-8.75"
    Enduse8[1] = "Total Compliance"
-   Enduse8[2] = "2,045.1"
-   Enduse8[3] = "7,529.5"
-   Enduse8[4] = "264.55"
-   Enduse8[5] = "791.5"
-   Enduse8[6] = "9,082.4"
-   Enduse8[7] = "185.23"
-   Enduse8[8] = "-79.32"
+   Enduse8[2] = "2,048.9"
+   Enduse8[3] = "7,556.0"
+   Enduse8[4] = "265.12"
+   Enduse8[5] = "775.5"
+   Enduse8[6] = "8,872.8"
+   Enduse8[7] = "181.36"
+   Enduse8[8] = "-83.76"
    Enduse8[9] = "209.0"
-   Enduse8[10] = "167.5"
-   Enduse8[11] = "38.42"
-   Enduse8[12] = "37.96"
-   Enduse8[13] = "-0.46"
-   Enduse8[17] = "294.19"
-   Enduse8[18] = "421.98"
-   Enduse8[19] = "716.17"
-   Enduse8[20] = "196.48"
-   Enduse8[21] = "509.00"
-   Enduse8[22] = "705.48"
-   Enduse8[23] = "-10.69"
+   Enduse8[10] = "165.7"
+   Enduse8[11] = "38.52"
+   Enduse8[12] = "37.22"
+   Enduse8[13] = "-1.30"
+   Enduse8[17] = "294.61"
+   Enduse8[18] = "423.46"
+   Enduse8[19] = "718.07"
+   Enduse8[20] = "194.44"
+   Enduse8[21] = "497.25"
+   Enduse8[22] = "691.69"
+   Enduse8[23] = "-26.38"
    Enduse9[1] = "Receptacle"
-   Enduse9[2] = "1,298.1"
+   Enduse9[2] = "1,301.5"
    Enduse9[3] = "8,147.4"
-   Enduse9[4] = "170.97"
-   Enduse9[5] = "1,298.1"
+   Enduse9[4] = "171.11"
+   Enduse9[5] = "1,301.5"
    Enduse9[6] = "8,147.4"
-   Enduse9[7] = "170.97"
+   Enduse9[7] = "171.11"
    Enduse9[8] = "--"
-   Enduse9[9] = "74.4"
-   Enduse9[10] = "74.4"
+   Enduse9[9] = "74.2"
+   Enduse9[10] = "74.2"
    Enduse9[11] = "32.93"
    Enduse9[12] = "32.93"
    Enduse9[13] = "--"
-   Enduse9[17] = "154.92"
+   Enduse9[17] = "155.03"
    Enduse9[18] = "456.60"
-   Enduse9[19] = "611.52"
-   Enduse9[20] = "154.92"
+   Enduse9[19] = "611.63"
+   Enduse9[20] = "155.03"
    Enduse9[21] = "456.60"
-   Enduse9[22] = "611.52"
+   Enduse9[22] = "611.63"
    Enduse9[23] = "0.00"
    Enduse10[1] = "Process"
    Enduse10[2] = "251.8"
@@ -5687,8 +5663,8 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
    Enduse14[4] = "--"
    Enduse14[5] = "3.0"
    Enduse14[6] = "--"
-   Enduse14[7] = "-0.73"
-   Enduse14[8] = "-0.73"
+   Enduse14[7] = "-0.74"
+   Enduse14[8] = "-0.74"
    Enduse14[9] = "--"
    Enduse14[10] = "-0.3"
    Enduse14[11] = "--"
@@ -5698,45 +5674,45 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
    Enduse14[22] = "-6.53"
    Enduse14[23] = "-6.53"
    Enduse15[1] = "TOTAL"
-   Enduse15[2] = "3,704.2"
-   Enduse15[3] = "15,676.9"
-   Enduse15[4] = "468.56"
-   Enduse15[5] = "2,450.6"
-   Enduse15[6] = "17,229.8"
-   Enduse15[7] = "389.24"
-   Enduse15[8] = "-79.32"
-   Enduse15[9] = "324.4"
-   Enduse15[10] = "282.9"
-   Enduse15[11] = "74.92"
-   Enduse15[12] = "74.46"
-   Enduse15[13] = "-0.46"
-   Enduse15[17] = "516.43"
-   Enduse15[18] = "878.58"
-   Enduse15[19] = "1,395.01"
-   Enduse15[20] = "418.72"
-   Enduse15[21] = "965.60"
-   Enduse15[22] = "1,384.32"
-   Enduse15[23] = "-10.69"
+   Enduse15[2] = "3,711.4"
+   Enduse15[3] = "15,703.4"
+   Enduse15[4] = "469.27"
+   Enduse15[5] = "2,438.0"
+   Enduse15[6] = "17,020.2"
+   Enduse15[7] = "385.51"
+   Enduse15[8] = "-83.76"
+   Enduse15[9] = "324.3"
+   Enduse15[10] = "281.0"
+   Enduse15[11] = "75.02"
+   Enduse15[12] = "73.72"
+   Enduse15[13] = "-1.30"
+   Enduse15[17] = "516.96"
+   Enduse15[18] = "880.06"
+   Enduse15[19] = "1,397.02"
+   Enduse15[20] = "416.79"
+   Enduse15[21] = "953.85"
+   Enduse15[22] = "1,370.64"
+   Enduse15[23] = "-26.38"
    Enduse16[1] = "Efficiency Compliance"
-   Enduse16[2] = "2,045.1"
-   Enduse16[3] = "7,529.5"
-   Enduse16[4] = "264.55"
-   Enduse16[5] = "1,628.2"
-   Enduse16[6] = "9,082.4"
-   Enduse16[7] = "239.37"
-   Enduse16[8] = "-25.18"
+   Enduse16[2] = "2,048.9"
+   Enduse16[3] = "7,556.0"
+   Enduse16[4] = "265.12"
+   Enduse16[5] = "1,612.2"
+   Enduse16[6] = "8,872.8"
+   Enduse16[7] = "235.51"
+   Enduse16[8] = "-29.61"
    Enduse16[9] = "209.0"
-   Enduse16[10] = "169.8"
-   Enduse16[11] = "38.42"
-   Enduse16[12] = "40.21"
-   Enduse16[13] = "1.79"
-   Enduse16[17] = "294.19"
-   Enduse16[18] = "421.98"
-   Enduse16[19] = "716.17"
-   Enduse16[20] = "238.91"
-   Enduse16[21] = "509.00"
-   Enduse16[22] = "747.91"
-   Enduse16[23] = "31.74"
+   Enduse16[10] = "168.0"
+   Enduse16[11] = "38.52"
+   Enduse16[12] = "39.47"
+   Enduse16[13] = "0.95"
+   Enduse16[17] = "294.61"
+   Enduse16[18] = "423.46"
+   Enduse16[19] = "718.07"
+   Enduse16[20] = "236.87"
+   Enduse16[21] = "497.25"
+   Enduse16[22] = "734.12"
+   Enduse16[23] = "16.05"
    ZoneUMLHsLoaded = ( 0, 1 )
    ZoneUMLHs = ( 
                  "clg: 0  htg: 0  'Basement Thermal Zone'
@@ -5756,7 +5732,7 @@ clg: 0  htg: 0  'Core_hi Thermal Zone'
 clg: 0  htg: 0  'Perimeter_hi_ZN_1 Thermal Zone'
 clg: 0  htg: 0  'Perimeter_hi_ZN_2 Thermal Zone'
 clg: 0  htg: 0  'Perimeter_hi_ZN_3 Thermal Zone'
-clg: 94  htg: 0  'Perimeter_hi_ZN_4 Thermal Zone'
+clg: 170  htg: 0  'Perimeter_hi_ZN_4 Thermal Zone'
 clg: 0  htg: 0  'HiFloor_Plenum Thermal Zone'
 clg: 0  htg: 0  'Core_top Thermal Zone'
 clg: 0  htg: 0  'Perimeter_top_ZN_1 Thermal Zone'
@@ -5789,8 +5765,13 @@ clg: 0  htg: 0  'Perimeter_top_ZN_2 Thermal Zone'
 clg: 0  htg: 0  'Perimeter_top_ZN_3 Thermal Zone'
 clg: 0  htg: 0  'Perimeter_top_ZN_4 Thermal Zone'
 clg: 0  htg: 0  'TopFloor_Plenum Thermal Zone'" )
+   HaveZoneUMLHsMsg = 1
+   ZoneUMLHsMsg = "Warning:  1 zone(s) in Proposed model exceed maximum cooling unmet load hours of 170.
+
+All thermal zones exceeding unmet load hour limits will be reported on PRF-1, which will be watermarked 'not for compliance'."
+   ZoneUMLHsLink = "https://bees.noresco.com/faq_hvac.html#umlh"
    SimSummary[1] = "E+ Successful (1 severe error, 225 warnings)"
-   SimSummary[3] = "CSE Successful, E+ Successful (3 severe errors, 218 warnings)"
+   SimSummary[3] = "CSE Successful, E+ Successful (3 severe errors, 210 warnings)"
    PassFail = "FAIL"
    MetricPassFail[1] = "Fail"
    MetricPassFail[2] = "Fail"
@@ -5800,28 +5781,28 @@ clg: 0  htg: 0  'TopFloor_Plenum Thermal Zone'" )
    AnalysisValid = 0
    HideCompSmrySrc = 0
    HideCompSmryTot = 0
-   PctSavingsTDV = -20.3782
-   PctSavingsEffTDV = -10.5193
-   PctSavingsCmpTDV = -42.8224
-   PctSavTDVLbl = "-20.4"
-   PctSavEffTDVLbl = "-10.5"
-   PctSavCmpTDVLbl = "-42.8"
-   PctSavingsSrc = -0.617781
-   PctSavingsEffSrc = 4.45163
-   PctSavingsCmpSrc = -1.2118
-   PctSavSrcLbl = "-0.6"
-   PctSavEffSrcLbl = "4.5"
-   PctSavCmpSrcLbl = "-1.2"
-   MarginkW = -41.5
+   PctSavingsTDV = -21.7271
+   PctSavingsEffTDV = -12.5727
+   PctSavingsCmpTDV = -46.1844
+   PctSavTDVLbl = "-21.7"
+   PctSavEffTDVLbl = "-12.6"
+   PctSavCmpTDVLbl = "-46.2"
+   PctSavingsSrc = -1.76343
+   PctSavingsEffSrc = 2.40689
+   PctSavingsCmpSrc = -3.49275
+   PctSavSrcLbl = "-1.8"
+   PctSavEffSrcLbl = "2.4"
+   PctSavCmpSrcLbl = "-3.5"
+   MarginkW = -43.3
    PVBattResultsValid = 1
    PropPV_Total = 0
    PropPV_Export = 0
    PropPV_PctExport = 0
    StdPV_Total = 839685
-   StdPV_Export = 8173.17
-   StdPV_PctExport = 0.973362
-   NRCCPRFPayldTransID = "71dcb8e9-3b82-466a-8fe6-cfacd092409b"
-   NRCCPRFPayldProcDate = "2024-05-03T14:08:45"
+   StdPV_Export = 8186.69
+   StdPV_PctExport = 0.974972
+   NRCCPRFPayldTransID = "f37f9119-37dd-4a69-9176-f1a21c81c908"
+   NRCCPRFPayldProcDate = "2023-10-13T11:29:52"
    ..
 
 

@@ -270,9 +270,11 @@ RULE NEW Spc:OverallAreaNew
   INPUTCLASS
     NotInput
   DEFAULT
-    if( OverallStatus = "New" ) then CondFlrArea else 0 endif
+    if( OverallStatus = "New" ) then CondFlrAreaWithMult else 0 endif
   SIZING
-    if( BaseSysNum > 0 ) then CondFlrArea else OverallAreaNew endif
+    if( BaseSysNum > 0 ) then CondFlrAreaWithMult else OverallAreaNew endif
+  ANNUAL
+    z:OverallAreaNew
 ENDRULE
 
 RULE NEW Spc:OverallAreaExisting
@@ -281,9 +283,11 @@ RULE NEW Spc:OverallAreaExisting
   INPUTCLASS
     NotInput
   DEFAULT
-    if( OverallStatus = "Existing" ) then CondFlrArea else 0 endif
+    if( OverallStatus = "Existing" ) then CondFlrAreaWithMult else 0 endif
   SIZING
     if( BaseSysNum > 0 ) then 0 else OverallAreaExisting endif
+  ANNUAL
+    z:OverallAreaExisting
 ENDRULE
 
 RULE NEW Spc:OverallAreaAltered
@@ -292,9 +296,11 @@ RULE NEW Spc:OverallAreaAltered
   INPUTCLASS
     NotInput
   DEFAULT
-    if( OverallStatus = "Altered" ) then CondFlrArea else 0 endif
+    if( OverallStatus = "Altered" ) then CondFlrAreaWithMult else 0 endif
   SIZING
     if( BaseSysNum > 0 ) then 0 else OverallAreaAltered endif
+  ANNUAL
+    z:OverallAreaAltered
 ENDRULE
 
 // Set values for area that correpond to each OverallStatus option
@@ -307,6 +313,8 @@ RULE NEW ThrmlZn:OverallAreaNew
     SumRevRef( Spc:ThrmlZnRef, Spc:OverallAreaNew )
   SIZING
     SumRevRef( Spc:ThrmlZnRef, Spc:OverallAreaNew )
+  ANNUAL
+    z:OverallAreaNew
 ENDRULE
 
 RULE NEW ThrmlZn:OverallAreaExisting
@@ -318,6 +326,8 @@ RULE NEW ThrmlZn:OverallAreaExisting
     SumRevRef( Spc:ThrmlZnRef, Spc:OverallAreaExisting )
   SIZING
     SumRevRef( Spc:ThrmlZnRef, Spc:OverallAreaExisting )
+  ANNUAL
+    z:OverallAreaExisting
 ENDRULE
 
 RULE NEW ThrmlZn:OverallAreaAltered
@@ -329,6 +339,8 @@ RULE NEW ThrmlZn:OverallAreaAltered
     SumRevRef( Spc:ThrmlZnRef, Spc:OverallAreaAltered )
   SIZING
     SumRevRef( Spc:ThrmlZnRef, Spc:OverallAreaAltered )
+  ANNUAL
+    z:OverallAreaAltered
 ENDRULE
 
 // Set flags that describe the status of the proposed HVAC system at the ThrmlZn.

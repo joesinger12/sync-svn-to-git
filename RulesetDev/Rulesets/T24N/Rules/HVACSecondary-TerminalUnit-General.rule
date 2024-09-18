@@ -246,17 +246,7 @@ RULE NEW TrmlUnit:ParentAirSysRef
     AirSys:Name
 ENDRULE 
 
-RULE NEW TrmlUnit:IsVAVSys
-  DATATYPE
-    Integer
-  DESCRIPTION
-    "A flag that indicates if the AirSys:Type is classified as a 'variable air volume' 
-     system for rules."
-  INPUTCLASS
-    NotInput
-  DEFAULT
-    AirSys:IsVAVSys
-ENDRULE
+
 
 // ********** Status ***********************************************************
 RULE TrmlUnit:Status
@@ -451,19 +441,6 @@ RULE TrmlUnit:SysCnt
     z:SysCnt
 ENDRULE
 
-RULE NEW TrmlUnit:SysCntSim
-  DESCRIPTION
-    "Echo of AirSys:CntSim"
-  INPUTCLASS
-    NotInput
-  DATATYPE
-    Integer
-  DEFAULT
-    Parent( CntSim ) * Cnt
-  SIZING
-    Parent( CntSim ) * Cnt
-ENDRULE
-
 RULE NEW TrmlUnit:SysCntControlledWithMult
   DATATYPE
     Integer
@@ -508,17 +485,11 @@ RULE NEW TrmlUnit:HVACZnCnt
     NotInput
   DEFAULT
     if( LocalCompAssigned( ZnServedRef ) )
-    then if( ServesResZn > 0 )
-         then ZnServedRef:AirSysCnt
-         else ZnServedRef:HVACZnCnt
-         endif
+    then ZnServedRef:HVACZnCnt
     else 0
     endif
   SIZING
-    if( ServesResZn > 0 )
-    then ZnServedRef:AirSysCnt
-    else ZnServedRef:HVACZnCnt
-    endif
+    ZnServedRef:HVACZnCnt
   ANNUAL
     z:HVACZnCnt
 ENDRULE
@@ -570,7 +541,7 @@ RULE TrmlUnit:Type
       PostError("TerminalUnit '%s' is Type = '%s', but has a child heating coil.",
                  Name, Type)
     else
-    if( ( AirSys:Type = "PVAV" .OR. AirSys:Type = "VAV" .OR. AirSys:Type = "DOASVAV" ) .AND.
+    if( ( AirSys:Type = "PVAV" .OR. AirSys:Type = "VAV" .OR. Type = "DOASVAV" ) .AND.
         Type = "Uncontrolled" )
     then 
       PostError("TerminalUnit '%s' is Type = 'Uncontrolled', but is connected to a
@@ -794,43 +765,21 @@ RULE TrmlUnit:PriAirFlowMaxSim
     0
   DEFAULT
     if( LocalStatus( PriAirFlowMax ) > 0 )
-    then PriAirFlowMax * SysCntSim
+    then PriAirFlowMax * SysCnt
     else 0
     endif
   SIZING
     if( LocalStatus( PriAirFlowMax ) > 0 )
-    then PriAirFlowMax * SysCntSim
+    then PriAirFlowMax * SysCnt
     else 0
     endif
   ANNUAL
     if( LocalStatus( PriAirFlowMax ) > 0 )
-    then PriAirFlowMax * SysCntSim
+    then PriAirFlowMax * SysCnt
     else 0
     endif
 ENDRULE
 
-RULE NEW TrmlUnit:PriAirFLowMaxNoExhZnSim
-  DESCRIPTION
-    "The zone air delivery rate at design conditions at zone without exhaust flow back to the system
-     , for simulation. This property is only used to calculate the remaining exhaust flow to zones
-     where the exhaust flow is not specified."
-  INPUTCLASS 
-    NotInput
-  MINIMUM 
-    0
-  UNITS 
-    cfm  
-  REPORTPRECISION
-    0
-  DEFAULT
-    if( IfValidAnd( ZnServedRef:ExhSysRef = ParentAirSysRef ) .AND.
-        IfValidAnd( ZnServedRef:ExhFlow > 0 ) )
-    then 0
-    else if( LocalStatus( PriAirFlowMax ) > 0 )
-    then PriAirFlowMax * SysCntSim
-    else 0
-    endif endif
-ENDRULE
 
 // ********** Minimum Primary Airflow ******************************************
 RULE TrmlUnit:PriAirFlowMin
@@ -1256,17 +1205,17 @@ RULE TrmlUnit:PriAirFlowMinSim
     0
   DEFAULT
     if( LocalStatus( PriAirFlowMin ) > 0 )
-    then PriAirFlowMin * SysCntSim
+    then PriAirFlowMin * SysCnt
     else UNDEFINED
     endif  
   SIZING
     if( LocalStatus( PriAirFlowMin ) > 0 )
-    then PriAirFlowMin * SysCntSim
+    then PriAirFlowMin * SysCnt
     else UNDEFINED
     endif 
   ANNUAL
     if( LocalStatus( PriAirFlowMin ) > 0 )
-    then PriAirFlowMin * SysCntSim
+    then PriAirFlowMin * SysCnt
     else UNDEFINED
     endif 
 ENDRULE

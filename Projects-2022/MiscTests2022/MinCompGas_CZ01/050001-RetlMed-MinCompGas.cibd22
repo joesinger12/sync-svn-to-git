@@ -3,7 +3,7 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "050012-RetlMed-CECStd22"  
    BldgEngyModelVersion = 17
    CreateDate = 1671248976
-   ModDate = 1718656430
+   ModDate = 1671307712
    RunDate = 1671307713
    CliZn = "ClimateZone1"
    ZipCode = 95501
@@ -24,7 +24,7 @@ System capacities are not based on loads but instead use AutoHardSize rules (CFM
    IsStdModel = 0
    DefaultDayltgCtrls = 1
    AirBarrier = "Air barrier - not verified"
-   SoftwareVersion = "CBECC 2022.3.1 (1344)"
+   SoftwareVersion = "CBECC 2022.2.1 (1284)"
    ResultsCurrentMessage = "(not current)"
    ..
 
@@ -49,8 +49,8 @@ ConsAssm   "Base_CZ12-NonresMetalFrameWallU060"
    MatRef[6] = "Air - Metal Wall Framing - 16 or 24 in. OC"
    MatRef[7] = "Gypsum Board - 1/2 in."
    ..
-
-Mat   "Compliance Insulation R14.32"  
+   
+   Mat   "Compliance Insulation R14.32"  
    CodeCat = "Insulation Board"
    CodeItem = "Compliance Insulation R14.32"
    ..
@@ -172,7 +172,6 @@ Spc   "Back_Space"
    Vol = 81782
    SpcFuncDefaultsRef = "Retail Back_Space"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 1"  
@@ -339,7 +338,6 @@ Spc   "Core_Retail"
    Vol = 344549
    SpcFuncDefaultsRef = "Retail Sales"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 8"  
@@ -1367,7 +1365,6 @@ Spc   "Front_Entry"
    SpcFuncDefaultsRef = "Retail Main Entry"
    Skylit100PctControlled = 0
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 38"  
@@ -1535,7 +1532,6 @@ Spc   "Front_Retail"
    Vol = 32466.1
    SpcFuncDefaultsRef = "Retail Sales"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 45"  
@@ -1678,7 +1674,6 @@ Spc   "Point_Of_Sale"
    Vol = 32466.1
    SpcFuncDefaultsRef = "Retail Sales"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 51"  
@@ -1852,11 +1847,10 @@ Fan   "DOAS_SupFan"
    PwrIdx = 0.65
    ..
 
-AirSeg   "DOAS_AirSeg-Exhaust"  
-   Type = "Exhaust"
+AirSeg   "DOAS_AirSeg-Relief"  
    ..
 
-Fan   "DOAS_ExhFan"  
+Fan   "DOAS_RetFan"  
    PwrIdx = 0.35
    ..
 

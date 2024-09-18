@@ -1118,7 +1118,7 @@ RULE ThrmlZn:ExhFlowSchRef
     else UNDEFINED
     endif
   SIZING_PROPOSED
-    if( IfValidAnd( ExhFlowSim > 0 ) )
+    if( ExhFlow > 0 )
     then
       if( LabArea > 0 )
       then // Is lab area, flow and pwr schedule are the same for sizing
@@ -1131,16 +1131,12 @@ RULE ThrmlZn:ExhFlowSchRef
         else RuleLibrary( Schedule, "RestaurantExhaustHoodEqualOrLessThan5000cfm" )
         endif
       else
-      if( PrkgGarArea > 0 )
-      then // Is parking garage, fan power is prescribed and it is based on 24/7 operation
-        RuleLibrary( Schedule, "On" )
-      else
-      if( BaseVentSysIsExh = 2 .OR. BaseVentSysIsExh = 3 )
-      then // Is Res and baseline ventilation system is an exhaust fan, prescribe 24/7/100% flow
+      if( ExhFlowSim > 0 )
+      then 
         RuleLibrary( Schedule, "On" )
       else // Use user defined exhaust schedule
         ExhFlowSchRef
-      endif endif endif endif
+      endif endif endif
     else UNDEFINED
     endif
   SIZING_BASELINE : T24N_2016
@@ -1175,7 +1171,7 @@ RULE ThrmlZn:ExhFlowSchRef
     else UNDEFINED
     endif
   SIZING_BASELINE
-    if( IfValidAnd( ExhFlowSim > 0 ) )
+    if( ExhFlow > 0 )
     then
       if( LabArea > 0 )
       then // Is lab area, flow and pwr schedule are the same for sizing
@@ -1188,16 +1184,12 @@ RULE ThrmlZn:ExhFlowSchRef
         else RuleLibrary( Schedule, "RestaurantExhaustHoodEqualOrLessThan5000cfm" )
         endif
       else
-      if( PrkgGarArea > 0 )
-      then // Is parking garage, fan power is prescribed and it is based on 24/7 operation
-        RuleLibrary( Schedule, "On" )
-      else
-      if( BaseVentSysIsExh = 2 .OR. BaseVentSysIsExh = 3 )
-      then // Is Res and baseline ventilation system is an exhaust fan, prescribe 24/7/100% flow
+      if( ExhFlowSim > 0 )
+      then 
         RuleLibrary( Schedule, "On" )
       else // Use user defined exhaust schedule
         ExhFlowSchRef
-      endif endif endif endif
+      endif endif endif
     else UNDEFINED
     endif
 // Set ANNUAL scheduled for labs
@@ -1205,7 +1197,7 @@ RULE ThrmlZn:ExhFlowSchRef
     z:ExhFlowSchRef
 // Set schedules for sizing
   ANNUAL
-    if( IfValidAnd( ExhFlowSim > 0 ) )
+    if( ExhFlow > 0 )
     then
       if( LabArea > 0 )
       then // Is lab area, see rules above for defining flow/power schedules
