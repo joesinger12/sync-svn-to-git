@@ -3,7 +3,7 @@ RulesetFilename   "T24_2025.bin"
 Proj   "SmallRetail_DOAS"  
    BldgEngyModelVersion = 17
    CreateDate = 1448129614
-   ModDate = 1718657587
+   ModDate = 1674799323
    RunDate = 1674799324
    ZipCode = 95814
    HVACAutoSizing = 0
@@ -24,7 +24,7 @@ Proj   "SmallRetail_DOAS"
    RunTitle = "Retail_Demo"
    AnalysisType = "Title24Compliance"
    AirBarrier = "Air barrier - not verified"
-   SoftwareVersion = "CBECC 2025.0.4 RV (1344)"
+   SoftwareVersion = "CBECC 2025.0.4 RV (1289)"
    ResultsCurrentMessage = "(not current)"
    ..
 
@@ -635,11 +635,12 @@ Fan   "Retail_DOAS_SupFan"
    PwrIdx = 0.5
    ..
 
-AirSeg   "Retail_DOAS_ExhSeg"  
-   Type = "Exhaust"
+AirSeg   "Retail_DOAS_RetSeg"  
+   Type = "Return"
+   Path = "Direct"
    ..
 
-Fan   "Retail_DOAS_ExhFan"  
+Fan   "Retail_DOAS_RetFan"  
    PwrIdx = 0.5
    ..
 
@@ -650,7 +651,7 @@ OACtrl   "Retail_DOAS_OACtrl"
    EconoLowTempLockout = 60
    MaxOARat = 1
    AirSegSupRef = "Retail_DOAS_SupSeg"
-   AirSegRetRef = "Retail_DOAS_ExhSeg"
+   AirSegRetRef = "Retail_DOAS_RetSeg"
    ..
 
 TrmlUnit   "RetailZn TU"  
@@ -749,6 +750,7 @@ Chlr   "Base Chlr"
    CndsrFluidSegOutRef = "BaseCWPrimRetSeg"
    EvapFluidSegInRef = "BaseChWPrimRetSeg"
    EvapFluidSegOutRef = "BaseChWPrimSupSeg"
+   EvapHasBypass = 1
    KwPerTon = 0.56
    IPLVKwPerTon = 0.5
    ..

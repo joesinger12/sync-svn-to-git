@@ -378,10 +378,8 @@ MAINSCREEN,  15
 
    CTRL, "AirBarrier",      3076, TDCT_Combo,  120, 365, 300, 300, 30, FNT_STD, "Air Barrier:",        TA_LEFT,  -100, 4,     0, TA_LEFT, 0, 0,  None,            None,          0,  0,  ""
 
-   CTRL, "WeatherFileSet",  1023, TDCT_Combo,  850, 390, 300, 100, 25, FNT_STD, "Weather Set:",                 TA_LEFT,   -90, 4,     0, TA_LEFT, 0, 0,  None,       EnableResearchMode > 0,  0,  0,  "Weather file set to perform analysis with (research only)"  ; SAC 08/27/24
-
    CTRL, "",                1060, TDCT_Label,   20, 410,  20,   0,  0, FNT_STD, "Building Location",            TA_LEFT,     0, 0,     0, TA_LEFT, 0, 0,  None,       None,               0,  0,  ""
-   CTRL, "",                1061, TDCT_Line,   130, 418, 970, 418, -1, FNT_STD, "",                             TA_CENTER,   0, 0,     0, TA_LEFT, 0, 0,  None,       None,               0,  0,  ""
+   CTRL, "",                1061, TDCT_Line,   130, 418, 870, 418, -1, FNT_STD, "",                             TA_CENTER,   0, 0,     0, TA_LEFT, 0, 0,  None,       None,               0,  0,  ""
    CTRL, "StAddress",       1062, TDCT_Edit,   110, 430,  25, 360, 99, FNT_STD, "Address:",                     TA_LEFT,   -70, 4,     0, TA_LEFT, 0, 0,  None,       None,               0,  0,  ""
    CTRL, "City",            1063, TDCT_Edit,   540, 430,  25, 100, 99, FNT_STD, "City:",                        TA_LEFT,   -50, 4,     0, TA_LEFT, 0, 0,  None,       None,               0,  0,  ""
    CTRL, "State",           1064, TDCT_Edit,   700, 430,  25,  70, 99, FNT_STD, "State:",                       TA_LEFT,   -40, 4,     0, TA_LEFT, 0, 0,  None,       None,               0,  0,  ""
@@ -392,7 +390,7 @@ MAINSCREEN,  15
    CTRL, "WeatherStation",  1068, TDCT_Combo,  400, 460, 450, 240, 25, FNT_STD, "Weather Station:",              TA_LEFT,  -110, 4,     0, TA_LEFT, 0, 0,  None,       None,               0,  0,  ""
                                                                                                                                                                                                                                            
    CTRL, "",                1070, TDCT_Label,   20, 490,  20,   0,  0, FNT_STD, "File Management",               TA_LEFT,     0, 0,     0, TA_LEFT, 0, 0,  None,       None,               0,  0,  ""
-   CTRL, "",                1071, TDCT_Line,   140, 498, 970, 498, -1, FNT_STD, "",                              TA_CENTER,   0, 0,     0, TA_LEFT, 0, 0,  None,       None,               0,  0,  ""
+   CTRL, "",                1071, TDCT_Line,   140, 498, 870, 498, -1, FNT_STD, "",                              TA_CENTER,   0, 0,     0, TA_LEFT, 0, 0,  None,       None,               0,  0,  ""
    CTRL, "CreateDate",      1072, TDCT_Edit,   150, 510,  25, 170, -1, FNT_STD, "Creation:",                     TA_LEFT,   -60, 4,     0, TA_LEFT, 0, 0,  AnalysisType = 99,   None,      0,  0,  "The time and date of creation of the project file."
    CTRL, "ModDate",         1073, TDCT_Edit,   400, 510,  25, 170, -1, FNT_STD, "Last Mod:",                     TA_LEFT,   -60, 4,     0, TA_LEFT, 0, 0,  AnalysisType = 99,   None,      0,  0,  "The time and date of the last revision of the project file."
    CTRL, "RunDate",         1074, TDCT_Edit,   650, 510,  25, 170, -1, FNT_STD, "Last Run:",                     TA_LEFT,   -60, 4,     0, TA_LEFT, 0, 0,  AnalysisType = 99,   None,      0,  0,  "The time and date of the last analysis run of the project file."
@@ -620,13 +618,10 @@ MAINSCREEN,  15
 
     CTRL, "BattGridHarmCredit",      2215, TDCT_Check,   20, 420,  22, 210,     0, FNT_STD, "Take the Self Utilization Credit", TA_LEFT,  0, 4,       0, TA_LEFT, 0, 0,  None,       AllowBattGridHarmCredit > 0,     0,  0,  ""  ; "whether or not to take the Self Utilization battery credit"   ; SAC 06/04/22
 
-	 CTRL, "PrscrpPVBatteryMsg",    31008, TDCT_Label,   20, 465,  18, 965,  -1, FNT_STD, "",                                   TA_LEFT,   672, 0,     0, TA_LEFT, 0, 0,  None,       None,        0,  0,  ""           
-	 CTRL, "StdPVBatteryMsg",       31009, TDCT_Label,   20, 485,  18, 965,  -1, FNT_STD, "",                                   TA_LEFT,   672, 0,     0, TA_LEFT, 0, 0,  None,       None,        0,  0,  ""           
-	 CTRL, "UserInpPVBatteryMsg",   31010, TDCT_Label,   20, 505,  18, 965,  -1, FNT_STD, "",                                   TA_LEFT,   672, 0,     0, TA_LEFT, 0, 0,  None,       None,        0,  0,  ""           
+	 CTRL, "PrscrpPVBatteryMsg",    31008, TDCT_Label,   20, 470,  18, 965,  -1, FNT_STD, "",                                   TA_LEFT,   672, 0,     0, TA_LEFT, 0, 0,  None,       None,        0,  0,  ""           
+	 CTRL, "StdPVBatteryMsg",       31009, TDCT_Label,   20, 490,  18, 965,  -1, FNT_STD, "",                                   TA_LEFT,   672, 0,     0, TA_LEFT, 0, 0,  None,       None,        0,  0,  ""           
+	 CTRL, "UserInpPVBatteryMsg",   31010, TDCT_Label,   20, 510,  18, 965,  -1, FNT_STD, "",                                   TA_LEFT,   672, 0,     0, TA_LEFT, 0, 0,  None,       None,        0,  0,  ""           
 
-   ; NEM3 - SAC 07/16/24 (tic #3624)
-	 CTRL, "NetEnergyMeteringType",   196, TDCT_Combo,  700, 528, 300, 100,  11, FNT_STD, "NEM:",                               TA_RIGHT,   -5, 4,     0, TA_LEFT, 4, 4,  None,    None,  0,  0,  "Type of Net Energy Metering adjustment" 
-	 CTRL, "NEMGrossUpPctInp",        195, TDCT_Edit,   890, 528,  25,  45,  11, FNT_STD, "Gross-Up:",                          TA_RIGHT,   -5, 4,     1, TA_LEFT, 4, 4,  None,    NetEnergyMeteringType > 1,  -70,  20,  "Gross-Up adjustment applied to NEM3" 
    ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     																													
