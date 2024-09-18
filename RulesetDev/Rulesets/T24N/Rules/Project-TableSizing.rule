@@ -52,12 +52,8 @@ RULE NEW Proj:ModelName
         case 2016 :  ModelFile + "16"
         case 2019 :  ModelFile + "19"
         case 2022 :  ModelFile + "22"
-        case 2025 :  ModelFile + "25"
         default   :  ValidOr( ModelFile, "NoName")
       endswitch
-// Use this rule if want to eliminate the ModelFile match check above
-;    if( LocalStatus( Proj:Name ) > 0 )
-;    then Proj:Name
     else "NoName"
     endif
 ENDRULE
@@ -121,6 +117,7 @@ RULE Proj:IsStdModel
      property is used to toggle on/off these special look-up rules."
   RESETS
     ResetThisWhenTheFollowingIsModified
+      Proj:Name
       Proj:ModelFile
   DEFAULT
     if( IfValidAnd( Proj:ModelName = Proj:Name ) .AND. // Filename check
@@ -131,9 +128,6 @@ RULE Proj:IsStdModel
     else 0
     endif
 ENDRULE
-   // removed following reset that is not supported (by compliance engine) - SAC 06/08/24
-   // ResetThisWhenTheFollowingIsModified
-   //   Proj:Name
 
 // TrmlUnit
 RULE TrmlUnit:PriAirFlowMax
@@ -208,7 +202,7 @@ ENDRULE
 // AirSys:Fan
 RULE AirSys:AirSeg:Fan:FlowCap
   DEFAULT
-    if( IfValidAnd( AirSys:IsExhSys = 0 ) .AND.
+    if( AirSys:IsExhSys = 0 .AND.
         Proj:IsStdModel > 0 .AND.
         Proj:TblName != "NoName" )
     then // For PROPOSED TableSizing

@@ -57,7 +57,6 @@
 
 
 // -------------- Simulation Flag ----------------------------------------------
-// modified SIZING_BASELINE to run sim for ResHVACAutoSizing - SAC 06/27/23 (tic #3479)
 RULE Proj:SimFlag
   DESCRIPTION
      "Whether or not to perform simulation (transform-specific)."  
@@ -70,13 +69,11 @@ RULE Proj:SimFlag
     else 0
     endif
   SIZING_BASELINE
-    if (SumAcrossIf( AirSys:ResHVACAutoSizing, AirSys:ServesResZn > 0 ))
-    then 1
-    else if( BaseHVACSameAsPropHVAC > 0 .AND.
-             HasBaseHVAC = 0 )
+    if( BaseHVACSameAsPropHVAC > 0 .AND.
+        HasBaseHVAC = 0 )
     then 0
     else 1
-    endif endif
+    endif
   ANNUAL_PROPOSED 
     1
   ANNUAL_BASELINE
@@ -107,7 +104,6 @@ RULE NEW Proj:SimComFlag
 ENDRULE
 
 // Set flag to designate that baseline HVAC should be created for ResOtherZn - SAC 05/06/22   ; augmented for Proposed AirSys sizing - SAC 05/19/22
-// revised both prop & base rules to trigger sim for either/both CreateBaseHVAC & ResHVACAutoSizing - SAC 06/27/23 (tic #3479)
 RULE NEW ResProj:HVACSizingNeeded
   DATATYPE
     Integer
@@ -116,9 +112,9 @@ RULE NEW ResProj:HVACSizingNeeded
   INPUTCLASS
     NotInput
   SIZING_PROPOSED
-    SumAll( ResOtherZn:CreateBaseHVAC ) + SumAcrossIf( AirSys:ResHVACAutoSizing, AirSys:ServesResZn > 0 )
+    SumAcrossIf( AirSys:ResHVACAutoSizing, AirSys:ServesResZn > 0 )
   SIZING_BASELINE
-    SumAll( ResOtherZn:CreateBaseHVAC ) + SumAcrossIf( AirSys:ResHVACAutoSizing, AirSys:ServesResZn > 0 )
+    SumAll( ResOtherZn:CreateBaseHVAC )
   ANNUAL
     0
 ENDRULE
@@ -258,12 +254,10 @@ RULE TrmlUnit:ExcludeFromSizing
     endif endif
   SIZING_PROPOSED
     if( AirSys:ExcludeFromSizing > 0 )
-    then 1
-    else 
-    if( Proj:IsAddOrAlt > 0 .AND. ZnServedRef:IsNewHVAC > 0 )
-    then 1
+    then                                     
+      1
     else UNCHANGED
-    endif endif
+    endif
   SIZING_BASELINE
     0
   ANNUAL
@@ -381,8 +375,7 @@ RULE VRFSys:ExcludeFromSizing
   INPUTCLASS
     NotInput
   DEFAULT
-    if( IsMFamSys = 0 .AND. ; JP 10/06/23 prevent system excluded when mixed with NRes NoMech
-        ( Proj:IsNoMech > 0 .OR. ( Proj:IsNoAddMech > 0 .AND. IsNew > 0 ) ) )
+    if( Proj:IsNoMech > 0 .OR. ( Proj:IsNoAddMech > 0 .AND. IsNew > 0 ) )
     then // Exclude all user-defined HVAC systems for partial compliance types  
          // that do not include permitting of mechanical systems or existing    
          // systems if modeling additions.                                      
@@ -395,7 +388,7 @@ RULE VRFSys:ExcludeFromSizing
     else 0
     endif endif
   SIZING_PROPOSED : T24N
-    if( IsMFamSys = 0 .AND. ( Proj:IsNoMech > 0 .OR. ( Proj:IsNoAddMech > 0 .AND. IsNew > 0 ) ) )
+    if( Proj:IsNoMech > 0 .OR. ( Proj:IsNoAddMech > 0 .AND. IsNew > 0 ) )
     then // This is a Partial Envelope analysis, and the baseline = proposed      
          // (if not an existing system) so do not exclude in copy from zp to zb   
       0
@@ -552,7 +545,7 @@ RULE FluidSys:ExcludeFromSizing
       else
       if( ( IsAltered > 0 .OR. IsExisting > 0 ) )
       then // The FluidSys is not new, but is Altered or Existing
-        if( SumChildren( FluidSeg:NumNewPriObj ) + SumChildren( FluidSeg:NumNewCoilObj ) = 0 ) 
+        if( SumChildren( FluidSeg:NumNewPriObj ) + SumChildren( FluidSeg:NumNewCoilObj )  = 0 ) 
         then // FluidSys has no new primary equipment and does not serve any 'IsNew' systems 
              // so system is needed in baseline
           0
@@ -565,13 +558,8 @@ RULE FluidSys:ExcludeFromSizing
         if( SumChildren( FluidSeg:NumNewPriObj ) > 0 )
         then // FluidSys has new primary equipment. Therefore check
              // to see if Add/Alt system map criteria for baseline = proposed
-// See ticket 3546. Remove old criteria athat was missing CapBldgRat and just reference Proj:BaseHVACSameAsPropHVAC
-          if( Proj:BaseHVACSameAsPropHVAC > 0 )
-;          if( ( Bldg:TotClgCap > 0 .AND. 
-;                Bldg:DeltaClgCapAltAddRat = 0 ) 
-;              .OR.
-;              ( Bldg:TotClgCap = 0 .AND.
-;                Bldg:DeltaHtgCapAltAddRat = 0 ) )
+          if( ( Bldg:TotClgCap > 0 .AND. Bldg:DeltaClgCapAltAddRat = 0 ) .OR.
+              ( Bldg:TotClgCap = 0 .AND. Bldg:DeltaHtgCapAltAddRat = 0 ) )
           then 0 // Baseline = proposed if IsAltered and change in building
                  // cooling capacity is 0 or is a heating only building with 
                  // no new heating capacity.     

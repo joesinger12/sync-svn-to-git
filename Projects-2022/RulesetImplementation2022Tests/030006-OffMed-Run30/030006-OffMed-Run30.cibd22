@@ -3,7 +3,7 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "030006-OffMed-Run30"  
    BldgEngyModelVersion = 16
    CreateDate = 1406229761
-   ModDate = 1714761301
+   ModDate = 1655929992
    RunDate = 1474256581
    ZipCode = 90045
    ExcptCondNoClgSys = "No"
@@ -560,7 +560,6 @@ Spc   "Core_bottom"
    SpcFuncDefaultsRef = "Office Mod Defaults"
    LtgStatus = "New"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 1"  
@@ -717,7 +716,6 @@ Spc   "Perimeter_bot_ZN_1"
    LtgStatus = "New"
    IntLPDReg = 0.8
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 17"  
@@ -864,7 +862,6 @@ Spc   "Perimeter_bot_ZN_2"
    LtgStatus = "Existing"
    PriSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 23"  
@@ -987,7 +984,6 @@ Spc   "Perimeter_bot_ZN_3"
    LtgStatus = "Existing"
    PriSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 28"  
@@ -1110,7 +1106,6 @@ Spc   "Perimeter_bot_ZN_4"
    LtgStatus = "Existing"
    PriSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 33"  
@@ -1207,7 +1202,6 @@ Spc   "FirstFloor_Plenum"
    ThrmlZnRef = "FirstFloor_Plenum Thermal Zone"
    Vol = 71503.7
    LtgStatus = "Existing"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 7"  
@@ -1451,7 +1445,6 @@ Spc   "Core_mid"
    SpcFuncDefaultsRef = "Office Mod Defaults"
    LtgStatus = "New"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 37"  
@@ -1608,7 +1601,6 @@ Spc   "Perimeter_mid_ZN_1"
    LtgStatus = "New"
    IntLPDReg = 0.8
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 53"  
@@ -1756,7 +1748,6 @@ Spc   "Perimeter_mid_ZN_2"
    LtgStatus = "Existing"
    PriSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 59"  
@@ -1880,7 +1871,6 @@ Spc   "Perimeter_mid_ZN_3"
    LtgStatus = "Existing"
    PriSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 64"  
@@ -2004,7 +1994,6 @@ Spc   "Perimeter_mid_ZN_4"
    LtgStatus = "Existing"
    PriSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 69"  
@@ -2102,7 +2091,6 @@ Spc   "MidFloor_Plenum"
    ThrmlZnRef = "MidFloor_Plenum Thermal Zone"
    Vol = 71503.7
    LtgStatus = "Existing"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 43"  
@@ -2346,7 +2334,6 @@ Spc   "Core_top"
    SpcFuncDefaultsRef = "Office Mod Defaults"
    LtgStatus = "New"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 73"  
@@ -2503,7 +2490,6 @@ Spc   "Perimeter_top_ZN_1"
    LtgStatus = "New"
    IntLPDReg = 0.8
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 79"  
@@ -2651,7 +2637,6 @@ Spc   "Perimeter_top_ZN_2"
    LtgStatus = "Existing"
    PriSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 85"  
@@ -2775,7 +2760,6 @@ Spc   "Perimeter_top_ZN_3"
    LtgStatus = "Existing"
    PriSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 90"  
@@ -2899,7 +2883,6 @@ Spc   "Perimeter_top_ZN_4"
    LtgStatus = "Existing"
    PriSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 95"  
@@ -2997,7 +2980,6 @@ Spc   "TopFloor_Plenum"
    ThrmlZnRef = "TopFloor_Plenum Thermal Zone"
    Vol = 71503.7
    LtgStatus = "Existing"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 99"  

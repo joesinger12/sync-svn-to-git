@@ -250,7 +250,7 @@
 2,          1, "Gas"
 2,          0, "Electric Resistance"
 2,          5, "Heat Pump"
-; 2,          3, "Heat Pump (2013 being phased out)"       - removed this research-only option - SAC 02/17/23 (Res tic #1347)
+2,          3, "Heat Pump (2013 being phased out)"
 1,    Proj:Ruleset,    -999,  0   ; Current selections
 2,          1, "Gas"
 2,          0, "Electric Resistance"
@@ -295,7 +295,7 @@
 ;2,          5, "Small Instantaneous (existing only)"     ; %WHTYPE_SINST =    5		' small instantaneous
 ;2,          6, "Small Storage (existing only)"           ; %WHTYPE_SSTOR =    6		' small storage
 1,    ResWtrHtr:HeaterElementType,     0, 12		; "Electric Resistance"
-1,    ResProj:RunScope,                   1, 12		; "New Construction"   - SAC 5/26/19 (tic #1096)
+1,    Proj:RunScope,                   1, 12		; "New Construction"   - SAC 5/26/19 (tic #1096)
 2,         10, "Consumer Instantaneous (UEF)"
 2,         11, "Commercial Instantaneous (TE)"
 2,         12, "Consumer Storage (UEF)"
@@ -333,7 +333,7 @@
 ;2,          6, "Small Storage (existing only)"           ; %WHTYPE_SSTOR =    6		' small storage
 1,    ResWtrHtr:HeaterElementType,  -999, 10		; all others
 1,    Proj:IsComRuleset,                  1, 10		; Multifamily   - SAC 12/29/19 (tic #862)
-1,    ResProj:RunScope,                      1, 10		; "New Construction"   - SAC 5/26/19 (tic #1096)
+1,    Proj:RunScope,                      1, 10		; "New Construction"   - SAC 5/26/19 (tic #1096)
 2,          0, "Boiler"                  ; %WHTYPE_BOIL =     0		' boiler
 2,         16, "Commercial Packaged Boiler"        ; SAC 12/18/19 - added to facilitate central gas std design DHW system (tic #862)
 2,          1, "Indirect"                ; %WHTYPE_IND =      1		' indirect                     ; SAC 6/17/14 - removed / 6/25 - restored
@@ -343,7 +343,7 @@
 2,         13, "Commercial Storage (TE & SBL)"
 2,         14, "Residential-Duty Commercial Storage (UEF)"
 1,    ResWtrHtr:HeaterElementType,  -999, 10		; all others
-1,    ResProj:RunScope,                      1, 10		; "New Construction"   - SAC 5/26/19 (tic #1096)
+1,    Proj:RunScope,                      1, 10		; "New Construction"   - SAC 5/26/19 (tic #1096)
 2,          0, "Boiler"                  ; %WHTYPE_BOIL =     0		' boiler
 2,          1, "Indirect"                ; %WHTYPE_IND =      1		' indirect                     ; SAC 6/17/14 - removed / 6/25 - restored
 2,         10, "Consumer Instantaneous (UEF)"
@@ -397,19 +397,11 @@
 2,          1, "Indirect"                ; %WHTYPE_IND =      1		' indirect    
 2,          6, "Small Storage"           ; %WHTYPE_SSTOR =    6		' small storage
 
-0, ResWtrHtr:HPWHCategory,    1   ; SAC 01/29/21 (tic #1260)    - switched 'Non-UEF Rated' to 'Non-UEF Rated (existing only)' - SAC 02/17/23 (Res tic #1347)
-1,    Proj:Ruleset,   -1001,  1   ; Backward compatibility
+0, ResWtrHtr:HPWHCategory,  1    ; SAC 01/29/21 (tic #1260)
+2,          1, "Residential (NEEA rated) Product"
+2,          2, "Commercial Product"
+2,          3, "UEF Rated"
 2,          4, "Non-UEF Rated"
-1,    ResWtrHtr:Status,   1,  1   ; "Existing"
-2,          1, "Residential (NEEA rated) Product"
-2,          2, "Commercial Product"
-2,          3, "UEF Rated"
-2,          4, "Non-UEF Rated (existing only)"
-1,    Proj:Ruleset,    -999,  1   ; all others
-2,          1, "Residential (NEEA rated) Product"
-2,          2, "Commercial Product"
-2,          3, "UEF Rated"
-2,          4, "Non-UEF Rated (existing only)"
 
 ; SAC 4/24/17 - added HPWH selections by brand & model (tic #829)
 0, ResWtrHtr:HPWHBrand,  0
@@ -420,7 +412,6 @@
 2,          1, "- select Brand -"
 2,         11, "A. O. Smith"    
 2,         12, "American"       
-2,         29, "AquaThermAire"      ; RJH 02/14/24
 2,         13, "Bradford White" 
 2,         27, "Direct Energy"      ; SAC 12/11/20       
 2,         14, "EcoSense"       
@@ -448,7 +439,6 @@
 2,          1, "- select Brand -"
 2,         11, "A. O. Smith"    
 2,         12, "American"       
-2,         29, "AquaThermAire"      ; RJH 02/14/24
 2,         13, "Bradford White" 
 2,         27, "Direct Energy"      ; SAC 12/11/20       
 2,         14, "EcoSense"       
@@ -475,7 +465,6 @@
 2,          1, "- select Brand -"
 2,         11, "A. O. Smith"    
 2,         12, "American"       
-2,         29, "AquaThermAire"      ; RJH 02/14/24
 2,         13, "Bradford White" 
 2,         27, "Direct Energy"      ; SAC 12/11/20       
 2,         14, "EcoSense"       
@@ -498,7 +487,6 @@
 
 
 ; added generic NEEA/AWHS tier 3 selections - SAC 06/17/21
-; added generic NEEA/AWHS tier 4 options - SAC 04/25/24 (tic #3595)
 0, ResWtrHtr:HPWHModel,  0
 1,    Proj:Ruleset,   -1001,  0   ; Backward compatibility
 2,         36, "AO Smith HPTU 80 DR"   ; AOSmithHPTU80DR  - SAC 3/28/17  -> map to GE DR - SAC 5/5/17
@@ -601,15 +589,8 @@
    ; SAC 11/2/17 - updated enum IDs of 6 50 gal NEEA HPWH models to be simulated as 80 (not 50) gal units (tic #916)
    ; SAC 11/16/17 - updated w/ new NEEA list (tic #927)
    ; revised all demand response enums strings to include 'JA13' - SAC 01/31/21
-   ; added 18 new NEEA HPWH models, tier 4, JA13, AOSmith - SAC 01/19/23
 1,    ResWtrHtr:HPWHBrand,   11,  1  ; "A. O. Smith"    
 2,          1, "- select Model -"
-2,     112083,   "HPTS-50 2**  (50 gal, JA13)"
-2,     112183,   "HPS10-50H45DV 2**  (50 gal, JA13)"
-2,     112284,   "HPTS-66 2**  (66 gal, JA13)"
-2,     112384,   "HPS10-66H45DV 2**  (66 gal, JA13)"
-2,     112485,   "HPTS-80 2**  (80 gal, JA13)"
-2,     112585,   "HPS10-80H45DV 2**  (80 gal, JA13)"
 2,     110113,   "FPTU 50 120  (50 gal)"
 2,     110214,   "FPTU 66 120  (66 gal)"
 2,     110315,   "FPTU 80 120  (80 gal)"
@@ -631,9 +612,6 @@
 2,     111412,   "PHPT 80  (80 gal)"
 1,    ResWtrHtr:HPWHBrand,   12,  1  ; "American"       
 2,          1, "- select Model -"
-2,     121783,   "HPS10250H045DV 2**  (50 gal, JA13)"
-2,     121884,   "HPS10266H045DV 2**  (66 gal, JA13)"
-2,     121985,   "HPS10280H045DV 2**  (80 gal, JA13)"
 2,     120111,   "HPE10260H045DV  (60 gal)"
 2,     120212,   "HPE10280H045DV  (80 gal)"
 2,     120312,   "HPE6280H045DV 102  (80 gal)"
@@ -650,17 +628,8 @@
 2,     121114,   "HPHE6266H045DV 120  (66 gal)"
 2,     121215,   "HPHE6280H045DV 120  (80 gal)"
 2,     121313,   "HPHE650H045DV 120  (50 gal)"
-1,    ResWtrHtr:HPWHBrand,   29,  1  ; "AquaThermAire"      ; RJH 02/14/24   
-2,          1, "- select Model -"
-2,     290186,   "CHT2021-36A  (54 gal)"
-2,     290286,   "CHT2021-36C  (54 gal)"
-2,     290386,   "CHT2021-48A  (54 gal)"
-2,     290486,   "CHT2021-48C  (54 gal)"
 1,    ResWtrHtr:HPWHBrand,   13,  1  ; "Bradford White" 
 2,          1, "- select Model -"
-2,     130760,   "RE2H50S*-*****  (50 gal)"
-2,     130861,   "RE2H65T*-*****  (65 gal)"
-2,     130962,   "RE2H80T*-*****  (80 gal)"
 2,     130119,   "RE2H50R10B-1NCWT  (50 gal)"
 2,     130358,   "RE2H65T10-1NCWT  (65 gal)"
 2,     130223,   "RE2H80R10B-1NCWT  (80 gal)"
@@ -708,9 +677,6 @@
 2,     160515,   "153.5928  (80 gal)"
 1,    ResWtrHtr:HPWHBrand,   17,  1  ; "Lochinvar"      
 2,          1, "- select Model -"
-2,     170783,   "HPSA050KD 2**  (50 gal, JA13)"
-2,     170884,   "HPSA065KD 2**  (66 gal, JA13)"
-2,     170985,   "HPSA080KD 2**  (80 gal, JA13)"
 2,     170113,   "HPA051KD 120  (50 gal)"
 2,     170213,   "HPA052KD 120  (50 gal)"
 2,     170314,   "HPA067KD 120  (66 gal)"
@@ -719,9 +685,6 @@
 2,     170615,   "HPA082KD 120  (80 gal)"
 1,    ResWtrHtr:HPWHBrand,   18,  1  ; "Reliance"       
 2,          1, "- select Model -"
-2,     181683,   "10-50-DHPTS 2**  (50 gal, JA13)"
-2,     181784,   "10-66-DHPTS 2**  (66 gal, JA13)"
-2,     181885,   "10-80-DHPTS 2**  (80 gal, JA13)"
 2,     180113,   "10 50 DHPHT 120  (50 gal)"
 2,     180213,   "10 50 DHPHTNE 120  (50 gal)"
 2,     181313,   "10-50-DHPHTDR 130  (50 gal, JA13)"
@@ -806,26 +769,6 @@
 2,     192940,   "PROPH65 T2 RH350 DCB  (65 gal)"
 2,     193044,   "PROPH80 T2 RH350 D15  (80 gal)"
 2,     193141,   "PROPH80 T2 RH350 DCB  (80 gal)"
-2,     196881,   "XE40T10H15U0  (40 gal)"       ; SAC 12/27/22
-2,     196982,   "XE50T10H15U0  (50 gal)"
-2,     197077,   "XE40T10HM00U0  (40 gal, JA13)"
-2,     197177,   "XE40T10HMS00U0  (40 gal, JA13)"
-2,     197278,   "XE50T10HM00U0  (50 gal, JA13)"
-2,     197378,   "XE50T10HMS00U0  (50 gal, JA13)"
-2,     197479,   "XE65T10HM00U0  (65 gal, JA13)"
-2,     197579,   "XE65T10HMS00U0  (65 gal, JA13)"
-2,     197680,   "XE80T10HM00U0  (80 gal, JA13)"
-2,     197780,   "XE80T10HMS00U0  (80 gal, JA13)"
-2,     197881,   "PROPH40 T0 RH120  (40 gal)"
-2,     197982,   "PROPH50 T0 RH120  (50 gal)"
-2,     198077,   "PROPH40 T0 RH120-M  (40 gal, JA13)"
-2,     198177,   "PROPH40 T0 RH120-MSO  (40 gal, JA13)"
-2,     198278,   "PROPH50 T0 RH120-M  (50 gal, JA13)"
-2,     198378,   "PROPH50 T0 RH120-MSO  (50 gal, JA13)"
-2,     198479,   "PROPH65 T0 RH120-M  (65 gal, JA13)"
-2,     198579,   "PROPH65 T0 RH120-MSO  (65 gal, JA13)"
-2,     198680,   "PROPH80 T0 RH120-M  (80 gal, JA13)"
-2,     198780,   "PROPH80 T0 RH120-MSO  (80 gal, JA13)"
 1,    ResWtrHtr:HPWHBrand,   28,  1  ; "Rheem Canada"          
 2,          1, "- select Model -"
 2,     280159,   "CPROPH40 T2 RH375-15  (40 gal)"
@@ -858,16 +801,6 @@
 2,     282866,   "CPRO H80 T2 RH310BM  (80 gal)"
 1,    ResWtrHtr:HPWHBrand,   20,  1  ; "Richmond"       
 2,          1, "- select Model -"
-2,     202281,   "10E40-HP120  (40 gal)"        ; SAC 12/27/22
-2,     202382,   "10E50-HP120  (50 gal)"
-2,     202477,   "10E40-HP120M  (40 gal, JA13)"
-2,     202577,   "10E40-HP120MS  (40 gal, JA13)"
-2,     202678,   "10E50-HP120M  (50 gal, JA13)"
-2,     202778,   "10E50-HP120MS  (50 gal, JA13)"
-2,     202879,   "10E65-HP120M  (65 gal, JA13)"
-2,     202979,   "10E65-HP120MS  (65 gal, JA13)"
-2,     203080,   "10E80-HP120M  (80 gal, JA13)"
-2,     203180,   "10E80-HP120MS  (80 gal, JA13)"
 2,     201059,   "10E40-HP515  (40 gal, JA13)"
 2,     201160,   "10E50-HP515  (50 gal, JA13)"
 2,     201261,   "10E65-HP515  (65 gal, JA13)"
@@ -915,16 +848,6 @@
 2,     213064,   "PRO H50 T2 RU310UM  (50 gal)"
 2,     213165,   "PRO H65 T2 RU310UM  (65 gal)"
 2,     213266,   "PRO H80 T2 RU310UM  (80 gal)"
-2,     213781,   "PROUH40 T0 RU120  (40 gal)"      ; SAC 12/27/22
-2,     213882,   "PROUH50 T0 RU120  (50 gal)"
-2,     213977,   "PROUH40 T0 RU120-M  (40 gal, JA13)"
-2,     214077,   "PROUH40 T0 RU120-MSO  (40 gal, JA13)"
-2,     214178,   "PROUH50 T0 RU120-M  (50 gal, JA13)"
-2,     214278,   "PROUH50 T0 RU120-MSO  (50 gal, JA13)"
-2,     214379,   "PROUH65 T0 RU120-M  (65 gal, JA13)"
-2,     214479,   "PROUH65 T0 RU120-MSO  (65 gal, JA13)"
-2,     214580,   "PROUH80 T0 RU120-M  (80 gal, JA13)"
-2,     214680,   "PROUH80 T0 RU120-MSO  (80 gal, JA13)"
 2,     210121,   "HB50RU  (50 gal)"
 2,     210221,   "PROUH50 T2 RU245  (50 gal)"
 2,     210339,   "PROUH50 T2 RU350 D  (50 gal)"
@@ -947,9 +870,6 @@
 2,     220617,   "GUS-45HPA-US & GAUS-315EQTD  (83 gal)"
 1,    ResWtrHtr:HPWHBrand,   23,  1  ; "State"          
 2,          1, "- select Model -"
-2,     231683,   "HPSX-50 DHPT 2**  (50 gal, JA13)"
-2,     231784,   "HPSX-66-DHPT 2**  (66 gal, JA13)"
-2,     231885,   "HPSX-80-DHPT 2**  (80 gal, JA13)"
 2,     230112,   "EP6 80 DHPT 102  (80 gal)"
 2,     230211,   "EPX 60 DHPT  (60 gal)"
 2,     230312,   "EPX 80 DHPT  (80 gal)"
@@ -997,10 +917,6 @@
 2,     261312,   "HPSE2K80HD045VC  (80 gal)"
 1,    ResWtrHtr:HPWHBrand,   99,  1  ; "(generic)"      
 2,          1, "- select Model -"
-2,     990787,   "tier 4  (40+ gal)"
-2,     990888,   "tier 4  (50+ gal)"
-2,     990989,   "tier 4  (65+ gal)"
-2,     991090,   "tier 4  (80+ gal)"
 2,     990273,   "tier 3  (40+ gal)"
 2,     990374,   "tier 3  (50+ gal)"
 2,     990475,   "tier 3  (65+ gal)"
@@ -1091,12 +1007,6 @@
    ; revised all demand response enums strings to include 'JA13' - SAC 01/31/21
 1,    ResDHWSys:CHPWHNEEABrand,   11,  1  ; "A. O. Smith"    
 2,          1, "- select Model -"
-2,     112083,   "HPTS-50 2**  (50 gal, JA13)"
-2,     112183,   "HPS10-50H45DV 2**  (50 gal, JA13)"
-2,     112284,   "HPTS-66 2**  (66 gal, JA13)"
-2,     112384,   "HPS10-66H45DV 2**  (66 gal, JA13)"
-2,     112485,   "HPTS-80 2**  (80 gal, JA13)"
-2,     112585,   "HPS10-80H45DV 2**  (80 gal, JA13)"
 2,     110113,   "FPTU 50 120  (50 gal)"
 2,     110214,   "FPTU 66 120  (66 gal)"
 2,     110315,   "FPTU 80 120  (80 gal)"
@@ -1118,9 +1028,6 @@
 2,     111412,   "PHPT 80  (80 gal)"
 1,    ResDHWSys:CHPWHNEEABrand,   12,  1  ; "American"       
 2,          1, "- select Model -"
-2,     121783,   "HPS10250H045DV 2**  (50 gal, JA13)"
-2,     121884,   "HPS10266H045DV 2**  (66 gal, JA13)"
-2,     121985,   "HPS10280H045DV 2**  (80 gal, JA13)"
 2,     120111,   "HPE10260H045DV  (60 gal)"
 2,     120212,   "HPE10280H045DV  (80 gal)"
 2,     120312,   "HPE6280H045DV 102  (80 gal)"
@@ -1137,17 +1044,8 @@
 2,     121114,   "HPHE6266H045DV 120  (66 gal)"
 2,     121215,   "HPHE6280H045DV 120  (80 gal)"
 2,     121313,   "HPHE650H045DV 120  (50 gal)"
-1,    ResDHWSys:CHPWHNEEABrand,   29,  1  ; "AquaThermAire"    ; RJH 02/14/24   
-2,          1, "- select Model -"
-2,     290186,   "CHT2021-36A  (54 gal)"
-2,     290286,   "CHT2021-36C  (54 gal)"
-2,     290386,   "CHT2021-48A  (54 gal)"
-2,     290486,   "CHT2021-48C  (54 gal)"
 1,    ResDHWSys:CHPWHNEEABrand,   13,  1  ; "Bradford White" 
 2,          1, "- select Model -"
-2,     130760,   "RE2H50S*-*****  (50 gal)"
-2,     130861,   "RE2H65T*-*****  (65 gal)"
-2,     130962,   "RE2H80T*-*****  (80 gal)"
 2,     130119,   "RE2H50R10B-1NCWT  (50 gal)"
 2,     130358,   "RE2H65T10-1NCWT  (65 gal)"
 2,     130223,   "RE2H80R10B-1NCWT  (80 gal)"
@@ -1195,9 +1093,6 @@
 2,     160515,   "153.5928  (80 gal)"
 1,    ResDHWSys:CHPWHNEEABrand,   17,  1  ; "Lochinvar"      
 2,          1, "- select Model -"
-2,     170783,   "HPSA050KD 2**  (50 gal, JA13)"
-2,     170884,   "HPSA065KD 2**  (66 gal, JA13)"
-2,     170985,   "HPSA080KD 2**  (80 gal, JA13)"
 2,     170113,   "HPA051KD 120  (50 gal)"
 2,     170213,   "HPA052KD 120  (50 gal)"
 2,     170314,   "HPA067KD 120  (66 gal)"
@@ -1206,9 +1101,6 @@
 2,     170615,   "HPA082KD 120  (80 gal)"
 1,    ResDHWSys:CHPWHNEEABrand,   18,  1  ; "Reliance"       
 2,          1, "- select Model -"
-2,     181683,   "10-50-DHPTS 2**  (50 gal, JA13)"
-2,     181784,   "10-66-DHPTS 2**  (66 gal, JA13)"
-2,     181885,   "10-80-DHPTS 2**  (80 gal, JA13)"
 2,     180113,   "10 50 DHPHT 120  (50 gal)"
 2,     180213,   "10 50 DHPHTNE 120  (50 gal)"
 2,     181313,   "10-50-DHPHTDR 130  (50 gal, JA13)"
@@ -1293,26 +1185,6 @@
 2,     192940,   "PROPH65 T2 RH350 DCB  (65 gal)"
 2,     193044,   "PROPH80 T2 RH350 D15  (80 gal)"
 2,     193141,   "PROPH80 T2 RH350 DCB  (80 gal)"
-2,     196881,   "XE40T10H15U0  (40 gal)"       ; SAC 12/27/22
-2,     196982,   "XE50T10H15U0  (50 gal)"
-2,     197077,   "XE40T10HM00U0  (40 gal, JA13)"
-2,     197177,   "XE40T10HMS00U0  (40 gal, JA13)"
-2,     197278,   "XE50T10HM00U0  (50 gal, JA13)"
-2,     197378,   "XE50T10HMS00U0  (50 gal, JA13)"
-2,     197479,   "XE65T10HM00U0  (65 gal, JA13)"
-2,     197579,   "XE65T10HMS00U0  (65 gal, JA13)"
-2,     197680,   "XE80T10HM00U0  (80 gal, JA13)"
-2,     197780,   "XE80T10HMS00U0  (80 gal, JA13)"
-2,     197881,   "PROPH40 T0 RH120  (40 gal)"
-2,     197982,   "PROPH50 T0 RH120  (50 gal)"
-2,     198077,   "PROPH40 T0 RH120-M  (40 gal, JA13)"
-2,     198177,   "PROPH40 T0 RH120-MSO  (40 gal, JA13)"
-2,     198278,   "PROPH50 T0 RH120-M  (50 gal, JA13)"
-2,     198378,   "PROPH50 T0 RH120-MSO  (50 gal, JA13)"
-2,     198479,   "PROPH65 T0 RH120-M  (65 gal, JA13)"
-2,     198579,   "PROPH65 T0 RH120-MSO  (65 gal, JA13)"
-2,     198680,   "PROPH80 T0 RH120-M  (80 gal, JA13)"
-2,     198780,   "PROPH80 T0 RH120-MSO  (80 gal, JA13)"
 1,    ResDHWSys:CHPWHNEEABrand,   28,  1  ; "Rheem Canada"          
 2,          1, "- select Model -"
 2,     280159,   "CPROPH40 T2 RH375-15  (40 gal)"
@@ -1345,16 +1217,6 @@
 2,     282866,   "CPRO H80 T2 RH310BM  (80 gal)"
 1,    ResDHWSys:CHPWHNEEABrand,   20,  1  ; "Richmond"       
 2,          1, "- select Model -"
-2,     202281,   "10E40-HP120  (40 gal)"        ; SAC 12/27/22
-2,     202382,   "10E50-HP120  (50 gal)"
-2,     202477,   "10E40-HP120M  (40 gal, JA13)"
-2,     202577,   "10E40-HP120MS  (40 gal, JA13)"
-2,     202678,   "10E50-HP120M  (50 gal, JA13)"
-2,     202778,   "10E50-HP120MS  (50 gal, JA13)"
-2,     202879,   "10E65-HP120M  (65 gal, JA13)"
-2,     202979,   "10E65-HP120MS  (65 gal, JA13)"
-2,     203080,   "10E80-HP120M  (80 gal, JA13)"
-2,     203180,   "10E80-HP120MS  (80 gal, JA13)"
 2,     201059,   "10E40-HP515  (40 gal, JA13)"
 2,     201160,   "10E50-HP515  (50 gal, JA13)"
 2,     201261,   "10E65-HP515  (65 gal, JA13)"
@@ -1402,16 +1264,6 @@
 2,     213064,   "PRO H50 T2 RU310UM  (50 gal)"
 2,     213165,   "PRO H65 T2 RU310UM  (65 gal)"
 2,     213266,   "PRO H80 T2 RU310UM  (80 gal)"
-2,     213781,   "PROUH40 T0 RU120  (40 gal)"      ; SAC 12/27/22
-2,     213882,   "PROUH50 T0 RU120  (50 gal)"
-2,     213977,   "PROUH40 T0 RU120-M  (40 gal, JA13)"
-2,     214077,   "PROUH40 T0 RU120-MSO  (40 gal, JA13)"
-2,     214178,   "PROUH50 T0 RU120-M  (50 gal, JA13)"
-2,     214278,   "PROUH50 T0 RU120-MSO  (50 gal, JA13)"
-2,     214379,   "PROUH65 T0 RU120-M  (65 gal, JA13)"
-2,     214479,   "PROUH65 T0 RU120-MSO  (65 gal, JA13)"
-2,     214580,   "PROUH80 T0 RU120-M  (80 gal, JA13)"
-2,     214680,   "PROUH80 T0 RU120-MSO  (80 gal, JA13)"
 2,     210121,   "HB50RU  (50 gal)"
 2,     210221,   "PROUH50 T2 RU245  (50 gal)"
 2,     210339,   "PROUH50 T2 RU350 D  (50 gal)"
@@ -1434,9 +1286,6 @@
 2,     220617,   "GUS-45HPA-US & GAUS-315EQTD  (83 gal)"
 1,    ResDHWSys:CHPWHNEEABrand,   23,  1  ; "State"          
 2,          1, "- select Model -"
-2,     231683,   "HPSX-50 DHPT 2**  (50 gal, JA13)"
-2,     231784,   "HPSX-66-DHPT 2**  (66 gal, JA13)"
-2,     231885,   "HPSX-80-DHPT 2**  (80 gal, JA13)"
 2,     230112,   "EP6 80 DHPT 102  (80 gal)"
 2,     230211,   "EPX 60 DHPT  (60 gal)"
 2,     230312,   "EPX 80 DHPT  (80 gal)"
@@ -1484,10 +1333,6 @@
 2,     261312,   "HPSE2K80HD045VC  (80 gal)"
 1,    ResDHWSys:CHPWHNEEABrand,   99,  1  ; "(generic)"      
 2,          1, "- select Model -"
-2,     990787,   "tier 4  (40+ gal)"
-2,     990888,   "tier 4  (50+ gal)"
-2,     990989,   "tier 4  (65+ gal)"
-2,     991090,   "tier 4  (80+ gal)"
 2,     990273,   "tier 3  (40+ gal)"
 2,     990374,   "tier 3  (50+ gal)"
 2,     990475,   "tier 3  (65+ gal)"
@@ -1576,15 +1421,8 @@
    ; SAC 11/2/17 - updated enum IDs of 6 50 gal NEEA HPWH models to be simulated as 80 (not 50) gal units (tic #916)
    ; SAC 11/16/17 - updated w/ new NEEA list (tic #927)
    ; revised all demand response enums strings to include 'JA13' - SAC 01/31/21
-   ; added 18 new NEEA HPWH models, tier 4, JA13, AOSmith - SAC 01/19/23
 1,    ResDHWSys:CHPWHLoopTankNEEABrand,   11,  1  ; "A. O. Smith"    
 2,          1, "- select Model -"
-2,     112083,   "HPTS-50 2**  (50 gal, JA13)"
-2,     112183,   "HPS10-50H45DV 2**  (50 gal, JA13)"
-2,     112284,   "HPTS-66 2**  (66 gal, JA13)"
-2,     112384,   "HPS10-66H45DV 2**  (66 gal, JA13)"
-2,     112485,   "HPTS-80 2**  (80 gal, JA13)"
-2,     112585,   "HPS10-80H45DV 2**  (80 gal, JA13)"
 2,     110113,   "FPTU 50 120  (50 gal)"
 2,     110214,   "FPTU 66 120  (66 gal)"
 2,     110315,   "FPTU 80 120  (80 gal)"
@@ -1606,9 +1444,6 @@
 2,     111412,   "PHPT 80  (80 gal)"
 1,    ResDHWSys:CHPWHLoopTankNEEABrand,   12,  1  ; "American"       
 2,          1, "- select Model -"
-2,     121783,   "HPS10250H045DV 2**  (50 gal, JA13)"
-2,     121884,   "HPS10266H045DV 2**  (66 gal, JA13)"
-2,     121985,   "HPS10280H045DV 2**  (80 gal, JA13)"
 2,     120111,   "HPE10260H045DV  (60 gal)"
 2,     120212,   "HPE10280H045DV  (80 gal)"
 2,     120312,   "HPE6280H045DV 102  (80 gal)"
@@ -1625,17 +1460,8 @@
 2,     121114,   "HPHE6266H045DV 120  (66 gal)"
 2,     121215,   "HPHE6280H045DV 120  (80 gal)"
 2,     121313,   "HPHE650H045DV 120  (50 gal)"
-1,    ResDHWSys:CHPWHLoopTankNEEABrand,   29,  1  ; "AquaThermAire"     ; RJH 02/14/24   
-2,          1, "- select Model -"
-2,     290186,   "CHT2021-36A  (54 gal)"
-2,     290286,   "CHT2021-36C  (54 gal)"
-2,     290386,   "CHT2021-48A  (54 gal)"
-2,     290486,   "CHT2021-48C  (54 gal)"
 1,    ResDHWSys:CHPWHLoopTankNEEABrand,   13,  1  ; "Bradford White" 
 2,          1, "- select Model -"
-2,     130760,   "RE2H50S*-*****  (50 gal)"
-2,     130861,   "RE2H65T*-*****  (65 gal)"
-2,     130962,   "RE2H80T*-*****  (80 gal)"
 2,     130119,   "RE2H50R10B-1NCWT  (50 gal)"
 2,     130358,   "RE2H65T10-1NCWT  (65 gal)"
 2,     130223,   "RE2H80R10B-1NCWT  (80 gal)"
@@ -1683,9 +1509,6 @@
 2,     160515,   "153.5928  (80 gal)"
 1,    ResDHWSys:CHPWHLoopTankNEEABrand,   17,  1  ; "Lochinvar"      
 2,          1, "- select Model -"
-2,     170783,   "HPSA050KD 2**  (50 gal, JA13)"
-2,     170884,   "HPSA065KD 2**  (66 gal, JA13)"
-2,     170985,   "HPSA080KD 2**  (80 gal, JA13)"
 2,     170113,   "HPA051KD 120  (50 gal)"
 2,     170213,   "HPA052KD 120  (50 gal)"
 2,     170314,   "HPA067KD 120  (66 gal)"
@@ -1694,9 +1517,6 @@
 2,     170615,   "HPA082KD 120  (80 gal)"
 1,    ResDHWSys:CHPWHLoopTankNEEABrand,   18,  1  ; "Reliance"       
 2,          1, "- select Model -"
-2,     181683,   "10-50-DHPTS 2**  (50 gal, JA13)"
-2,     181784,   "10-66-DHPTS 2**  (66 gal, JA13)"
-2,     181885,   "10-80-DHPTS 2**  (80 gal, JA13)"
 2,     180113,   "10 50 DHPHT 120  (50 gal)"
 2,     180213,   "10 50 DHPHTNE 120  (50 gal)"
 2,     181313,   "10-50-DHPHTDR 130  (50 gal, JA13)"
@@ -1781,26 +1601,6 @@
 2,     192940,   "PROPH65 T2 RH350 DCB  (65 gal)"
 2,     193044,   "PROPH80 T2 RH350 D15  (80 gal)"
 2,     193141,   "PROPH80 T2 RH350 DCB  (80 gal)"
-2,     196881,   "XE40T10H15U0  (40 gal)"       ; SAC 12/27/22
-2,     196982,   "XE50T10H15U0  (50 gal)"
-2,     197077,   "XE40T10HM00U0  (40 gal, JA13)"
-2,     197177,   "XE40T10HMS00U0  (40 gal, JA13)"
-2,     197278,   "XE50T10HM00U0  (50 gal, JA13)"
-2,     197378,   "XE50T10HMS00U0  (50 gal, JA13)"
-2,     197479,   "XE65T10HM00U0  (65 gal, JA13)"
-2,     197579,   "XE65T10HMS00U0  (65 gal, JA13)"
-2,     197680,   "XE80T10HM00U0  (80 gal, JA13)"
-2,     197780,   "XE80T10HMS00U0  (80 gal, JA13)"
-2,     197881,   "PROPH40 T0 RH120  (40 gal)"
-2,     197982,   "PROPH50 T0 RH120  (50 gal)"
-2,     198077,   "PROPH40 T0 RH120-M  (40 gal, JA13)"
-2,     198177,   "PROPH40 T0 RH120-MSO  (40 gal, JA13)"
-2,     198278,   "PROPH50 T0 RH120-M  (50 gal, JA13)"
-2,     198378,   "PROPH50 T0 RH120-MSO  (50 gal, JA13)"
-2,     198479,   "PROPH65 T0 RH120-M  (65 gal, JA13)"
-2,     198579,   "PROPH65 T0 RH120-MSO  (65 gal, JA13)"
-2,     198680,   "PROPH80 T0 RH120-M  (80 gal, JA13)"
-2,     198780,   "PROPH80 T0 RH120-MSO  (80 gal, JA13)"
 1,    ResDHWSys:CHPWHLoopTankNEEABrand,   28,  1  ; "Rheem Canada"          
 2,          1, "- select Model -"
 2,     280159,   "CPROPH40 T2 RH375-15  (40 gal)"
@@ -1833,16 +1633,6 @@
 2,     282866,   "CPRO H80 T2 RH310BM  (80 gal)"
 1,    ResDHWSys:CHPWHLoopTankNEEABrand,   20,  1  ; "Richmond"       
 2,          1, "- select Model -"
-2,     202281,   "10E40-HP120  (40 gal)"        ; SAC 12/27/22
-2,     202382,   "10E50-HP120  (50 gal)"
-2,     202477,   "10E40-HP120M  (40 gal, JA13)"
-2,     202577,   "10E40-HP120MS  (40 gal, JA13)"
-2,     202678,   "10E50-HP120M  (50 gal, JA13)"
-2,     202778,   "10E50-HP120MS  (50 gal, JA13)"
-2,     202879,   "10E65-HP120M  (65 gal, JA13)"
-2,     202979,   "10E65-HP120MS  (65 gal, JA13)"
-2,     203080,   "10E80-HP120M  (80 gal, JA13)"
-2,     203180,   "10E80-HP120MS  (80 gal, JA13)"
 2,     201059,   "10E40-HP515  (40 gal, JA13)"
 2,     201160,   "10E50-HP515  (50 gal, JA13)"
 2,     201261,   "10E65-HP515  (65 gal, JA13)"
@@ -1890,16 +1680,6 @@
 2,     213064,   "PRO H50 T2 RU310UM  (50 gal)"
 2,     213165,   "PRO H65 T2 RU310UM  (65 gal)"
 2,     213266,   "PRO H80 T2 RU310UM  (80 gal)"
-2,     213781,   "PROUH40 T0 RU120  (40 gal)"      ; SAC 12/27/22
-2,     213882,   "PROUH50 T0 RU120  (50 gal)"
-2,     213977,   "PROUH40 T0 RU120-M  (40 gal, JA13)"
-2,     214077,   "PROUH40 T0 RU120-MSO  (40 gal, JA13)"
-2,     214178,   "PROUH50 T0 RU120-M  (50 gal, JA13)"
-2,     214278,   "PROUH50 T0 RU120-MSO  (50 gal, JA13)"
-2,     214379,   "PROUH65 T0 RU120-M  (65 gal, JA13)"
-2,     214479,   "PROUH65 T0 RU120-MSO  (65 gal, JA13)"
-2,     214580,   "PROUH80 T0 RU120-M  (80 gal, JA13)"
-2,     214680,   "PROUH80 T0 RU120-MSO  (80 gal, JA13)"
 2,     210121,   "HB50RU  (50 gal)"
 2,     210221,   "PROUH50 T2 RU245  (50 gal)"
 2,     210339,   "PROUH50 T2 RU350 D  (50 gal)"
@@ -1922,9 +1702,6 @@
 2,     220617,   "GUS-45HPA-US & GAUS-315EQTD  (83 gal)"
 1,    ResDHWSys:CHPWHLoopTankNEEABrand,   23,  1  ; "State"          
 2,          1, "- select Model -"
-2,     231683,   "HPSX-50 DHPT 2**  (50 gal, JA13)"
-2,     231784,   "HPSX-66-DHPT 2**  (66 gal, JA13)"
-2,     231885,   "HPSX-80-DHPT 2**  (80 gal, JA13)"
 2,     230112,   "EP6 80 DHPT 102  (80 gal)"
 2,     230211,   "EPX 60 DHPT  (60 gal)"
 2,     230312,   "EPX 80 DHPT  (80 gal)"
@@ -1972,10 +1749,6 @@
 2,     261312,   "HPSE2K80HD045VC  (80 gal)"
 1,    ResDHWSys:CHPWHLoopTankNEEABrand,   99,  1  ; "(generic)"      
 2,          1, "- select Model -"
-2,     990787,   "tier 4  (40+ gal)"
-2,     990888,   "tier 4  (50+ gal)"
-2,     990989,   "tier 4  (65+ gal)"
-2,     991090,   "tier 4  (80+ gal)"
 2,     990273,   "tier 3  (40+ gal)"
 2,     990374,   "tier 3  (50+ gal)"
 2,     990475,   "tier 3  (65+ gal)"
@@ -2615,7 +2388,6 @@
 2,            995,    "generic  (40kW cap @ 40F)"
 2,            996,    "generic  (45kW cap @ 40F)"
 
-; incremented CHPWH ASHPType values by 100 to avoid conflict w/ new Rheem NEEA models - SAC 12/28/22
 0, ResWtrHtr:ASHPType,  0
 0, ResDHWSys:CHPWHASHPType,  0            ; SAC 5/28/20
 0, ResDHWSys:CHPWHLoopTankASHPType,  0    ; SAC 5/28/20
@@ -2647,9 +2419,9 @@
 2,         39, "Rheem HBDR-50-50"
 2,         40, "Rheem HBDR-50-65"
 2,         41, "Rheem HBDR-50-80"
-2,         145, "Colmac CxA20"       ; SAC 3/5/20
-2,         146, "Nyle C185A external"       ; SAC 4/19/20 - NyleC185A
-2,         147, "Nyle C250A external"       ; SAC 4/19/20 - NyleC250A
+2,         45, "Colmac CxA20"       ; SAC 3/5/20
+2,         46, "Nyle C185A external"       ; SAC 4/19/20 - NyleC185A
+2,         47, "Nyle C250A external"       ; SAC 4/19/20 - NyleC250A
 ;1,    Proj:EnableResearchMode,   1,  0   ; Research mode enabled
 1,    Proj:Ruleset,   -999,  0   ; Current selections
 2,          0, "- select HPWH type -"
@@ -2681,24 +2453,24 @@
 2,         42, "Rheem HBDR-22-50"
 2,         43, "Rheem HBDR-22-65"
 2,         44, "Rheem HBDR-22-80"
-2,            148,    "Colmac CxV-5"
-2,            149,    "Colmac CxA-10"
-2,            150,    "Colmac CxA-15"
-2,            145,    "Colmac CxA-20"
-2,            151,    "Colmac CxA-25"
-2,            152,    "Colmac CxA-30"
-2,            153,    "Nyle C25A"
-2,            154,    "Nyle C60A"
-2,            155,    "Nyle C90A"
-2,            156,    "Nyle C125A"
-2,            146,    "Nyle C185A"
-2,            147,    "Nyle C250A"
-2,            167,    "Nyle C60A-CWP"        ; SAC 6/23/20 - added cold wthr package presets
-2,            168,    "Nyle C90A-CWP"
-2,            169,    "Nyle C125A-CWP"
-2,            170,    "Nyle C185A-CWP"
-2,            171,    "Nyle C250A-CWP"
-2,            157,    "Sanden GS3-45HPA-US"   ; used to map to 17 - Sanden 80
+2,             48,    "Colmac CxV-5"
+2,             49,    "Colmac CxA-10"
+2,             50,    "Colmac CxA-15"
+2,             45,    "Colmac CxA-20"
+2,             51,    "Colmac CxA-25"
+2,             52,    "Colmac CxA-30"
+2,             53,    "Nyle C25A"
+2,             54,    "Nyle C60A"
+2,             55,    "Nyle C90A"
+2,             56,    "Nyle C125A"
+2,             46,    "Nyle C185A"
+2,             47,    "Nyle C250A"
+2,             67,    "Nyle C60A-CWP"        ; SAC 6/23/20 - added cold wthr package presets
+2,             68,    "Nyle C90A-CWP"
+2,             69,    "Nyle C125A-CWP"
+2,             70,    "Nyle C185A-CWP"
+2,             71,    "Nyle C250A-CWP"
+2,             57,    "Sanden GS3-45HPA-US"   ; used to map to 17 - Sanden 80
 2,             58,    "Bradford White 2020 65"     ; SAC 6/16/20 - NEEA additions
 2,             59,    "Rheem 2020 Premium 40"
 2,             60,    "Rheem 2020 Premium 50"
@@ -2708,46 +2480,32 @@
 2,             64,    "Rheem 2020 Builder 50"
 2,             65,    "Rheem 2020 Builder 65"
 2,             66,    "Rheem 2020 Builder 80"
-2,            177,    "Colmac CxV-5 (MP)"      ; multi pass additions - SAC 01/17/22
-2,            178,    "Colmac CxA-10 (MP)"
-2,            179,    "Colmac CxA-15 (MP)"
-2,            180,    "Colmac CxA-20 (MP)"
-2,            181,    "Colmac CxA-25 (MP)"
-2,            182,    "Colmac CxA-30 (MP)"
-2,            183,    "Rheem HPHD-60HNU (horiz MP)"
-2,            184,    "Rheem HPHD-60VNU (vertical MP)"
-2,            185,    "Rheem HPHD-135HNU (horiz MP)"
-2,            186,    "Rheem HPHD-135VNU (vertical MP)"
-2,            105,    "Nyle C60A (MP)"     ; more multi pass options - SAC 02/23/22
-2,            106,    "Nyle C90A (MP)"
-2,            107,    "Nyle C125A (MP)"
-2,            108,    "Nyle C185A (MP)"
-2,            109,    "Nyle C250A (MP)"
-2,            125,    "Nyle C60A-CWP (MP)"
-2,            126,    "Nyle C90A-CWP (MP)"
-2,            127,    "Nyle C125A-CWP (MP)"
-2,            128,    "Nyle C185A-CWP (MP)"
-2,            129,    "Nyle C250A-CWP (MP)"
-2,            191,    "generic 5kW"                ; SAC 06/22/21
-2,            192,    "generic 11kW"
-2,            193,    "generic 20kW"
-2,            194,    "generic 26kW"
-2,            195,    "generic 40kW"
-2,            196,    "generic 45kW"
-2,             77,    "RheemPlugInShared40"     ; SAC 12/29/22
-2,             78,    "RheemPlugInShared50"
-2,             79,    "RheemPlugInShared65"
-2,             80,    "RheemPlugInShared80"
-2,             81,    "RheemPlugInDedicated40"
-2,             82,    "RheemPlugInDedicated50"
-2,             83,    "AOSmithHPTS50"     ; SAC 01/19/23
-2,             84,    "AOSmithHPTS66"
-2,             85,    "AOSmithHPTS80"
-2,             86,    "AquaThermAire"     ; SAC 01/29/24
-2,         87, "AWHSTier4Generic40"    ; NEEA generic tier 4 options - SAC 04/25/24 (tic #3595)
-2,         88, "AWHSTier4Generic50"
-2,         89, "AWHSTier4Generic65"
-2,         90, "AWHSTier4Generic80"
+2,             77,    "Colmac CxV-5 (MP)"      ; multi pass additions - SAC 01/17/22
+2,             78,    "Colmac CxA-10 (MP)"
+2,             79,    "Colmac CxA-15 (MP)"
+2,             80,    "Colmac CxA-20 (MP)"
+2,             81,    "Colmac CxA-25 (MP)"
+2,             82,    "Colmac CxA-30 (MP)"
+2,             83,    "Rheem HPHD-60HNU (horiz MP)"
+2,             84,    "Rheem HPHD-60VNU (vertical MP)"
+2,             85,    "Rheem HPHD-135HNU (horiz MP)"
+2,             86,    "Rheem HPHD-135VNU (vertical MP)"
+2,              5,    "Nyle C60A (MP)"     ; more multi pass options - SAC 02/23/22
+2,              6,    "Nyle C90A (MP)"
+2,              7,    "Nyle C125A (MP)"
+2,              8,    "Nyle C185A (MP)"
+2,              9,    "Nyle C250A (MP)"
+2,             25,    "Nyle C60A-CWP (MP)"
+2,             26,    "Nyle C90A-CWP (MP)"
+2,             27,    "Nyle C125A-CWP (MP)"
+2,             28,    "Nyle C185A-CWP (MP)"
+2,             29,    "Nyle C250A-CWP (MP)"
+2,             91,    "generic 5kW"                ; SAC 06/22/21
+2,             92,    "generic 11kW"
+2,             93,    "generic 20kW"
+2,             94,    "generic 26kW"
+2,             95,    "generic 40kW"
+2,             96,    "generic 45kW"
 
 0, ResWtrHtr:AmbientCond,  1
 ; 0, HVACSys:DHWAmbientCond,  1

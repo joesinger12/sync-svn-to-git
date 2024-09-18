@@ -3,20 +3,19 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "1014315-RetlStrp-WSHP"  
    BldgEngyModelVersion = 16
    CreateDate = 1447709820
-   ModDate = 1714761504
+   ModDate = 1655801141
    RunDate = 1655801142
    ZipCode = 92262
-   WeatherStation = "PALM SPRINGS"
+   WeatherStation = "CTZ15S22A"
    ExcptCondNoClgSys = "No"
    ExcptCondRtdCap = "No"
    ExcptCondNarrative = "No"
    AutoHardSize = 1
    AutoEffInput = 1
    DefaultDayltgCtrls = 1
+   AirBarrier = "Air barrier - not verified"   
    CompType = "NewComplete"
-   AirBarrier = "Air barrier - not verified"
    SoftwareVersion = "CBECC 2022.1.0 (1250)"
-   CompReportPDF = 1
    ..
 
 Bldg   "Strip Mall"  
@@ -34,7 +33,6 @@ Spc   "LGstore1"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 1"  
@@ -437,7 +435,6 @@ Spc   "LGstore2"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 18"  
@@ -841,7 +838,6 @@ Spc   "SMstore1"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 35"  
@@ -1105,7 +1101,6 @@ Spc   "SMstore2"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 46"  
@@ -1369,7 +1364,6 @@ Spc   "SMstore3"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 57"  
@@ -1633,7 +1627,6 @@ Spc   "SMstore4"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 68"  
@@ -1872,7 +1865,6 @@ Spc   "SMstore5"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 78"  
@@ -2136,7 +2128,6 @@ Spc   "SMstore6"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 89"  
@@ -2400,7 +2391,6 @@ Spc   "SMstore7"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 100"  
@@ -2664,7 +2654,6 @@ Spc   "SMstore8"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 111"  

@@ -3,11 +3,11 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "0300016-OffMed-Baseline"  
    BldgEngyModelVersion = 16
    CreateDate = 1447648055
-   ModDate = 1714761428
+   ModDate = 1656608953
    RunDate = 1656608954
    CliZn = "ClimateZone16"
    ZipCode = 95715
-   WeatherStation = "BLUE CANYON"
+   WeatherStation = "CTZ16S22A"
    HVACAutoSizing = 0
    ExcptCondNoClgSys = "No"
    ExcptCondRtdCap = "No"
@@ -19,7 +19,6 @@ Proj   "0300016-OffMed-Baseline"
    CompType = "NewComplete"
    AirBarrier = "Air barrier - not verified"
    SoftwareVersion = "CBECC 2022.1.0 (1250)"
-   CompReportPDF = 1
    ..
 
 ConsAssm   "Metal Framed Wall"  
@@ -172,7 +171,6 @@ Spc   "Core_bottom"
    Vol = 95280.3
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 1"  
@@ -323,7 +321,6 @@ Spc   "FirstFloor_Plenum"
    CondgType = "Plenum"
    ThrmlZnRef = "FirstFloor_Plenum Thermal Zone"
    Vol = 71503.7
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 7"  
@@ -573,7 +570,6 @@ Spc   "Perimeter_bot_ZN_1"
    Vol = 20085.9
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 17"  
@@ -722,7 +718,6 @@ Spc   "Perimeter_bot_ZN_2"
    Vol = 12716.1
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 23"  
@@ -846,7 +841,6 @@ Spc   "Perimeter_bot_ZN_3"
    Vol = 20085.9
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 28"  
@@ -970,7 +964,6 @@ Spc   "Perimeter_bot_ZN_4"
    Vol = 12715.2
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 33"  
@@ -1072,7 +1065,6 @@ Spc   "Core_mid"
    Vol = 95280.3
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 37"  
@@ -1219,7 +1211,6 @@ Spc   "MidFloor_Plenum"
    CondgType = "Plenum"
    ThrmlZnRef = "MidFloor_Plenum Thermal Zone"
    Vol = 71503.7
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 43"  
@@ -1459,7 +1450,6 @@ Spc   "Perimeter_mid_ZN_1"
    Vol = 20085.9
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 53"  
@@ -1605,7 +1595,6 @@ Spc   "Perimeter_mid_ZN_2"
    Vol = 12716.1
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 59"  
@@ -1727,7 +1716,6 @@ Spc   "Perimeter_mid_ZN_3"
    Vol = 20085.9
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 64"  
@@ -1849,7 +1837,6 @@ Spc   "Perimeter_mid_ZN_4"
    Vol = 12715.2
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 69"  
@@ -1950,7 +1937,6 @@ Spc   "Core_top"
    Vol = 95280.3
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 73"  
@@ -2098,7 +2084,6 @@ Spc   "Perimeter_top_ZN_1"
    Vol = 20085.9
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 79"  
@@ -2244,7 +2229,6 @@ Spc   "Perimeter_top_ZN_2"
    Vol = 12716.1
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 85"  
@@ -2366,7 +2350,6 @@ Spc   "Perimeter_top_ZN_3"
    Vol = 20085.9
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 90"  
@@ -2488,7 +2471,6 @@ Spc   "Perimeter_top_ZN_4"
    Vol = 12715.2
    SpcFuncDefaultsRef = "Office Mod Defaults"
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 95"  
@@ -2585,7 +2567,6 @@ Spc   "TopFloor_Plenum"
    CondgType = "Plenum"
    ThrmlZnRef = "TopFloor_Plenum Thermal Zone"
    Vol = 71503.7
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 99"  

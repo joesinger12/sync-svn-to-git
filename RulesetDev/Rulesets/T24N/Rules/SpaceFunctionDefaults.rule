@@ -372,17 +372,16 @@ RULE SpcFuncDefaults:GasEqpPwrDens
   CHECKCODE
     if ( SpcFunc = "Scientific Laboratory Area" .OR. SpcFunc = "Laboratory, Scientific") ; JP 211130 space type name change (tic #3301)
     then UNCHANGED
-    else if( Proj:GasType = "None" .AND. IfValidAnd( GasEqpPwrDens > 0 ) )
-	  then PostError("Space function defaults '%s' specifies process gas equipment 
+    else
+	    if( Proj:GasType = "None" .AND. IfValidAnd( GasEqpPwrDens > 0 ) )
+	    then
+	      PostError("Space function defaults '%s' specifies process gas equipment 
 	                 but the project gas type is specified as none.  Make the 
 	                 process gas equipment load zero or change the project gas 
 	                 type.", Name)
-	  else if( Proj:GasType != "None" .AND. IfValidAnd( GasEqpPwrDens < SpaceFunctionData:GasEqpPwrDens("FuncType", SpcFunc) ) )
-	  then PostError("Space function defaults '%s' specifies process gas equipment 
-	                 power lower than the prescribed value.  Make the process gas
-	                 equipment power equal or greater than the default value.", Name) 
-	  else UNCHANGED
-	  endif endif endif
+	    else UNCHANGED
+	    endif
+	  endif
 ENDRULE
 
 // -----------------------------------------------------------------------------
@@ -969,10 +968,14 @@ RULE SpcFuncDefaults:VentPerPerson
     if( SpcFunc = "High-Rise Residential Living Spaces" )
     then 7.5
     else
+    if( IfValidAnd( OccDensSim > 0 ) .AND. 
+        IfValidAnd( VentOccDensSim > 0 ) )
+    then Min( ( VentOccDensSim / OccDensSim ) , 1 ) * 15
+    else
     if( IfValidAnd( CodeVentPerAreaForDCV > 0 ) )
     then 15 // Space could have DCV
     else 0
-    endif endif endif endif
+    endif endif endif endif endif
   DEFAULT : S901G ECBC
     if( HasNoInternalLds = 1 )
     then UNDEFINED

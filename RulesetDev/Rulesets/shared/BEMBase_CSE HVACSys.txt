@@ -122,10 +122,9 @@
 ;                      -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 0,  "cseLOADMETER",    "cseLOADMETER",      "CSE HVAC Load Meter <i>",     100,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1800   ; SAC 03/15/22
 ;
-;                                 VType     NV  WA  SP    US    UL                UT  NO  OC                CV  CP      HI    LName                  
-;                                --------------------------------------------------------------------------------------------------
-1,           "lmtSubMeters",      BEMP_Obj, 50,  1,  1,  NInp,  "",                0,  1, "cseLOADMETER",    0, "",    3208, "list of submeters",  ""
-1,           "lmtSubMeterMults",  BEMP_Flt, 50,  1,  1,  NInp,  "",                0,  0,                              3208, "list of submeter multipliers",  ""
+;                                 VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP        HI    LName                  
+;                                ------------------------------------------------------------------------------------
+1,           "Hide",              BEMP_Str,  1,  0,  1,  NInp,  "",                 0,  0,                        1801, "Hide",  ""     
 ;------------------------------------------------------------------------------------------------
 
 
@@ -209,11 +208,7 @@
 1,           "rsCdH",             BEMP_Flt,  1,  0,  1,  Pres,  "ratio",            0,  0,                          8004, "Heating cyclic degradation coefficient",  "" ; JP 5/3/22
 1,           "rsCdC",             BEMP_Flt,  1,  0,  1,  Pres,  "ratio",            0,  0,                          8004, "Cooling cyclic degradation coefficient",  ""
 
-;1,           "rsDefrostModel",    BEMP_Str,  1,  0,  1,  Pres,  "",                 0,  0,                          8002, "Defrost model",  ""  ; SAC 11/4/18 - VCHP
-
-1,           "rsFEffAuxHBackup",    BEMP_Flt,  1,  0,  1,  Pres,  "mult",           0,  0,                          8004, "applied to (= multiplied) the backup aux heat efficiency (default 1)",  ""    ; VCHP - SAC 06/01/23
-1,           "rsFEffAuxHDefrost",   BEMP_Flt,  1,  0,  1,  Pres,  "mult",           0,  0,                          8004, "applied to (= multiplied) the defrost aux heat efficiency (default 1)",  "" 
-1,           "rsFEffAuxHDefrost_x", BEMP_Str,  1,  0,  1,  Pres,  "mult",           0,  0,                          8004, "applied to (= multiplied) the defrost aux heat efficiency (default 1)",  "" 
+1,           "rsDefrostModel",    BEMP_Str,  1,  0,  1,  Pres,  "",                 0,  0,                          8002, "Defrost model",  ""  ; SAC 11/4/18 - VCHP
 
 1,           "rsOAVType",         BEMP_Sym,  1,  0,  1,  Pres,  "",                 0,  0,                          8002, "OAV system type",  ""    
 1,           "rsOAVReliefZn",     BEMP_Obj,  1,  0,  1,  Pres,  "",                 0,  1, "cseZONE",    0, "",     3208, "OAV relief zone",  ""    
@@ -222,8 +217,7 @@
 
       ; WSHP - SAC 03/17/22
 1,           "rsTdbOut_x",        BEMP_Str,  1,  0,  1,  Pres,  "°F",               0,  0,                          8004, "Source side temperature for performance corrections (heat = mode 1, cool = mode 2)",  ""   
-1,           "rsSrcSideLoadMtr",  BEMP_Obj,  1,  0,  1,  Pres,  "",                 0,  1, "cseLOADMETER", 0, "",   3208, "LOADMETER used to generate plant load profiles for condenser/boiler loops",  ""    
-1,           "rsLoadMtr",         BEMP_Obj,  1,  0,  1,  Pres,  "",                 0,  1, "cseLOADMETER", 0, "",   3208, "LOADMETER used to generate plant load profiles for condenser/boiler loops",  ""    
+1,           "rsSrcSideLoadMtr",  BEMP_Obj,  1,  0,  1,  Pres,  "",                 0,  1, "cseLOADMETER", 0, "",   3208, "LOADMETER used to generate pland load profiles for condenser/boiler loops",  ""    
 
 ;1,           "rsMtrH",            BEMP_Obj,  1,  0,  1,  Pres,  "",                 0,  1, "cseMETER",    0, "",    3208, "Heating energy use meter",  ""    
 ;1,           "rsMtrC",            BEMP_Obj,  1,  0,  1,  Pres,  "",                 0,  1, "cseMETER",    0, "",    3208, "Cooling energy use meter",  ""    

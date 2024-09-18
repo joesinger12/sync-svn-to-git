@@ -108,16 +108,16 @@ RULE AirSys:OACtrlRef
   INPUTCLASS
     NotInput
   DEFAULT
-    if( ChildCount( OACtrl ) > 0 .AND.
+    if( LocalCompAssigned( OACtrlRef ) = 0 .AND.
         IfValidAnd( MaxChild( OACtrl:OACtrlIdx) > 0 ) )
     then ChildRef( OACtrl:Name, MaxChild( OACtrl:OACtrlIdx ) )
-    else UNDEFINED
+    else UNCHANGED
     endif
   CHECKSIM
     if( BypassCheckSim > 0 )
     then UNCHANGED // Bypass QC checks for system
     else
-    if( ChildCount( OACtrl ) = 0 .AND. IsExhSys = 0 )
+    if( LocalCompAssigned( OACtrlRef ) = 0 .AND. IsExhSys = 0 .AND. SysVentFlow > 0 )
     then 
       PostError("AirSystem '%s' has no OutsideAirControl object defined.",
                  Name)  
@@ -298,10 +298,10 @@ RULE AirSys:IsAllOA
   CHECKCODE
     if( ( Type = "DOASCV" .OR. Type = "DOASVAV" ) .AND. IsAllOA = 0 )
     then
-      PostError("AirSystem '%s' is a DOAS system but has not been defined
-                 as a 100% OA system ( IsAllOA = 0 ). For compliance, this
-                 system should be modeled as 100% OA. If the propsed design
-                 is not a 100% OA system select a different system type.", Name)
+      PostWarning("AirSystem '%s' is a DOAS system but has not been defined
+                   as a 100% OA system ( IsAllOA = 0 ). For compliance, this
+                   system will be modeled as 100% OA. If the propsed design
+                   is not a 100% OA system select a different system type.", Name)
     else UNCHANGED
     endif
   SIZING : T24N_2016
@@ -766,17 +766,6 @@ ENDRULE
 
 
 // ********** Economizer Control Type ******************************************
-// calculate receptacle power for computer room to determine baseline economizer
-RULE NEW AirSys:CompRmPwr
-  DATATYPE
-    Float
-  LONGFORM
-    ComputerRoomPower
-  INPUTCLASS
-    NotInput
-  ANNUAL : T24N
-    SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CompRmPwr )
-ENDRULE
 RULE OACtrl:EconoCtrlMthd
   DESCRIPTION
     "The method used to control the air-side economizer."
@@ -852,12 +841,6 @@ RULE OACtrl:EconoCtrlMthd
       if( AirSys:BaseSysNum = 10 )
       then // CRAH system
         "FixedDryBulb" // No capacity threshold for CRAH units
-      else if( AirSys:BaseSysNum = 11 )
-      then // CRAC system
-        if( AirSys:CompRmPwr < 18 .AND. Bldg:PropHasAirEcono = 0  )
-        then "NoEconomizer" // Exception 1 to Section 140.9(a)
-        else "FixedDryBulb"
-        endif
       else if( AirSys:BaseSysNum = 12 )
       then // LAB system
         if( IfValidAnd( AirSys:PropSysOARat < 0.99 ) ) 
@@ -869,18 +852,9 @@ RULE OACtrl:EconoCtrlMthd
       else if( AirSys:ClgCap > 33000 )
       then "FixedDryBulb"
       else "NoEconomizer"
-      endif endif endif endif
-    else if( IsBaseHlthCareSys > 0 )
-    then
-      if( AirSys:ClgCap >= 54000 .OR.
-          ( AirSys:ClgCap > 33000 .AND. PairedWithHtRcvryDOAS = 0 ) )
-      then "FixedDryBulb"
-      else if( AirSys:IsHlthCareDOAS > 0 .AND. AirSys:HasHtRcvry > 0 )
-      then "FixedDryBulb"
-      else "NoEconomizer"
-      endif endif
+      endif endif endif ; endif
     else z:EconoCtrlMthd
-    endif endif
+    endif
   ANNUAL : S901G ECBC
     if( BaseSysNum > 0 ) then
       if( AirSys:BaseSysNum = 1 .OR.
@@ -1025,7 +999,7 @@ RULE AirSys:AirSeg:CoilClg:CapTotGrossRtdSim
           ( AirSys:SubType = "CRAH" .OR.
             AirSys:SubType = "CRAC" ) )
       then // Update CapTotGrossRtdSim
-        CapTotGrossRtd * SysCntSim
+        CapTotGrossRtd * SysCnt
       else UNCHANGED
       endif
     else UNCHANGED
@@ -1080,7 +1054,7 @@ RULE OACtrl:EconoIntegration
     else EconoIntegration
     endif endif
   ANNUAL
-    if( BaseSysNum > 0 .OR. IsBaseHlthCareSys > 0 )
+    if( BaseSysNum > 0 )
     then
       if( EconoCtrlMthd != "NoEconomizer" )
       then "Integrated"
@@ -1233,7 +1207,7 @@ RULE OACtrl:EconoHiTempLockout
   COMMONMAXIMUM
     85  
   UNITS 
-    Â°F  
+    °F  
   REPORTPRECISION
     0
   DEFAULT : S901G
@@ -1344,7 +1318,7 @@ RULE OACtrl:EconoHiTempLockout
   ANNUAL : T24N_2013 T24N_2016 T24N_2019
     z:EconoHiTempLockout
   ANNUAL : T24N
-    if( BaseSysNum > 0 .OR. IsBaseHlthCareSys > 0 )
+    if( BaseSysNum > 0 )
     then
       if( EconoCtrlMthd = "FixedDryBulb" )
       then
@@ -1387,22 +1361,14 @@ RULE OACtrl:EconoLowTempLockout
   INPUTCLASS 
     Default
   UNITS 
-    Â°F
+    °F
   RESETS
     ResetThisWhenTheFollowingIsModified
       OACtrl:EconoCtrlMthd
-  DEFAULT : T24_2025
-    UNDEFINED
   DEFAULT
     if( IfValidAnd( EconoCtrlMthd != "NoEconomizer" ) )
     then 45
     else UNDEFINED
-    endif
-  SIZING : T24_2025
-    if( EconoCtrlMthd = "NoEconomizer" .OR.
-        BaseSysNum > 0 )
-    then UNDEFINED
-    else UNCHANGED
     endif
   SIZING
     if( EconoCtrlMthd = "NoEconomizer" )
@@ -1412,21 +1378,9 @@ RULE OACtrl:EconoLowTempLockout
     then UNDEFINED // No economizer is assumed for sizing run
     else max( 45, EconoLowTempLockout )
     endif endif
-  ANNUAL : T24_2025
-    if( EconoCtrlMthd = "NoEconomizer" .OR.
-        BaseSysNum > 0 )
-    then UNDEFINED
-    else UNCHANGED
-    endif
   ANNUAL
     if( EconoCtrlMthd = "NoEconomizer" )
     then UNDEFINED
-    else
-    if( IsBaseHlthCareSys > 0 )
-    then if( AirSys:IsHlthCareDOAS > 0 .AND. AirSys:HasHtRcvry > 0 )
-         then 55 // for heat recovery bypass control
-         else 45
-         endif
     else
     if( IsNew .OR. BaseSysNum > 0 )
     then if( BaseSysNum = 10 .OR. BaseSysNum = 11 .OR.
@@ -1435,7 +1389,7 @@ RULE OACtrl:EconoLowTempLockout
          else 45 // Set to 45F per 140.4(e)2D
          endif
     else z:EconoLowTempLockout
-    endif endif endif
+    endif endif
 ENDRULE
 
 
@@ -1480,7 +1434,7 @@ RULE OACtrl:EconoHiEnthLockout
     if( LocalStatus( u:EconoHiEnthLockout ) = 0 )
     then // high limit = no control based on entrophy.
       50 // it is getting set to 64000 J/kg (~= 28 Btu/lb) in OpenStudio if it is not defined in CBECC. 
-    else u:EconoHiEnthLockout + 2.0
+    else EconoHiEnthLockout + 2
     endif endif
   ANNUAL
     if( EconoCtrlMthd = "NoEconomizer" )
@@ -1797,12 +1751,12 @@ RULE ZnSys:ClgOAFlowCapSim
     cfm
   SIZING
     if( IfValidAnd( ClgOAFlowCap >= 0 ) )
-    then ClgOAFlowCap * CntSim
+    then ClgOAFlowCap * Cnt
     else UNDEFINED
     endif
   ANNUAL
     if( IfValidAnd( ClgOAFlowCap >= 0 ) )
-    then ClgOAFlowCap * CntSim
+    then ClgOAFlowCap * Cnt
     else UNDEFINED
     endif
 ENDRULE
@@ -1821,12 +1775,12 @@ RULE ZnSys:HtgOAFlowCapSim
     cfm
   SIZING
     if( IfValidAnd( HtgOAFlowCap >= 0 ) )
-    then HtgOAFlowCap * CntSim
+    then HtgOAFlowCap * Cnt
     else UNDEFINED
     endif
   ANNUAL
     if( IfValidAnd( HtgOAFlowCap >= 0 ) )
-    then HtgOAFlowCap * CntSim
+    then HtgOAFlowCap * Cnt
     else UNDEFINED
     endif
 ENDRULE
@@ -1843,12 +1797,12 @@ RULE ZnSys:NoClgHtgOAFlowCapSim
     cfm
   SIZING
     if( IfValidAnd( NoClgHtgOAFlowCap >= 0 ) )
-    then NoClgHtgOAFlowCap * CntSim
+    then NoClgHtgOAFlowCap * Cnt
     else UNDEFINED
     endif
   ANNUAL
     if( IfValidAnd( NoClgHtgOAFlowCap >= 0 ) )
-    then NoClgHtgOAFlowCap * CntSim
+    then NoClgHtgOAFlowCap * Cnt
     else UNDEFINED
     endif
 ENDRULE

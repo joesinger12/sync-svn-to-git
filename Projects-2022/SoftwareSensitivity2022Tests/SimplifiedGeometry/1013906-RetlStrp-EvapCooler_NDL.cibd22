@@ -3,9 +3,10 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "1013906-RetlStrp-EvapCooler"  
    BldgEngyModelVersion = 17
    CreateDate = 1447977799
-   ModDate = 1714761626
+   ModDate = 1666218957
    RunDate = 1666218958
    ZipCode = 90505
+   WeatherStation = "TORRANCE-MUNI-AP"
    ExcptCondNoClgSys = "No"
    ExcptCondRtdCap = "No"
    ExcptCondNarrative = "No"
@@ -16,7 +17,6 @@ Proj   "1013906-RetlStrp-EvapCooler"
    CompType = "NewComplete"
    AirBarrier = "Air barrier - not verified"
    SoftwareVersion = "CBECC 2022.2.0 (1273)"
-   CompReportPDF = 1
    ..
 
 Bldg   "Strip Mall"  
@@ -34,7 +34,6 @@ Spc   "LGstore1"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 1"  
@@ -437,7 +436,6 @@ Spc   "LGstore2"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 18"  
@@ -841,7 +839,6 @@ Spc   "SMstore1"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 35"  
@@ -1105,7 +1102,6 @@ Spc   "SMstore2"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 46"  
@@ -1369,7 +1365,6 @@ Spc   "SMstore3"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 57"  
@@ -1633,7 +1628,6 @@ Spc   "SMstore4"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 68"  
@@ -1872,7 +1866,6 @@ Spc   "SMstore5"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 78"  
@@ -2136,7 +2129,6 @@ Spc   "SMstore6"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 89"  
@@ -2400,7 +2392,6 @@ Spc   "SMstore7"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 100"  
@@ -2664,7 +2655,6 @@ Spc   "SMstore8"
    SpcFuncDefaultsRef = "StripMall_Defaults"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSys1 Supply"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 111"  
@@ -4051,7 +4041,7 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
 clg: 0  htg: 0  'LGstore2 Thermal Zone'
 clg: 0  htg: 0  'SMstore1 Thermal Zone'
 clg: 0  htg: 0  'SMstore2 Thermal Zone'
-clg: 0  htg: 0  'SMstore3 Thermal Zone'
+clg: 0  htg: 0  'SMstore3 Thermal Zone'
 clg: 0  htg: 0  'SMstore4 Thermal Zone'
 clg: 0  htg: 0  'SMstore5 Thermal Zone'
 clg: 0  htg: 0  'SMstore6 Thermal Zone'
