@@ -151,7 +151,7 @@ jobs:
 
             git add .
             if ! git diff-index --quiet HEAD --; then
-              git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER
+              git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER by $SVN_AUTHOR
               $COMMIT_MSG"
               echo "FINISHED: Successfully committed revision $REV_NUMBER"
               
