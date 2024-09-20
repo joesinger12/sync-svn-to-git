@@ -49,8 +49,9 @@ jobs:
         # Retrieve the last revision number from the last run
         LAST_REVISION=$(cat ../git-repo/last_revision.txt)
         echo "LAST_REVISION=$LAST_REVISION" >> $GITHUB_ENV
-        echo "PREVIOUS_REV_NUMBER=$LAST_REVISION" >> $GITHUB_ENV
         echo "Last revision number is: $LAST_REVISION"
+        echo "PREVIOUS_REV_NUMBER=$LAST_REVISION" >> $GITHUB_ENV
+        echo "Setting 'Previous_rev_num' to : $PREVIOUS_REV_NUMBER"
         
         # get the log from last_revision to HEAD
         svn log -r $LAST_REVISION:8190 --xml > ../svn_log.xml
@@ -131,6 +132,7 @@ jobs:
 
             # Echo the extracted information for debugging
             echo "RevNumber: $REV_NUMBER"
+            echo "PrevRevNumber: $PREVIOUS_REV_NUMBER"
             echo "author: $AUTHOR"
             echo "date: $COMMIT_DATE"
             echo "Commit Message: $COMMIT_MSG"
@@ -141,6 +143,7 @@ jobs:
 
             # Get deleted files from previous revision to this revision
             deleted_files=$(svn diff --summarize -r $PREVIOUS_REV_NUMBER:$REV_NUMBER | grep '^D' | awk '{print $2}')
+            echo "found deleted files in SVN as: $deleted_files"
             
             # Print the deleted files
             if [ -n "$deleted_files" ]; then
@@ -168,6 +171,7 @@ jobs:
                 git rm -r "$git_file"
               fi
             done
+            echo "Deleted files from git-repo"
 
             # Set the author and email for the commit
             git config --global user.name "$AUTHOR_NAME"
