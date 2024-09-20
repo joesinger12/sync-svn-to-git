@@ -250,7 +250,7 @@
 2,          1, "Gas"
 2,          0, "Electric Resistance"
 2,          5, "Heat Pump"
-; 2,          3, "Heat Pump (2013 being phased out)"       - removed this research-only option - SAC 02/17/23 (Res tic #1347)
+2,          3, "Heat Pump (2013 being phased out)"
 1,    Proj:Ruleset,    -999,  0   ; Current selections
 2,          1, "Gas"
 2,          0, "Electric Resistance"
@@ -295,7 +295,7 @@
 ;2,          5, "Small Instantaneous (existing only)"     ; %WHTYPE_SINST =    5		' small instantaneous
 ;2,          6, "Small Storage (existing only)"           ; %WHTYPE_SSTOR =    6		' small storage
 1,    ResWtrHtr:HeaterElementType,     0, 12		; "Electric Resistance"
-1,    ResProj:RunScope,                   1, 12		; "New Construction"   - SAC 5/26/19 (tic #1096)
+1,    Proj:RunScope,                   1, 12		; "New Construction"   - SAC 5/26/19 (tic #1096)
 2,         10, "Consumer Instantaneous (UEF)"
 2,         11, "Commercial Instantaneous (TE)"
 2,         12, "Consumer Storage (UEF)"
@@ -333,7 +333,7 @@
 ;2,          6, "Small Storage (existing only)"           ; %WHTYPE_SSTOR =    6		' small storage
 1,    ResWtrHtr:HeaterElementType,  -999, 10		; all others
 1,    Proj:IsComRuleset,                  1, 10		; Multifamily   - SAC 12/29/19 (tic #862)
-1,    ResProj:RunScope,                      1, 10		; "New Construction"   - SAC 5/26/19 (tic #1096)
+1,    Proj:RunScope,                      1, 10		; "New Construction"   - SAC 5/26/19 (tic #1096)
 2,          0, "Boiler"                  ; %WHTYPE_BOIL =     0		' boiler
 2,         16, "Commercial Packaged Boiler"        ; SAC 12/18/19 - added to facilitate central gas std design DHW system (tic #862)
 2,          1, "Indirect"                ; %WHTYPE_IND =      1		' indirect                     ; SAC 6/17/14 - removed / 6/25 - restored
@@ -343,7 +343,7 @@
 2,         13, "Commercial Storage (TE & SBL)"
 2,         14, "Residential-Duty Commercial Storage (UEF)"
 1,    ResWtrHtr:HeaterElementType,  -999, 10		; all others
-1,    ResProj:RunScope,                      1, 10		; "New Construction"   - SAC 5/26/19 (tic #1096)
+1,    Proj:RunScope,                      1, 10		; "New Construction"   - SAC 5/26/19 (tic #1096)
 2,          0, "Boiler"                  ; %WHTYPE_BOIL =     0		' boiler
 2,          1, "Indirect"                ; %WHTYPE_IND =      1		' indirect                     ; SAC 6/17/14 - removed / 6/25 - restored
 2,         10, "Consumer Instantaneous (UEF)"
@@ -397,19 +397,11 @@
 2,          1, "Indirect"                ; %WHTYPE_IND =      1		' indirect    
 2,          6, "Small Storage"           ; %WHTYPE_SSTOR =    6		' small storage
 
-0, ResWtrHtr:HPWHCategory,    1   ; SAC 01/29/21 (tic #1260)    - switched 'Non-UEF Rated' to 'Non-UEF Rated (existing only)' - SAC 02/17/23 (Res tic #1347)
-1,    Proj:Ruleset,   -1001,  1   ; Backward compatibility
+0, ResWtrHtr:HPWHCategory,  1    ; SAC 01/29/21 (tic #1260)
+2,          1, "Residential (NEEA rated) Product"
+2,          2, "Commercial Product"
+2,          3, "UEF Rated"
 2,          4, "Non-UEF Rated"
-1,    ResWtrHtr:Status,   1,  1   ; "Existing"
-2,          1, "Residential (NEEA rated) Product"
-2,          2, "Commercial Product"
-2,          3, "UEF Rated"
-2,          4, "Non-UEF Rated (existing only)"
-1,    Proj:Ruleset,    -999,  1   ; all others
-2,          1, "Residential (NEEA rated) Product"
-2,          2, "Commercial Product"
-2,          3, "UEF Rated"
-2,          4, "Non-UEF Rated (existing only)"
 
 ; SAC 4/24/17 - added HPWH selections by brand & model (tic #829)
 0, ResWtrHtr:HPWHBrand,  0
@@ -420,7 +412,6 @@
 2,          1, "- select Brand -"
 2,         11, "A. O. Smith"    
 2,         12, "American"       
-2,         29, "AquaThermAire"      ; RJH 02/14/24
 2,         13, "Bradford White" 
 2,         27, "Direct Energy"      ; SAC 12/11/20       
 2,         14, "EcoSense"       
@@ -448,7 +439,6 @@
 2,          1, "- select Brand -"
 2,         11, "A. O. Smith"    
 2,         12, "American"       
-2,         29, "AquaThermAire"      ; RJH 02/14/24
 2,         13, "Bradford White" 
 2,         27, "Direct Energy"      ; SAC 12/11/20       
 2,         14, "EcoSense"       
@@ -475,7 +465,6 @@
 2,          1, "- select Brand -"
 2,         11, "A. O. Smith"    
 2,         12, "American"       
-2,         29, "AquaThermAire"      ; RJH 02/14/24
 2,         13, "Bradford White" 
 2,         27, "Direct Energy"      ; SAC 12/11/20       
 2,         14, "EcoSense"       
@@ -498,7 +487,6 @@
 
 
 ; added generic NEEA/AWHS tier 3 selections - SAC 06/17/21
-; added generic NEEA/AWHS tier 4 options - SAC 04/25/24 (tic #3595)
 0, ResWtrHtr:HPWHModel,  0
 1,    Proj:Ruleset,   -1001,  0   ; Backward compatibility
 2,         36, "AO Smith HPTU 80 DR"   ; AOSmithHPTU80DR  - SAC 3/28/17  -> map to GE DR - SAC 5/5/17
@@ -650,17 +638,8 @@
 2,     121114,   "HPHE6266H045DV 120  (66 gal)"
 2,     121215,   "HPHE6280H045DV 120  (80 gal)"
 2,     121313,   "HPHE650H045DV 120  (50 gal)"
-1,    ResWtrHtr:HPWHBrand,   29,  1  ; "AquaThermAire"      ; RJH 02/14/24   
-2,          1, "- select Model -"
-2,     290186,   "CHT2021-36A  (54 gal)"
-2,     290286,   "CHT2021-36C  (54 gal)"
-2,     290386,   "CHT2021-48A  (54 gal)"
-2,     290486,   "CHT2021-48C  (54 gal)"
 1,    ResWtrHtr:HPWHBrand,   13,  1  ; "Bradford White" 
 2,          1, "- select Model -"
-2,     130760,   "RE2H50S*-*****  (50 gal)"
-2,     130861,   "RE2H65T*-*****  (65 gal)"
-2,     130962,   "RE2H80T*-*****  (80 gal)"
 2,     130119,   "RE2H50R10B-1NCWT  (50 gal)"
 2,     130358,   "RE2H65T10-1NCWT  (65 gal)"
 2,     130223,   "RE2H80R10B-1NCWT  (80 gal)"
@@ -997,10 +976,6 @@
 2,     261312,   "HPSE2K80HD045VC  (80 gal)"
 1,    ResWtrHtr:HPWHBrand,   99,  1  ; "(generic)"      
 2,          1, "- select Model -"
-2,     990787,   "tier 4  (40+ gal)"
-2,     990888,   "tier 4  (50+ gal)"
-2,     990989,   "tier 4  (65+ gal)"
-2,     991090,   "tier 4  (80+ gal)"
 2,     990273,   "tier 3  (40+ gal)"
 2,     990374,   "tier 3  (50+ gal)"
 2,     990475,   "tier 3  (65+ gal)"
@@ -1137,17 +1112,8 @@
 2,     121114,   "HPHE6266H045DV 120  (66 gal)"
 2,     121215,   "HPHE6280H045DV 120  (80 gal)"
 2,     121313,   "HPHE650H045DV 120  (50 gal)"
-1,    ResDHWSys:CHPWHNEEABrand,   29,  1  ; "AquaThermAire"    ; RJH 02/14/24   
-2,          1, "- select Model -"
-2,     290186,   "CHT2021-36A  (54 gal)"
-2,     290286,   "CHT2021-36C  (54 gal)"
-2,     290386,   "CHT2021-48A  (54 gal)"
-2,     290486,   "CHT2021-48C  (54 gal)"
 1,    ResDHWSys:CHPWHNEEABrand,   13,  1  ; "Bradford White" 
 2,          1, "- select Model -"
-2,     130760,   "RE2H50S*-*****  (50 gal)"
-2,     130861,   "RE2H65T*-*****  (65 gal)"
-2,     130962,   "RE2H80T*-*****  (80 gal)"
 2,     130119,   "RE2H50R10B-1NCWT  (50 gal)"
 2,     130358,   "RE2H65T10-1NCWT  (65 gal)"
 2,     130223,   "RE2H80R10B-1NCWT  (80 gal)"
@@ -1484,10 +1450,6 @@
 2,     261312,   "HPSE2K80HD045VC  (80 gal)"
 1,    ResDHWSys:CHPWHNEEABrand,   99,  1  ; "(generic)"      
 2,          1, "- select Model -"
-2,     990787,   "tier 4  (40+ gal)"
-2,     990888,   "tier 4  (50+ gal)"
-2,     990989,   "tier 4  (65+ gal)"
-2,     991090,   "tier 4  (80+ gal)"
 2,     990273,   "tier 3  (40+ gal)"
 2,     990374,   "tier 3  (50+ gal)"
 2,     990475,   "tier 3  (65+ gal)"
@@ -1625,17 +1587,8 @@
 2,     121114,   "HPHE6266H045DV 120  (66 gal)"
 2,     121215,   "HPHE6280H045DV 120  (80 gal)"
 2,     121313,   "HPHE650H045DV 120  (50 gal)"
-1,    ResDHWSys:CHPWHLoopTankNEEABrand,   29,  1  ; "AquaThermAire"     ; RJH 02/14/24   
-2,          1, "- select Model -"
-2,     290186,   "CHT2021-36A  (54 gal)"
-2,     290286,   "CHT2021-36C  (54 gal)"
-2,     290386,   "CHT2021-48A  (54 gal)"
-2,     290486,   "CHT2021-48C  (54 gal)"
 1,    ResDHWSys:CHPWHLoopTankNEEABrand,   13,  1  ; "Bradford White" 
 2,          1, "- select Model -"
-2,     130760,   "RE2H50S*-*****  (50 gal)"
-2,     130861,   "RE2H65T*-*****  (65 gal)"
-2,     130962,   "RE2H80T*-*****  (80 gal)"
 2,     130119,   "RE2H50R10B-1NCWT  (50 gal)"
 2,     130358,   "RE2H65T10-1NCWT  (65 gal)"
 2,     130223,   "RE2H80R10B-1NCWT  (80 gal)"
@@ -1972,10 +1925,6 @@
 2,     261312,   "HPSE2K80HD045VC  (80 gal)"
 1,    ResDHWSys:CHPWHLoopTankNEEABrand,   99,  1  ; "(generic)"      
 2,          1, "- select Model -"
-2,     990787,   "tier 4  (40+ gal)"
-2,     990888,   "tier 4  (50+ gal)"
-2,     990989,   "tier 4  (65+ gal)"
-2,     991090,   "tier 4  (80+ gal)"
 2,     990273,   "tier 3  (40+ gal)"
 2,     990374,   "tier 3  (50+ gal)"
 2,     990475,   "tier 3  (65+ gal)"
@@ -2743,11 +2692,6 @@
 2,             83,    "AOSmithHPTS50"     ; SAC 01/19/23
 2,             84,    "AOSmithHPTS66"
 2,             85,    "AOSmithHPTS80"
-2,             86,    "AquaThermAire"     ; SAC 01/29/24
-2,         87, "AWHSTier4Generic40"    ; NEEA generic tier 4 options - SAC 04/25/24 (tic #3595)
-2,         88, "AWHSTier4Generic50"
-2,         89, "AWHSTier4Generic65"
-2,         90, "AWHSTier4Generic80"
 
 0, ResWtrHtr:AmbientCond,  1
 ; 0, HVACSys:DHWAmbientCond,  1

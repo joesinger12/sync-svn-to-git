@@ -63,7 +63,7 @@ RULELIST "CSE_SimulationPrep_Zones_IntGains" 1 0 0 1
 ;	"Default ResZn:CSE_ZONE:znEaveZ"     	ResZn:CSE_ZONE:znEaveZ    	= {	Bottom + (FloorHeight * (NumStories - 1)) + CeilingHeight  }
 	"Default ResZn:CSE_ZONE:znEaveZ"     	ResZn:CSE_ZONE:znEaveZ    	= {	if (LocalStatus( Top ) > 0 .AND. Top > 0) then  Top
 																									else  Bottom + (FloorHeight * (NumStories - 1)) + CeilingHeight  endif  }
-;	"Prevent invalid ResZn:CSE_ZONE:znEaveZ"  ResZn:CSE_ZONE:znEaveZ    = {	if (CSE_ZONE:znEaveZ < 0.01) then  UNDEFINED  else  UNCHANGED  endif  }    ; moved to very end of CSE prep rules to ensure it remains valid for other rules that reference it during CSE prep - SAC 10/02/23
+	"Prevent invalid ResZn:CSE_ZONE:znEaveZ"  ResZn:CSE_ZONE:znEaveZ    = {	if (CSE_ZONE:znEaveZ < 0.01) then  UNDEFINED  else  UNCHANGED  endif  }
 
 	"Default ResZn:CSE_ZONE:znCeilingHt"  	ResZn:CSE_ZONE:znCeilingHt 	= {	if (LocalStatus( CeilingHeight ) > 0) then  Local( CeilingHeight )  else  UNDEFINED  endif  }
 	"Default ResZn:CSE_ZONE:znFloorZ"     	ResZn:CSE_ZONE:znFloorZ     = {	if (LocalStatus( Bottom        ) > 0) then  Local( Bottom        )  else  UNDEFINED  endif  }  ; SAC 3/28/13
@@ -262,7 +262,7 @@ RULELIST "CSE_SimulationPrep_Zones_IntGains" 1 0 0 1
 	"Default ResOtherZn:CSE_ZONE:znVol"        ResOtherZn:CSE_ZONE:znVol       	= {	if (LocalStatus( Volume    ) > 0) then  Local( Volume 	)  else  UNDEFINED  endif  }
 	"Default ResOtherZn:CSE_ZONE:znEaveZ"     	ResOtherZn:CSE_ZONE:znEaveZ    	= {	if (LocalStatus( Top ) > 0 .AND. Top > 0) then  Top
 																												else  Bottom + (FloorHeight * (NumStories - 1)) + CeilingHeight  endif  }
-;	"Prevent invalid ResOtherZn:CSE_ZONE:znEaveZ"  ResOtherZn:CSE_ZONE:znEaveZ    = {	if (CSE_ZONE:znEaveZ < 0.01) then  UNDEFINED  else  UNCHANGED  endif  }       ; moved to very end of CSE prep rules to ensure it remains valid for other rules that reference it during CSE prep - SAC 10/02/23
+	"Prevent invalid ResOtherZn:CSE_ZONE:znEaveZ"  ResOtherZn:CSE_ZONE:znEaveZ    = {	if (CSE_ZONE:znEaveZ < 0.01) then  UNDEFINED  else  UNCHANGED  endif  }
 
 	"Default ResOtherZn:CSE_ZONE:znCeilingHt"  	ResOtherZn:CSE_ZONE:znCeilingHt 	= {	if (LocalStatus( CeilingHeight ) > 0) then  Local( CeilingHeight )  else  UNDEFINED  endif  }
 	"Default ResOtherZn:CSE_ZONE:znFloorZ"     	ResOtherZn:CSE_ZONE:znFloorZ      = {	if (LocalStatus( Bottom        ) > 0) then  Local( Bottom        )  else  UNDEFINED  endif  }  ; SAC 3/28/13
@@ -814,7 +814,7 @@ RULELIST "CSE_SimulationPrep_Zones_IntGains_part2" 1 0 0 1
    ; OtherZone People
    "Create new ResOtherZn:GainPeople"            ResOtherZn:GainPeople  =
       {  if ( (IfValidAnd( OccSensHtRt > 0 )==0 .AND. IfValidAnd( OccLatHtRt > 0 )==0) .OR.
-              IfValidAnd( OccNumSim > 0 )==0 .OR. LocalCompAssigned( OccSchRef ) < 1) then  UNCHANGED
+              IfValidAnd( MinOccNumSim > 0 )==0 .OR. LocalCompAssigned( OccSchRef ) < 1) then  UNCHANGED
          else  CreateComp( cseGAIN, substr( Name, 0, 47 ) + "-znPpl" )  endif  }
    "Set ResOtherZn:GainPeople parent cseZONE"    ResOtherZn:GainPeople:Parent  = {  Local( CSE_ZONE )  }
    "Set ResOtherZn:GainPeople gnPower_x"         ResOtherZn:GainPeople:gnPower_x =
@@ -824,9 +824,9 @@ RULELIST "CSE_SimulationPrep_Zones_IntGains_part2" 1 0 0 1
                            LocalCompAssigned( OccSchRef:SchWeekRef[1]:SchDayMonRef ) < 1 )
          then  PostError( "Invalid OccSchRef for OtherZone '%s'.", Name )
          else  Format("%g * %g * select( $dsDay==1, 0, $dsDay==2, 1, $DOWH==1, hourval(%s), $DOWH==8, hourval(%s), $DOWH==7, hourval(%s), default hourval(%s) )",
-                              OccNumSim, (ValidOr( OccSensHtRt, 0 ) + ValidOr( OccLatHtRt, 0 )),
+                              MinOccNumSim, (ValidOr( OccSensHtRt, 0 ) + ValidOr( OccLatHtRt, 0 )),
                               SchDayHoursString( OccSchRef:SchWeekRef[1]:SchDaySunRef ), SchDayHoursString( OccSchRef:SchWeekRef[1]:SchDayHolRef ),
-                              SchDayHoursString( OccSchRef:SchWeekRef[1]:SchDaySatRef ), SchDayHoursString( OccSchRef:SchWeekRef[1]:SchDayMonRef ) )   ; OccNumSim (#Ppl) * OccSensHtRt (Btu/person)
+                              SchDayHoursString( OccSchRef:SchWeekRef[1]:SchDaySatRef ), SchDayHoursString( OccSchRef:SchWeekRef[1]:SchDayMonRef ) )   ; MinOccNumSim (#Ppl) * OccSensHtRt (Btu/person)
          endif  }
    "Set ResOtherZn:GainPeople:gnFrLat"        ResOtherZn:GainPeople:gnFrLat =
       {  OccLatHtRt / (OccSensHtRt + OccLatHtRt)  }      ; frac of Latent / (Sens + Lat)
@@ -928,8 +928,7 @@ RULELIST "CSE_SimulationPrep_Zones_IntGains_part2" 1 0 0 1
    "Set ResOtherZn:GainMisc:gnFrRad"    ResOtherZn:GainMisc:gnFrRad  = {  ValidOr( RecptRadFrac, 0 )   }
    "Set ResOtherZn:GainMisc:gnFrLat"    ResOtherZn:GainMisc:gnFrLat  = {  ValidOr( RecptLatFrac, 0 )  }
    "Set ResOtherZn:GainMisc:gnEndUse"   ResOtherZn:GainMisc:gnEndUse = {  "Rcp" }
-   ; switch elec meter assignment from Proj:CSE_ElecMETER to CSE_ElecMETER to fix floor multiplier bug - SAC 06/22/23 (tic #3392)
-   "Set ResOtherZn:GainMisc:gnMeter"    ResOtherZn:GainMisc:gnMeter  = {  if (Global( ResProj:Fuel_HaveElec ) > 0.5) then  CSE_ElecMETER
+   "Set ResOtherZn:GainMisc:gnMeter"    ResOtherZn:GainMisc:gnMeter  = {  if (Global( ResProj:Fuel_HaveElec ) > 0.5) then  Global( Proj:CSE_ElecMETER )
                                                                         else  UNDEFINED  endif  }
 
 ; add new Gain to adjust internal gains to match RESNET  mjb   11/18/15
@@ -941,114 +940,6 @@ RULELIST "CSE_SimulationPrep_Zones_IntGains_part2" 1 0 0 1
 					Format("%g * %g %s %s)", -4.833, Local( CondFloorArea ), Local( EqpDaySched_CSE ), Global( ResProj:IntGain_MoMult_CSE ) ) }
 	"Set ResZn:GainRESNET:gnFrLat"				ResZn:GainRESNET:gnFrLat	= { 0.1 }
 ;	"Set ResZn:GainRESNET:gnEndUse"			ResZn:GainRESNET:gnEndUse = { "RESNET" }
-
-; ********** OtherZone Process Loads **********
-  ; Gas equipment
-   "Create new ResOtherZn:GainGasEqp"  ResOtherZn:GainGasEqp =
-     { if(IfValidAnd( GasEqpPwrDens > 0 ) == 0 .OR. LocalCompAssigned( GasEqpSchRef ) < 1 ) then UNCHANGED
-       else CreateComp( cseGAIN, substr( Name, 0, 47 ) + "-znGEL" ) endif }
-   "Set ResOtherZn:GainGasEqp parent cseZONE"      ResOtherZn:GainGasEqp:Parent = { Local( CSE_ZONE ) }
-   "Set ResOtherZn:GainGasEqp gnPower_x"           ResOtherZn:GainGasEqp:gnPower_x =
-     { if( IfValidAnd( GasEqpSchRef:NumWeeks = 1 )==0 .OR. 
-           LocalCompAssigned( GasEqpSchRef:SchWeekRef[1]:SchDaySunRef ) < 1 .OR. LocalCompAssigned( GasEqpSchRef:SchWeekRef[1]:SchDaySatRef ) < 1 .OR. 
-           LocalCompAssigned( GasEqpSchRef:SchWeekRef[1]:SchDayHolRef ) < 1 .OR. LocalCompAssigned( GasEqpSchRef:SchWeekRef[1]:SchDayMonRef ) < 1 )
-       then PostError( "Invalid GasEqpSchRef for ResidentialOtherZone '%s'.", Name )
-       else Format( "%g * %g * select( $dsDay==1, 0, $dsDay==2, 1, $DOWH==1, hourval(%s), $DOWH==8, hourval(%s), $DOWH==7, hourval(%s), default hourval(%s) )",
-                    GasEqpPwrDens, ValidOr( Area, 0 ), SchDayHoursString( GasEqpSchRef:SchWeekRef[1]:SchDaySunRef ), SchDayHoursString( GasEqpSchRef:SchWeekRef[1]:SchDayHolRef ),
-                                                       SchDayHoursString( GasEqpSchRef:SchWeekRef[1]:SchDaySatRef ), SchDayHoursString( GasEqpSchRef:SchWeekRef[1]:SchDayMonRef ) )
-       endif }
-   "Set ResOtherZn:GainGasEqp:gnFrZn"     ResOtherZn:GainGasEqp:gnFrZn   = { 1- ValidOr( GasEqpLostFrac, 0 ) }
-   "Set ResOtherZn:GainGasEqp:gnFrRad"    ResOtherZn:GainGasEqp:gnFrRad  = { if( GainGasEqp:gnFrZn = 0 ) then 0 else ValidOr( GasEqpRadFrac, 0 ) / GainGasEqp:gnFrZn endif }
-   "Set ResOtherZn:GainGasEqp:gnFrLat"    ResOtherZn:GainGasEqp:gnFrLat  = { if( GainGasEqp:gnFrZn = 0 ) then 0 else ValidOr( GasEqpLatFrac, 0 ) / GainGasEqp:gnFrZn endif }
-   "Set ResOtherZn:GainGasEqp:gnEndUse"   ResOtherZn:GainGasEqp:gnEndUse = { "Proc" }
-   "Set ResOtherZn:GainGasEqp:gnMeter"    ResOtherZn:GainGasEqp:gnMeter  = { CSE_NatGasMETER }
-
-  ; Process Electrical
-   "Create new ResOtherZn:GainProcElec"  ResOtherZn:GainProcElec =
-     { if(IfValidAnd( ProcElecPwrDens > 0 ) == 0 .OR. LocalCompAssigned( ProcElecSchRef ) < 1 ) then UNCHANGED
-       else CreateComp( cseGAIN, substr( Name, 0, 47 ) + "-znPEL" ) endif }
-   "Set ResOtherZn:GainProcElec parent cseZONE"      ResOtherZn:GainProcElec:Parent = { Local( CSE_ZONE ) }
-   "Set ResOtherZn:GainProcElec gnPower_x"           ResOtherZn:GainProcElec:gnPower_x =
-     { if( IfValidAnd( ProcElecSchRef:NumWeeks = 1 )==0 )
-       then PostError( "ProcElecSch with different week schedules is not supported for ResidentialOtherZone '%s'.", Name )
-       else if( LocalCompAssigned( ProcElecSchRef:SchWeekRef[1]:SchDaySunRef ) < 1 .OR. LocalCompAssigned( ProcElecSchRef:SchWeekRef[1]:SchDaySatRef ) < 1 .OR. 
-                LocalCompAssigned( ProcElecSchRef:SchWeekRef[1]:SchDayHolRef ) < 1 .OR. LocalCompAssigned( ProcElecSchRef:SchWeekRef[1]:SchDayMonRef ) < 1 )
-       then PostError( "Invalid ProcElecSchRef for ResidentialOtherZone '%s'.", Name )
-       else Format( "%g * %g * 3.412 * select( $dsDay==1, 0, $dsDay==2, hourval(%s), $DOWH==1, hourval(%s), $DOWH==8, hourval(%s), $DOWH==7, hourval(%s), default hourval(%s) )",
-                    ProcElecPwrDens, ValidOr( Area, 0 ), SchDayHoursString( ProcElecSchRef:SchWeekRef[1]:SchDayMonRef ), ; use WD for cooling, ticket 3581
-                    SchDayHoursString( ProcElecSchRef:SchWeekRef[1]:SchDaySunRef ), SchDayHoursString( ProcElecSchRef:SchWeekRef[1]:SchDayHolRef ),
-                    SchDayHoursString( ProcElecSchRef:SchWeekRef[1]:SchDaySatRef ), SchDayHoursString( ProcElecSchRef:SchWeekRef[1]:SchDayMonRef ) )
-       endif endif }
-   "Set ResOtherZn:GainProcElec:gnFrZn"     ResOtherZn:GainProcElec:gnFrZn   = { 1- ValidOr( ProcElecLostFrac, 0 ) }
-   "Set ResOtherZn:GainProcElec:gnFrRad"    ResOtherZn:GainProcElec:gnFrRad  = { if( GainProcElec:gnFrZn = 0 ) then 0 else ValidOr( ProcElecRadFrac, 0 ) / GainProcElec:gnFrZn endif }
-   "Set ResOtherZn:GainProcElec:gnFrLat"    ResOtherZn:GainProcElec:gnFrLat  = { if( GainProcElec:gnFrZn = 0 ) then 0 else ValidOr( ProcElecLatFrac, 0 ) / GainProcElec:gnFrZn endif }
-   "Set ResOtherZn:GainProcElec:gnEndUse"   ResOtherZn:GainProcElec:gnEndUse = { "Proc" }
-   "Set ResOtherZn:GainProcElec:gnMeter"    ResOtherZn:GainProcElec:gnMeter  = { CSE_ElecMETER }
-
-  ; Process Gas
-   "Create new ResOtherZn:GainProcGas"  ResOtherZn:GainProcGas =
-     { if(IfValidAnd( ProcGasPwrDens > 0 ) == 0 .OR. LocalCompAssigned( ProcGasSchRef ) < 1 ) then UNCHANGED
-       else CreateComp( cseGAIN, substr( Name, 0, 47 ) + "-znPGL" ) endif }
-   "Set ResOtherZn:GainProcGas parent cseZONE"      ResOtherZn:GainProcGas:Parent = { Local( CSE_ZONE ) }
-   "Set ResOtherZn:GainProcGas gnPower_x"           ResOtherZn:GainProcGas:gnPower_x =
-     { if( IfValidAnd( ProcGasSchRef:NumWeeks = 1 )==0 )
-       then PostError( "ProcGasSch with different week schedules is not supported for ResidentialOtherZone '%s'.", Name )
-       else if( LocalCompAssigned( ProcGasSchRef:SchWeekRef[1]:SchDaySunRef ) < 1 .OR. LocalCompAssigned( ProcGasSchRef:SchWeekRef[1]:SchDaySatRef ) < 1 .OR. 
-                LocalCompAssigned( ProcGasSchRef:SchWeekRef[1]:SchDayHolRef ) < 1 .OR. LocalCompAssigned( ProcGasSchRef:SchWeekRef[1]:SchDayMonRef ) < 1 )
-       then PostError( "Invalid ProcGasSchRef for ResidentialOtherZone '%s'.", Name )
-       else Format( "%g * %g * select( $dsDay==1, 0, $dsDay==2, hourval(%s), $DOWH==1, hourval(%s), $DOWH==8, hourval(%s), $DOWH==7, hourval(%s), default hourval(%s) )",
-                    ProcGasPwrDens, ValidOr( Area, 0 ), SchDayHoursString( ProcGasSchRef:SchWeekRef[1]:SchDayMonRef ), ; use WD for cooling, ticket 3581
-                    SchDayHoursString( ProcGasSchRef:SchWeekRef[1]:SchDaySunRef ), SchDayHoursString( ProcGasSchRef:SchWeekRef[1]:SchDayHolRef ),
-                    SchDayHoursString( ProcGasSchRef:SchWeekRef[1]:SchDaySatRef ), SchDayHoursString( ProcGasSchRef:SchWeekRef[1]:SchDayMonRef ) )
-       endif endif }
-   "Set ResOtherZn:GainProcGas:gnFrZn"     ResOtherZn:GainProcGas:gnFrZn   = { 1- ValidOr( ProcGasLostFrac, 0 ) }
-   "Set ResOtherZn:GainProcGas:gnFrRad"    ResOtherZn:GainProcGas:gnFrRad  = { if( GainProcGas:gnFrZn = 0 ) then 0 else ValidOr( ProcGasRadFrac, 0 ) / GainProcGas:gnFrZn endif }
-   "Set ResOtherZn:GainProcGas:gnFrLat"    ResOtherZn:GainProcGas:gnFrLat  = { if( GainProcGas:gnFrZn = 0 ) then 0 else ValidOr( ProcGasLatFrac, 0 ) / GainProcGas:gnFrZn endif }
-   "Set ResOtherZn:GainProcGas:gnEndUse"   ResOtherZn:GainProcGas:gnEndUse = { "Proc" }
-   "Set ResOtherZn:GainProcGas:gnMeter"    ResOtherZn:GainProcGas:gnMeter  = { CSE_NatGasMETER }
-
-; ********** OtherZone Elevator/Escalator **********
-  ; Elevator
-   "Create new ResOtherZn:GainElev"  ResOtherZn:GainElev =
-     { if(IfValidAnd( ElevPwr > 0 ) == 0 .OR. LocalCompAssigned( ElevSchRef ) < 1 ) then UNCHANGED
-       else CreateComp( cseGAIN, substr( Name, 0, 47 ) + "-znELEV" ) endif }
-   "Set ResOtherZn:GainElev parent cseZONE"      ResOtherZn:GainElev:Parent = { Local( CSE_ZONE ) }
-   "Set ResOtherZn:GainElev gnPower_x"           ResOtherZn:GainElev:gnPower_x =
-     { if( IfValidAnd( ElevSchRef:NumWeeks = 1 )==0 .OR.
-           LocalCompAssigned( ElevSchRef:SchWeekRef[1]:SchDaySunRef ) < 1 .OR. LocalCompAssigned( ElevSchRef:SchWeekRef[1]:SchDaySatRef ) < 1 .OR. 
-           LocalCompAssigned( ElevSchRef:SchWeekRef[1]:SchDayHolRef ) < 1 .OR. LocalCompAssigned( ElevSchRef:SchWeekRef[1]:SchDayMonRef ) < 1 )
-       then PostError( "Invalid ElevSchRef for ResidentialOtherZone '%s'.", Name )
-       else Format( "%g * 3.412 * select( $dsDay==1, 0, $dsDay==2, 1, $DOWH==1, hourval(%s), $DOWH==8, hourval(%s), $DOWH==7, hourval(%s), default hourval(%s) )",
-                    ElevPwr, 
-                    SchDayHoursString( ElevSchRef:SchWeekRef[1]:SchDaySunRef ), SchDayHoursString( ElevSchRef:SchWeekRef[1]:SchDayHolRef ),
-                    SchDayHoursString( ElevSchRef:SchWeekRef[1]:SchDaySatRef ), SchDayHoursString( ElevSchRef:SchWeekRef[1]:SchDayMonRef ) )
-       endif }
-   "Set ResOtherZn:GainElev:gnFrZn"     ResOtherZn:GainElev:gnFrZn   = { 1- ValidOr( ElevLostFrac, 0 ) }
-   "Set ResOtherZn:GainElev:gnFrRad"    ResOtherZn:GainElev:gnFrRad  = { if( GainElev:gnFrZn = 0 ) then 0 else ValidOr( ElevRadFrac, 0 ) / GainElev:gnFrZn endif }
-   "Set ResOtherZn:GainElev:gnFrLat"    ResOtherZn:GainElev:gnFrLat  = { if( GainElev:gnFrZn = 0 ) then 0 else ValidOr( ElevLatFrac, 0 ) / GainElev:gnFrZn endif }
-   "Set ResOtherZn:GainElev:gnEndUse"   ResOtherZn:GainElev:gnEndUse = { "Proc" }
-   "Set ResOtherZn:GainElev:gnMeter"    ResOtherZn:GainElev:gnMeter  = { CSE_ElecMETER }
-
-  ; Escalator
-   "Create new ResOtherZn:GainEscal"  ResOtherZn:GainEscal =
-     { if(IfValidAnd( EscalPwr > 0 ) == 0 .OR. LocalCompAssigned( EscalSchRef ) < 1 ) then UNCHANGED
-       else CreateComp( cseGAIN, substr( Name, 0, 47 ) + "-znESCL" ) endif }
-   "Set ResOtherZn:GainEscal parent cseZONE"      ResOtherZn:GainEscal:Parent = { Local( CSE_ZONE ) }
-   "Set ResOtherZn:GainEscal gnPower_x"           ResOtherZn:GainEscal:gnPower_x =
-     { if( IfValidAnd( EscalSchRef:NumWeeks = 1 )==0 .OR.
-           LocalCompAssigned( EscalSchRef:SchWeekRef[1]:SchDaySunRef ) < 1 .OR. LocalCompAssigned( EscalSchRef:SchWeekRef[1]:SchDaySatRef ) < 1 .OR. 
-           LocalCompAssigned( EscalSchRef:SchWeekRef[1]:SchDayHolRef ) < 1 .OR. LocalCompAssigned( EscalSchRef:SchWeekRef[1]:SchDayMonRef ) < 1 )
-       then PostError( "Invalid EscalSchRef for ResidentialOtherZone '%s'.", Name )
-       else Format( "%g * 3.412 * select( $dsDay==1, 0, $dsDay==2, 1, $DOWH==1, hourval(%s), $DOWH==8, hourval(%s), $DOWH==7, hourval(%s), default hourval(%s) )",
-                    EscalPwr, 
-                    SchDayHoursString( EscalSchRef:SchWeekRef[1]:SchDaySunRef ), SchDayHoursString( EscalSchRef:SchWeekRef[1]:SchDayHolRef ),
-                    SchDayHoursString( EscalSchRef:SchWeekRef[1]:SchDaySatRef ), SchDayHoursString( EscalSchRef:SchWeekRef[1]:SchDayMonRef ) )
-       endif }
-   "Set ResOtherZn:GainEscal:gnFrZn"     ResOtherZn:GainEscal:gnFrZn   = { 1- ValidOr( EscalLostFrac, 0 ) }
-   "Set ResOtherZn:GainEscal:gnFrRad"    ResOtherZn:GainEscal:gnFrRad  = { if( GainEscal:gnFrZn = 0 ) then 0 else ValidOr( EscalRadFrac, 0 ) / GainEscal:gnFrZn endif }
-   "Set ResOtherZn:GainEscal:gnFrLat"    ResOtherZn:GainEscal:gnFrLat  = { if( GainEscal:gnFrZn = 0 ) then 0 else ValidOr( EscalLatFrac, 0 ) / GainEscal:gnFrZn endif }
-   "Set ResOtherZn:GainEscal:gnEndUse"   ResOtherZn:GainEscal:gnEndUse = { "Proc" }
-   "Set ResOtherZn:GainEscal:gnMeter"    ResOtherZn:GainEscal:gnMeter  = { CSE_ElecMETER }
 
 ; SAC 5/11/16 - now handled via DwellUnitDHW object
 ;	"Set DwellUnit:GainCtrlDHWSYS"		DwellUnit:GainCtrlDHWSYS		= {			; SAC 4/15/16 - T24-2016 gains
@@ -1131,12 +1022,9 @@ RULELIST "CSE_SimulationPrep_Zones_IntGains_part2" 1 0 0 1
                                                                                  EvalRulelist( "CreateGainWasher_Zone_2", 1 )
                                                                               else UNCHANGED endif }
 	; SAC 4/22/16 - added logic to ensure WasherZoneRef valid before creating washer gain for each DwellUnit
-   ; revise logic to ensure Parent object is DwellUnit prior to checking existence of DryerZoneRef - SAC 01/12/24
 	"Create DwellUnitDHW:GainWasher if requested"	DwellUnitDHW:Action	= {	if (IfValidAnd( DwellUnitTypeRef:HaveWasher > 0 ) .AND. ResProj:IntGainsMethod > 2013 .AND.
-                                                                                  ParentComponentType() == "DwellUnit")
-                                                                              then  if (ParentCompAssigned( WasherZoneRef ))
-																											   then  EvalRulelist( "CreateGainWasher_DwellUnitDHW", 1 )
-                                                                                    else  UNCHANGED  endif
+																											 ParentCompAssigned( WasherZoneRef )) then
+																											EvalRulelist( "CreateGainWasher_DwellUnitDHW", 1 )
 																										else UNCHANGED endif }
 
    ; SAC 4/14/16 - revised for T24-2016 gains - ClothesDryer done by DwellUnit for 2016 multifamily
@@ -1151,13 +1039,10 @@ RULELIST "CSE_SimulationPrep_Zones_IntGains_part2" 1 0 0 1
                                                                                EvalRulelist( "CreateGainDryer_Zone_2", 1 )
                                                                            else UNCHANGED endif }
    ; SAC 4/22/16 - added logic to ensure DryerZoneRef valid before creating dryer gain for each DwellUnit
-   ; revise logic to ensure Parent object is DwellUnit prior to checking existence of DryerZoneRef - SAC 01/12/24
    "Create DwellUnitDHW:GainDryer if requested"   DwellUnitDHW:Action   = {   if (IfValidAnd( DwellUnitTypeRef:HaveDryer > 0 ) .AND. ResProj:IntGainsMethod > 2013 .AND.
-                                                                                  ParentComponentType() == "DwellUnit")
-                                                                              then  if (ParentCompAssigned( DryerZoneRef ))
-                                                                                    then  EvalRulelist( "CreateGainDryer_DwellUnitDHW", 1 )
-                                                                                    else  UNCHANGED  endif
-                                                                              else UNCHANGED endif }
+                                                                               ParentCompAssigned( DryerZoneRef )) then
+                                                                              EvalRulelist( "CreateGainDryer_DwellUnitDHW", 1 )
+                                                                           else UNCHANGED endif }
 		;	Exterior lights
 	"Setup exterior lighting profile CSE export string (Zone:ExtLtgDaySched_CSE)"
 				ResZn:ExtLtgDaySched_CSE	= {	if (LocalCompAssigned( ExtLtgDaySched ))
@@ -1175,21 +1060,62 @@ RULELIST "CSE_SimulationPrep_Zones_IntGains_part2" 1 0 0 1
 																							else UNCHANGED endif  }
 	"Set ResZn:GainExtLights parent cseZONE"	ResZn:GainExtLights:Parent 		= {  Local( CSE_ZONE )  }
 	; SAC 4/22/16 - added NumDwellingUnits multiplier on constant '8' so that it scales for MFam models (tic #650)
-	"Set ResZn:GainExtLights gnPower_x"			ResZn:GainExtLights:gnPower_x	=     ; CondFloorAreaWithMult - SAC 04/28/23 (tic #3392)
-					{	if ( ResProj:IntGainsMethod <= 2013)
+	"Set ResZn:GainExtLights gnPower_x"			ResZn:GainExtLights:gnPower_x	= {
+						if ( ResProj:IntGainsMethod <= 2013)
 						then	Format("%g %s", (Local( ExtLtg_Gain ) * 3413), Local( ExtLtgDaySched_CSE ) )
 						else	Format("(((8 * %g) + (.0532 * %g)) * 3412/365) * %g * select( $dsDay==1, 0., $ISWEHOL, ExtLight_WEH, Default ExtLight_WD) * Other_SM",
-											ValidOr( ResProj:NumDwellingUnits, 0 ), ValidOr( ResProj:LtgCondFloorArea, 0 ), (ValidOr( CondFloorAreaWithMult, 0 ) / max( 1, ValidOr( ResProj:CondFloorArea, 1 ) )) )
+											ValidOr( ResProj:NumDwellingUnits, 0 ), ValidOr( ResProj:LtgCondFloorArea, 0 ), (ValidOr( CondFloorArea, 0 ) / max( 1, ValidOr( ResProj:CondFloorArea, 1 ) )) )
 						endif  }
 	"Set ResZn:GainExtLights:gnFrZn"				ResZn:GainExtLights:gnFrZn		= {	0. }
 	"Set ResZn:GainExtLights:gnEndUse"			ResZn:GainExtLights:gnEndUse	= {	"Ext" }
-	"Set ResZn:GainExtLights:gnMeter"			ResZn:GainExtLights:gnMeter	= {	if (Global( ResProj:Fuel_HaveElec ) > 0.5) then  CSE_ElecMETER
+	"Set ResZn:GainExtLights:gnMeter"				ResZn:GainExtLights:gnMeter		= {	if (Global( ResProj:Fuel_HaveElec ) > 0.5) then  CSE_ElecMETER
 																											else  UNDEFINED  endif  }
 
-   "evaluate rules to set all RezZn & ResOtherZn surface area sums"  Proj:Action = {  EvalRulelist( "SetSurfaceAreaSums" )  }    ; SAC 04/28/23 (tic #3392)
+			; setup for AirNet (& misc other stuff)
+	"Set ResZn:ExtWallArea"				ResZn:ExtWallArea			= {	SumChildren( ResExtWall:Area )  }
+	"Set ResZn:ClgBlwAtticArea"			ResZn:ClgBlwAtticArea		= {	SumChildren( ResCeilingBelowAttic:Area )  }
+	"Set ResZn:CathCeilingArea"			ResZn:CathCeilingArea		= {	SumChildren( ResCathedralCeiling:Area )  }
+	"Set ResZn:CondClgBlwAtticArea"	ResZn:CondClgBlwAtticArea ={	if (Type < 10) then  ClgBlwAtticArea  else  0  endif  }
+	"Set ResZn:SlabFloorArea"			ResZn:SlabFloorArea		= {	SumChildren( ResSlabFlr:Area ) + SumChildren( ResUndgrFlr:Area )  }		; SAC 11/17/14 - added ResUndgrFlr:Area
+	"Set ResZn:ExtFloorArea"				ResZn:ExtFloorArea			= {	SumChildren( ResExtFlr:Area ) + SumChildren( ResFlrOverCrawlSpc:Area )  }
+	"Set ResZn:FlrOverUncondZnArea"	ResZn:FlrOverUncondZnArea ={	SumChildren( ResIntFlr:ParCndZnAdjUZnArea ) +
+                                                                  SumRevRef(   ResIntFlr:Outside, ResIntWall:ParUZnAdjCndZnArea )  }  ; SAC 11/30/20
+	"Set ResZn:AdjUncondZnWallArea"	ResZn:AdjUncondZnWallArea	= {	SumChildren( ResIntWall:ParCndZnAdjUZnArea ) + SumRevRef( ResIntWall:Outside, ResIntWall:ParUZnAdjCndZnArea )	}
+	"Set ResZn:AdjUncondZnArea"		   ResZn:AdjUncondZnArea		   = {	AdjUncondZnWallArea + SumChildren( ResIntFlr:ParCndZnAdjUZnArea ) +
+                                                                     SumRevRef( ResIntCeiling:Outside, ResIntCeiling:ParUZnAdjCndZnArea ) +
+                                                                     SumRevRef( ResIntFlr:Outside,   ResIntFlr:ParUZnAdjCndZnArea )	}
 
-	"Set ResExtWall:WinVentArea"			ResExtWall:WinVentArea		= {	SumChildren( ResWin:VentArea )  }
-	"Set ResZn:WinVentArea"				   ResZn:WinVentArea				= {	SumChildren( ResExtWall:WinVentArea )  }
+	"Set ResOtherZn:ExtWallArea"			ResOtherZn:ExtWallArea			= {	SumChildren( ResExtWall:Area )  }      ; SAC 7/13/20
+	"Set ResOtherZn:ClgBlwAtticArea"		ResOtherZn:ClgBlwAtticArea		= {	SumChildren( ResCeilingBelowAttic:Area )  }
+	"Set ResOtherZn:CathCeilingArea"		ResOtherZn:CathCeilingArea		= {	SumChildren( ResCathedralCeiling:Area )  }
+	"Set ResOtherZn:CondClgBlwAtticArea"	ResOtherZn:CondClgBlwAtticArea = {	if (Type < 10) then  ClgBlwAtticArea  else  0  endif  }
+	"Set ResOtherZn:SlabFloorArea"			ResOtherZn:SlabFloorArea			= {	SumChildren( ResSlabFlr:Area ) + SumChildren( ResUndgrFlr:Area )  }		; SAC 11/17/14 - added ResUndgrFlr:Area
+	"Set ResOtherZn:ExtFloorArea"			ResOtherZn:ExtFloorArea			= {	SumChildren( ResExtFlr:Area ) + SumChildren( ResFlrOverCrawlSpc:Area )  }
+	"Set ResOtherZn:FlrOverUncondZnArea"	ResOtherZn:FlrOverUncondZnArea	= {	SumChildren( ResIntFlr:ParCndOZnAdjUZnArea ) +
+                                                                           SumRevRef(   ResIntFlr:Outside, ResIntWall:ParUZnAdjCndOZnArea )  }  ; SAC 11/30/20
+	"Set ResOtherZn:AdjUncondZnWallArea"	ResOtherZn:AdjUncondZnWallArea	= {	SumChildren( ResIntWall:ParCndOZnAdjUZnArea) + SumRevRef( ResIntWall:Outside, ResIntWall:ParUZnAdjCndOZnArea )	}
+	"Set ResOtherZn:AdjUncondZnArea"	   ResOtherZn:AdjUncondZnArea	   = {	AdjUncondZnWallArea + SumChildren( ResIntFlr:ParCndOZnAdjUZnArea ) +
+                                                                           SumRevRef( ResIntCeiling:Outside, ResIntCeiling:ParUZnAdjCndOZnArea ) +
+                                                                           SumRevRef( ResIntFlr:Outside,   ResIntFlr:ParUZnAdjCndOZnArea )	}
+
+	"Set ResProj:BldgExtWallArea"				ResProj:BldgExtWallArea			= {	SumAll( ResZn:ExtWallArea     )  }
+	"Set ResProj:BldgClgBlwAtticArea"		ResProj:BldgClgBlwAtticArea	= {	SumAll( ResZn:ClgBlwAtticArea )  }
+	"Set ResProj:BldgCathCeilingArea"		ResProj:BldgCathCeilingArea	= {	SumAll( ResZn:CathCeilingArea )  }
+	"Set ResProj:BldgSlabFloorArea"			ResProj:BldgSlabFloorArea		= {	SumAll( ResZn:SlabFloorArea   )  }
+	"Set ResProj:BldgCondZnSlabFlrArea"		ResProj:BldgCondZnSlabFlrArea	= {   SumAcrossif( ResZn:SlabFloorArea, ResZn:Type < 10 )  }		; SAC 9/10/13
+	"Set ResProj:BldgExtFloorArea"			ResProj:BldgExtFloorArea		= {	SumAll( ResZn:ExtFloorArea    )  }
+	"Set ResProj:BldgZnAdjUZnArea"	   	ResProj:BldgZnAdjUZnArea	   = {   SumAll( ResZn:AdjUncondZnArea )  }     ; SAC 11/30/20
+
+	"Set ResProj:BldgOZExtWallArea"			ResProj:BldgOZExtWallArea			= {	SumAll( ResOtherZn:ExtWallArea     )  }    ; SAC 7/10/20
+	"Set ResProj:BldgOZClgBlwAtticArea" 	ResProj:BldgOZClgBlwAtticArea 	= {	SumAll( ResOtherZn:ClgBlwAtticArea )  }
+	"Set ResProj:BldgOZCathCeilingArea" 	ResProj:BldgOZCathCeilingArea 	= {	SumAll( ResOtherZn:CathCeilingArea )  }
+	"Set ResProj:BldgOZExtFloorArea" 		ResProj:BldgOZExtFloorArea 		= {	SumAll( ResOtherZn:ExtFloorArea    )  }
+	"Set ResProj:BldgOZSlabFloorArea"		ResProj:BldgOZSlabFloorArea		= {	SumAll( ResOtherZn:SlabFloorArea   )  }
+	"Set ResProj:BldgOZCondZnSlabFlrArea"	ResProj:BldgOZCondZnSlabFlrArea	= {   SumAcrossif( ResOtherZn:SlabFloorArea, ResOtherZn:Type < 10 )  }
+	"Set ResProj:BldgOZAdjUZnArea"		   ResProj:BldgOZAdjUZnArea	      = {   SumAll( ResOtherZn:AdjUncondZnArea )  }      ; SAC 11/30/20
+
+	"Set ResExtWall:WinVentArea"			ResExtWall:WinVentArea			= {	SumChildren( ResWin:VentArea )  }
+	"Set ResZn:WinVentArea"				ResZn:WinVentArea				= {	SumChildren( ResExtWall:WinVentArea )  }
 
 ; SAC 4/14/16 - MOVED UP above DHWSYS creation
 ; ; CSE ZONE (Garage) creation & defaulting
@@ -1323,84 +1249,6 @@ RULELIST "CSE_SimulationPrep_Zones_IntGains_part2" 1 0 0 1
 ;	"Default ResCrawlSpc:CSE_ZONE:infStories"  		ResCrawlSpc:CSE_ZONE:infStories 			= {	1  }
 
 END
-;*************************************************************************
-
-
-;*************************************************************************
-RULELIST "SetSurfaceAreaSums"  1 0 0 1
-			; setup for AirNet (& misc other stuff)
-	"Set ResZn:ExtWallArea"				ResZn:ExtWallArea			   = {	SumChildren( ResExtWall:Area )  }
-	"Set ResZn:UndWallArea"				ResZn:UndWallArea				= {	SumChildren( ResUndgrWall:Area )  }
-	"Set ResZn:ClgBlwAtticArea"		ResZn:ClgBlwAtticArea		= {	SumChildren( ResCeilingBelowAttic:Area )  }
-	"Set ResZn:CathCeilingArea"		ResZn:CathCeilingArea		= {	SumChildren( ResCathedralCeiling:Area )  }
-	"Set ResZn:CondClgBlwAtticArea"	ResZn:CondClgBlwAtticArea  = {	if (Type < 10) then  ClgBlwAtticArea  else  0  endif  }
-	"Set ResZn:SlabFloorArea"			ResZn:SlabFloorArea		   = {	SumChildren( ResSlabFlr:Area ) + SumChildren( ResUndgrFlr:Area )  }		; SAC 11/17/14 - added ResUndgrFlr:Area
-	"Set ResZn:UndFloorArea"			ResZn:UndFloorArea			= {	SumChildren( ResUndgrFlr:Area )  }
-	"Set ResZn:ExtFloorArea"			ResZn:ExtFloorArea			= {	SumChildren( ResExtFlr:Area ) + SumChildren( ResFlrOverCrawlSpc:Area )  }
-	"Set ResZn:FlrOverUncondZnArea"	ResZn:FlrOverUncondZnArea  = {	SumChildren( ResIntFlr:ParCndZnAdjUZnArea ) +
-                                                                     SumRevRef(   ResIntFlr:Outside, ResIntWall:ParUZnAdjCndZnArea )  }  ; SAC 11/30/20
-	"Set ResZn:AdjUncondZnWallArea"	ResZn:AdjUncondZnWallArea	= {	SumChildren( ResIntWall:ParCndZnAdjUZnArea ) + SumRevRef( ResIntWall:Outside, ResIntWall:ParUZnAdjCndZnArea )	}
-	"Set ResZn:AdjUncondZnArea"		ResZn:AdjUncondZnArea		= {	AdjUncondZnWallArea + SumChildren( ResIntFlr:ParCndZnAdjUZnArea ) +
-                                                                     SumRevRef( ResIntCeiling:Outside, ResIntCeiling:ParUZnAdjCndZnArea ) +
-                                                                     SumRevRef( ResIntFlr:Outside,   ResIntFlr:ParUZnAdjCndZnArea )	}
-         ; versions of area properties taking into account Mult - SAC 04/28/23 (tic #3392)
-   "Set ResZn:ExtWallAreaWithMult"           ResZn:ExtWallAreaWithMult          = {  ExtWallArea		   * Mult  }
-   "Set ResZn:UndWallAreaWithMult"           ResZn:UndWallAreaWithMult          = {  UndWallArea		   * Mult  }
-   "Set ResZn:ClgBlwAtticAreaWithMult"       ResZn:ClgBlwAtticAreaWithMult      = {  ClgBlwAtticArea	   * Mult  }
-   "Set ResZn:CathCeilingAreaWithMult"       ResZn:CathCeilingAreaWithMult      = {  CathCeilingArea	   * Mult  }
-   "Set ResZn:CondClgBlwAtticAreaWithMult"   ResZn:CondClgBlwAtticAreaWithMult  = {  CondClgBlwAtticArea * Mult  }    
-   "Set ResZn:SlabFloorAreaWithMult"         ResZn:SlabFloorAreaWithMult        = {  SlabFloorArea		   * Mult  }
-   "Set ResZn:UndFloorAreaWithMult"          ResZn:UndFloorAreaWithMult         = {  UndFloorArea		   * Mult  }
-   "Set ResZn:ExtFloorAreaWithMult"          ResZn:ExtFloorAreaWithMult         = {  ExtFloorArea		   * Mult  }
-   "Set ResZn:FlrOverUncondZnAreaWithMult"   ResZn:FlrOverUncondZnAreaWithMult  = {  FlrOverUncondZnArea * Mult  }   
-   "Set ResZn:AdjUnCondZnWallAreaWithMult"   ResZn:AdjUnCondZnWallAreaWithMult  = {  AdjUncondZnWallArea	* Mult  }
-   "Set ResZn:AdjUnCondZnAreaWithMult"       ResZn:AdjUnCondZnAreaWithMult      = {  AdjUncondZnArea		* Mult  }
-
-	"Set ResOtherZn:ExtWallArea"			   ResOtherZn:ExtWallArea			   = {	SumChildren( ResExtWall:Area )  }      ; SAC 7/13/20
-	"Set ResOtherZn:UndWallArea"			   ResOtherZn:UndWallArea			   = {	SumChildren( ResUndgrWall:Area )  }
-	"Set ResOtherZn:ClgBlwAtticArea"		   ResOtherZn:ClgBlwAtticArea		   = {	SumChildren( ResCeilingBelowAttic:Area )  }
-	"Set ResOtherZn:CathCeilingArea"		   ResOtherZn:CathCeilingArea		   = {	SumChildren( ResCathedralCeiling:Area )  }
-	"Set ResOtherZn:CondClgBlwAtticArea"	ResOtherZn:CondClgBlwAtticArea   = {	if (Type < 10) then  ClgBlwAtticArea  else  0  endif  }
-	"Set ResOtherZn:SlabFloorArea"			ResOtherZn:SlabFloorArea			= {	SumChildren( ResSlabFlr:Area ) + SumChildren( ResUndgrFlr:Area )  }		; SAC 11/17/14 - added ResUndgrFlr:Area
-	"Set ResOtherZn:UndFloorArea"			   ResOtherZn:UndFloorArea			   = {	SumChildren( ResUndgrFlr:Area )  }
-	"Set ResOtherZn:ExtFloorArea"			   ResOtherZn:ExtFloorArea			   = {	SumChildren( ResExtFlr:Area ) + SumChildren( ResFlrOverCrawlSpc:Area )  }
-	"Set ResOtherZn:FlrOverUncondZnArea"	ResOtherZn:FlrOverUncondZnArea	= {	SumChildren( ResIntFlr:ParCndOZnAdjUZnArea ) +
-                                                                                 SumRevRef(   ResIntFlr:Outside, ResIntWall:ParUZnAdjCndOZnArea )  }  ; SAC 11/30/20
-	"Set ResOtherZn:AdjUncondZnWallArea"	ResOtherZn:AdjUncondZnWallArea	= {	SumChildren( ResIntWall:ParCndOZnAdjUZnArea) + SumRevRef( ResIntWall:Outside, ResIntWall:ParUZnAdjCndOZnArea )	}
-	"Set ResOtherZn:AdjUncondZnArea"	      ResOtherZn:AdjUncondZnArea	      = {	AdjUncondZnWallArea + SumChildren( ResIntFlr:ParCndOZnAdjUZnArea ) +
-                                                                                 SumRevRef( ResIntCeiling:Outside, ResIntCeiling:ParUZnAdjCndOZnArea ) +
-                                                                                 SumRevRef( ResIntFlr:Outside,   ResIntFlr:ParUZnAdjCndOZnArea )	}
-         ; versions of area properties taking into account Mult - SAC 04/28/23 (tic #3392)
-   "Set ResOtherZn:ExtWallAreaWithMult"           ResOtherZn:ExtWallAreaWithMult          = {  ExtWallArea		    * Mult  }
-   "Set ResOtherZn:UndWallAreaWithMult"           ResOtherZn:UndWallAreaWithMult          = {  UndWallArea		    * Mult  }
-   "Set ResOtherZn:ClgBlwAtticAreaWithMult"       ResOtherZn:ClgBlwAtticAreaWithMult      = {  ClgBlwAtticArea	    * Mult  }
-   "Set ResOtherZn:CathCeilingAreaWithMult"       ResOtherZn:CathCeilingAreaWithMult      = {  CathCeilingArea	    * Mult  }
-   "Set ResOtherZn:CondClgBlwAtticAreaWithMult"   ResOtherZn:CondClgBlwAtticAreaWithMult  = {  CondClgBlwAtticArea * Mult  }    
-   "Set ResOtherZn:SlabFloorAreaWithMult"         ResOtherZn:SlabFloorAreaWithMult        = {  SlabFloorArea		 * Mult  }
-   "Set ResOtherZn:UndFloorAreaWithMult"          ResOtherZn:UndFloorAreaWithMult         = {  UndFloorArea		    * Mult  }
-   "Set ResOtherZn:ExtFloorAreaWithMult"          ResOtherZn:ExtFloorAreaWithMult         = {  ExtFloorArea		    * Mult  }
-   "Set ResOtherZn:FlrOverUncondZnAreaWithMult"   ResOtherZn:FlrOverUncondZnAreaWithMult  = {  FlrOverUncondZnArea * Mult  }   
-   "Set ResOtherZn:AdjUnCondZnWallAreaWithMult"   ResOtherZn:AdjUnCondZnWallAreaWithMult  = {  AdjUncondZnWallArea * Mult  }
-   "Set ResOtherZn:AdjUnCondZnAreaWithMult"       ResOtherZn:AdjUnCondZnAreaWithMult      = {  AdjUncondZnArea		 * Mult  }
-
-	"Set ResProj:BldgExtWallArea"				ResProj:BldgExtWallArea			= {	SumAll( ResZn:ExtWallAreaWithMult     )  }      ; updated all to reference ...WithMult properties - SAC 04/28/23 (tic #3392)
-	"Set ResProj:BldgClgBlwAtticArea"		ResProj:BldgClgBlwAtticArea	= {	SumAll( ResZn:ClgBlwAtticAreaWithMult )  }
-	"Set ResProj:BldgCathCeilingArea"		ResProj:BldgCathCeilingArea	= {	SumAll( ResZn:CathCeilingAreaWithMult )  }
-	"Set ResProj:BldgSlabFloorArea"			ResProj:BldgSlabFloorArea		= {	SumAll( ResZn:SlabFloorAreaWithMult   )  }
-	"Set ResProj:BldgCondZnSlabFlrArea"		ResProj:BldgCondZnSlabFlrArea	= {   SumAcrossif( ResZn:SlabFloorAreaWithMult, ResZn:Type < 10 )  }		; SAC 9/10/13
-	"Set ResProj:BldgExtFloorArea"			ResProj:BldgExtFloorArea		= {	SumAll( ResZn:ExtFloorAreaWithMult    )  }
-	"Set ResProj:BldgUndWallArea"			   ResProj:BldgUndWallArea			= {	SumAll( ResZn:UndWallAreaWithMult     ) + SumAll( ResOtherZn:UndWallAreaWithMult )  }   ; SAC 7/11/20 - only used here for reporting, so no need to store separate 'OZ' version
-	"Set ResProj:BldgZnAdjUZnArea"	   	ResProj:BldgZnAdjUZnArea	   = {   SumAll( ResZn:AdjUncondZnAreaWithMult )  }     ; SAC 11/30/20
-
-	"Set ResProj:BldgOZExtWallArea"			ResProj:BldgOZExtWallArea			= {	SumAll( ResOtherZn:ExtWallAreaWithMult     )  }    ; SAC 7/10/20
-	"Set ResProj:BldgOZClgBlwAtticArea" 	ResProj:BldgOZClgBlwAtticArea 	= {	SumAll( ResOtherZn:ClgBlwAtticAreaWithMult )  }
-	"Set ResProj:BldgOZCathCeilingArea" 	ResProj:BldgOZCathCeilingArea 	= {	SumAll( ResOtherZn:CathCeilingAreaWithMult )  }
-	"Set ResProj:BldgOZExtFloorArea" 		ResProj:BldgOZExtFloorArea 		= {	SumAll( ResOtherZn:ExtFloorAreaWithMult    )  }
-	"Set ResProj:BldgOZSlabFloorArea"		ResProj:BldgOZSlabFloorArea		= {	SumAll( ResOtherZn:SlabFloorAreaWithMult   )  }
-	"Set ResProj:BldgOZCondZnSlabFlrArea"	ResProj:BldgOZCondZnSlabFlrArea	= {   SumAcrossif( ResOtherZn:SlabFloorAreaWithMult, ResOtherZn:Type < 10 )  }
-	"Set ResProj:BldgOZAdjUZnArea"		   ResProj:BldgOZAdjUZnArea	      = {   SumAll( ResOtherZn:AdjUncondZnAreaWithMult )  }      ; SAC 11/30/20
-END
-;*************************************************************************
 
 
 ;*************************************************************************
@@ -1499,7 +1347,7 @@ RULELIST "CreateGainDish_DwellUnitDHW" 1 0 0 0
 	"Set DwellUnitDHW:GainDishwasher parent cseZone"	DwellUnitDHW:GainDishwasher:Parent		= {	Parent2( CSE_ZONE )   }
 	; SAC 4/22/16 - updated to set gnPower_x (expression) rather than static value - and added accounting for DwellUnit multiplier (tic #651)
 	;"Set DwellUnitDHW:GainDishwasher:gnPower_x"			DwellUnitDHW:GainDishwasher:gnPower_x	= {	Format( "%g * %g * 3412", ValidOr( DwellUnitTypeRef:DishElecUsage, 0 ), ValidOr( Count, 0 ) )  }
-	"Set DwellUnitDHW:GainDishwasher:gnPower_x"			DwellUnitDHW:GainDishwasher:gnPower_x	= {	Format( "%g * 3412 / %g", ValidOr( DwellUnitTypeRef:DishElecUsage, 0 ), Parent2( Mult ) )  }    ; divide by Mult since there are Mult times as many DwellUnitDHWs - SAC 04/28/23 (tic #3392)
+	"Set DwellUnitDHW:GainDishwasher:gnPower_x"			DwellUnitDHW:GainDishwasher:gnPower_x	= {	Format( "%g * 3412", ValidOr( DwellUnitTypeRef:DishElecUsage, 0 ) )  }
 	"Set DwellUnitDHW:GainDishwasher:gnFrRad"				DwellUnitDHW:GainDishwasher:gnFrRad		= {	0.			}
 	"Set DwellUnitDHW:GainDishwasher:gnFrLat"				DwellUnitDHW:GainDishwasher:gnFrLat		= {	0.25		}
 	"Set DwellUnitDHW:GainDishwasher:gnEndUse"			DwellUnitDHW:GainDishwasher:gnEndUse	= {	"Dish"	}
@@ -1650,7 +1498,7 @@ RULELIST "CreateGainWasher_DwellUnitDHW" 1 0 0 0
 	"Set DwellUnitDHW:GainWasher parent cseZone"		DwellUnitDHW:GainWasher:Parent		= {	WasherZoneRef:CSE_ZONE  }		; SAC 4/22/16 - make sure gain added to correct Zone
 	; SAC 4/22/16 - updated to set gnPower_x (expression) rather than static value - and added accounting for DwellUnit multiplier (tic #651)
 	;"Set DwellUnitDHW:GainWasher:gnPower_x"			DwellUnitDHW:GainWasher:gnPower_x	= {	Format( "%g * %g * 3412", ValidOr( UnitClthWashGain, 0 ), ValidOr( Count, 0 ) )  }
-	"Set DwellUnitDHW:GainWasher:gnPower_x"			DwellUnitDHW:GainWasher:gnPower_x	= {	Format( "%g * 3412 / %g", ValidOr( DwellUnit:UnitClthWashGain, 0 ), Parent2( Mult ) )  }    ; divide by Mult since there are Mult times as many DwellUnitDHWs - SAC 04/28/23 (tic #3392)
+	"Set DwellUnitDHW:GainWasher:gnPower_x"			DwellUnitDHW:GainWasher:gnPower_x	= {	Format( "%g * 3412", ValidOr( DwellUnit:UnitClthWashGain, 0 ) )  }
 	"Set DwellUnitDHW:GainWasher:gnFrRad"				DwellUnitDHW:GainWasher:gnFrRad		= {	0.			}
 	"Set DwellUnitDHW:GainWasher:gnEndUse"				DwellUnitDHW:GainWasher:gnEndUse		= {	"Wash"	}
 	"Set DwellUnitDHW:GainWasher:gnMeter"				DwellUnitDHW:GainWasher:gnMeter		= {	if (Global( ResProj:Fuel_HaveElec ) > 0.5) then  WasherZoneRef:CSE_ElecMETER
@@ -1768,7 +1616,7 @@ RULELIST "CreateGainDryer_DwellUnitDHW" 1 0 0 0
 	; SAC 4/22/16 - added accounting for DwellUnit:Count (tic #651)
 	"Set DwellUnitDHW:GainDryer[1]:gnPower_x"			DwellUnitDHW:GainDryer[1]:gnPower_x = { 
 																		;		Format("%g * %g * 3412 * @DHWSYS[%c%s%c].FxUseMixLH.CWashr", UnitClthDryElecGain, ValidOr( Count, 0 ), 34, GainCtrlDHWSYS:Name, 34 )  }
-																				Format("%g * 3412 * @DHWSYS[%c%s%c].FxUseMixLH.CWashr / %g", DwellUnit:UnitClthDryElecGain, 34, cseDHWSYSRef:Name, 34, Parent2( Mult ) )  }  ; divide by Mult since there are Mult times as many DwellUnitDHWs - SAC 04/28/23 (tic #3392)
+																				Format("%g * 3412 * @DHWSYS[%c%s%c].FxUseMixLH.CWashr", DwellUnit:UnitClthDryElecGain, 34, cseDHWSYSRef:Name, 34 )  }
 	"Set DwellUnitDHW:GainDryer[1]:gnFrRad"			DwellUnitDHW:GainDryer[1]:gnFrRad	= {	0.  }
 	"Set DwellUnitDHW:GainDryer[1]:gnFrLat"			DwellUnitDHW:GainDryer[1]:gnFrLat	= {	0.5 }
    ; prevent tracking Zone loads for Central (MFam) laundries - SAC 08/03/20 (MFamProto)
@@ -1783,7 +1631,7 @@ RULELIST "CreateGainDryer_DwellUnitDHW" 1 0 0 0
 	; SAC 4/22/16 - added accounting for DwellUnit:Count (tic #651)
 	"Set DwellUnitDHW:GainDryer[2]:gnPower_x"			DwellUnitDHW:GainDryer[2]:gnPower_x = { 
 																		;		Format("%g * %g * @DHWSYS[%c%s%c].FxUseMixLH.CWashr", UnitClthDryGasGain, ValidOr( Count, 0 ), 34, cseDHWSYSRef:Name, 34 )  }
-																				Format("%g * @DHWSYS[%c%s%c].FxUseMixLH.CWashr / %g", DwellUnit:UnitClthDryGasGain, 34, cseDHWSYSRef:Name, 34, Parent2( Mult ) )  }    ; divide by Mult since there are Mult times as many DwellUnitDHWs - SAC 04/28/23 (tic #3392)
+																				Format("%g * @DHWSYS[%c%s%c].FxUseMixLH.CWashr", DwellUnit:UnitClthDryGasGain, 34, cseDHWSYSRef:Name, 34 )  }
 	"Set DwellUnitDHW:GainDryer[2]:gnFrRad"			DwellUnitDHW:GainDryer[2]:gnFrRad	= {	0.  }
 	"Set DwellUnitDHW:GainDryer[2]:gnFrLat"			DwellUnitDHW:GainDryer[2]:gnFrLat	= {	0.5 }
    ; prevent tracking ZOne loads for Central (MFam) laundries - SAC 08/03/20 (MFamProto)

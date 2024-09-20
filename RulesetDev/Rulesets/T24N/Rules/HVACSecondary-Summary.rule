@@ -307,31 +307,6 @@ RULE NEW AirSys:RetFanPwr
   ANNUAL
     SumChildrenIf( AirSeg:FanPwr, AirSeg:Type = "Return" )
 ENDRULE
-RULE NEW AirSys:RetFanPwrIdx
-  DATATYPE
-    Float
-  LONGFORM
-    ReturnFanPowerPerFlow
-  INPUTCLASS
-    NotInput
-  UNITS
-    W/cfm
-  DEFAULT
-    if( RetFanCap > 0 )
-    then RetFanPwr * 1000 / RetFanCap 
-    else 0
-    endif
-  SIZING
-    if( IfValidAnd( RetFanCap > 0 ) )
-    then RetFanPwr * 1000 / RetFanCap 
-    else 0
-    endif
-  ANNUAL
-    if( RetFanCap > 0 )
-    then RetFanPwr * 1000 / RetFanCap 
-    else 0
-    endif    
-ENDRULE
 // Relief fans
 RULE NEW AirSys:ReliefFanPwr
   DATATYPE
@@ -350,31 +325,6 @@ RULE NEW AirSys:ReliefFanPwr
     SumChildrenIf( AirSeg:FanPwr, AirSeg:Type = "Relief" )
   ANNUAL
     SumChildrenIf( AirSeg:FanPwr, AirSeg:Type = "Relief" )
-ENDRULE
-RULE NEW AirSys:ReliefFanPwrIdx
-  DATATYPE
-    Float
-  LONGFORM
-    ReliefFanPowerPerFlow
-  INPUTCLASS
-    NotInput
-  UNITS
-    W/cfm
-  DEFAULT
-    if( ReliefFanCap > 0 )
-    then ReliefFanPwr * 1000 / ReliefFanCap 
-    else 0
-    endif
-  SIZING
-    if( IfValidAnd( ReliefFanCap > 0 ) )
-    then ReliefFanPwr * 1000 / ReliefFanCap 
-    else 0
-    endif
-  ANNUAL
-    if( ReliefFanCap > 0 )
-    then ReliefFanPwr * 1000 / ReliefFanCap 
-    else 0
-    endif    
 ENDRULE
 // Exhaust fans
 RULE NEW AirSys:SysExhFlow
@@ -471,37 +421,10 @@ RULE AirSys:ExhFanCap
         endif
       else UNCHANGED
       endif endif endif
-    else if( IsAllOA > 0 ) // Is a 100% OA system with exhaust fan
-    then
-      if( ExhFanCap < SysExhFlow * ( 1 - Proj:ExhTolMaxLimNonRes ) ) 
-      then
-        PostError("System '%s' has a exhaust flow capacity of %.0f cfm,
-                   which is more than %.0f percent less than the design
-                   exhaust flow of the zone(s) it serves.  
-                   Revise inputs for consistency.", 
-                   Name, ExhFanCap, Proj:ExhTolMaxLimNonRes * 100 ) 
-      else UNCHANGED
-      endif
     else UNCHANGED
-    endif endif
+    endif
   ANNUAL
     SumChildrenIf( AirSeg:FanFlowCap, AirSeg:Type = "Exhaust" )
-ENDRULE
-RULE NEW AirSys:ExhFanCapRemainder
-  DESCRIPTION
-    "The total exhaust fan capacity of the AirSystem minus system exhaust flow. This will
-     be distributed to zones served by the AirSystem but no exhaust flow specified."
-  DATATYPE
-    Float
-  INPUTCLASS
-    NotInput
-  REPORTPRECISION
-    0 
-  DEFAULT
-    if( ExhFanCap > SysExhFlow * ( 1 + Proj:ExhTolMaxLimNonRes ) )
-    then ExhFanCap - SysExhFlow
-    else 0
-    endif
 ENDRULE
 RULE AirSys:ExhFlowMin
   DESCRIPTION
@@ -584,31 +507,7 @@ RULE NEW AirSys:ExhSysFanPwrIdx
     else 0
     endif    
 ENDRULE
-RULE NEW AirSys:ExhFanPwrIdx
-  DATATYPE
-    Float
-  LONGFORM
-    ExhaustFanPowerPerFlow
-  INPUTCLASS
-    NotInput
-  UNITS
-    W/cfm
-  DEFAULT
-    if( ExhFanCap > 0 )
-    then ExhFanPwr * 1000 / ExhFanCap 
-    else 0
-    endif
-  SIZING
-    if( IfValidAnd( ExhFanCap > 0 ) )
-    then ExhFanPwr * 1000 / ExhFanCap 
-    else 0
-    endif
-  ANNUAL
-    if( ExhFanCap > 0 )
-    then ExhFanPwr * 1000 / ExhFanCap 
-    else 0
-    endif    
-ENDRULE
+
 
 // ---------- Terminal Units ----------------------------------
 RULE NEW AirSys:TrmlFanCap
@@ -808,7 +707,7 @@ RULE ZnSys:ExhFanCap
       then // ExhFanCap is < sum of ThrmlZn:ExhFlow
         PostError("Exhaust system '%s' has a flow capacity of %.0f cfm,
                    which is more than %.0f percent less than the design
-                   exhaust flow of the zone(s) it serves.  
+                   ventilation flow of the zone(s) it serves.  
                    Revise inputs for consistency.", 
                    Name, ExhFanCap, Proj:ExhTolMaxLimNonRes * 100 ) 
       else
@@ -816,7 +715,7 @@ RULE ZnSys:ExhFanCap
       then // ExhFanCap is > sum of ThrmlZn:ExhFlow
         PostError("Exhaust system '%s' has a flow capacity of %.0f cfm,
                    which is more than %.0f percent greater than the design
-                   exhaust flow of the zone(s) it serves. 
+                   ventilation flow of the zone(s) it serves. 
                    Revise inputs for consistency.", 
                    Name, ExhFanCap, Proj:ExhTolMaxLimNonRes * 100 ) 
       else UNCHANGED
@@ -2138,7 +2037,7 @@ RULE AirSys:DuctIns
       UNCHANGED 
     else if ( DuctLctn = "Conditioned" .OR. DuctLctn = "Ductless" ) then
       UNCHANGED
-    else if ( DuctLctn = "Unconditioned" .AND. ServesResZn < 1 ) then
+    else if ( DuctLctn = "Unconditioned" ) then
       if( DuctIns < DuctInsMin - 0.01 ) then
         PostError("The R-value of the duct insulation for system '%s', is 
                    '%.1f', which does not meet the mandatory requirement in 
@@ -2146,7 +2045,7 @@ RULE AirSys:DuctIns
                    Name,DuctIns,DuctInsMin ) 
       else UNCHANGED
       endif 
-    else if ( DuctLctn = "Other" .AND. ServesResZn < 1 ) then
+    else if ( DuctLctn = "Other" ) then
       if( DuctIns < DuctInsMin - 0.01 ) then
         PostError("The R-value of the duct insulation for system '%s', is 
                    '%.1f', which does not meet the mandatory requirement in 
@@ -2182,199 +2081,6 @@ RULE AirSys:DuctInsRpt
     endif endif
 ENDRULE
 
-// -----------------------------------------------------------------------------
-RULE AirSys:DuctDesign
-  DESCRIPTION
-    "A boolean (0/1) flag to indicate verified duct design."
-  HELP
-    ""  
-  INPUTCLASS 
-    Default
-  RESETS
-    ResetTheFollowingWhenThisIsModified
-      DuctLctn
-  DEFAULT : T24N
-    0
-  ANNUAL_PROPOSED
-    if( BaseSysNum > 0 ) 
-    then 
-      0 
-    else if( Proj:IsAddOrAlt = 0 .AND. DuctStatus = 1 ) 
-    then
-      0
-    else if( IfValidAnd ( ServesResZn < 1 ) ) 
-    then
-      0
-    else 
-      UNCHANGED 
-    endif endif endif
-ENDRULE
-
-RULE AirSys:SupplyDuctArea
-  DESCRIPTION
-    ""
-  HELP
-    ""  
-  INPUTCLASS 
-    Optional
-  RESETS
-    ResetTheFollowingWhenThisIsModified
-      DuctDesign
-  DEFAULT : T24N
-    0
-  ANNUAL_PROPOSED
-    if( BaseSysNum > 0 ) 
-    then 
-      0 
-    else if( Proj:IsAddOrAlt = 0 .AND. DuctStatus = 1 ) 
-    then
-      0
-    else if( IfValidAnd ( ServesResZn < 1 ) ) 
-    then
-      0
-    else 
-      UNCHANGED 
-    endif endif endif
-ENDRULE
-
-RULE AirSys:ReturnDuctArea
-  DESCRIPTION
-    ""
-  HELP
-    ""  
-  INPUTCLASS 
-    Optional
-  RESETS
-    ResetTheFollowingWhenThisIsModified
-      DuctDesign
-  DEFAULT : T24N
-    0
-  ANNUAL_PROPOSED
-    if( BaseSysNum > 0 ) 
-    then 
-      0 
-    else if( Proj:IsAddOrAlt = 0 .AND. DuctStatus = 1 ) 
-    then
-      0
-    else if( IfValidAnd ( ServesResZn < 1 ) ) 
-    then
-      0
-    else 
-      UNCHANGED 
-    endif endif endif
-ENDRULE
-
-RULE AirSys:SupplyDuctDesignIns
-  DESCRIPTION
-    ""
-  HELP
-    ""  
-  INPUTCLASS 
-    Optional
-  RESETS
-    ResetTheFollowingWhenThisIsModified
-      DuctDesign
-  DEFAULT : T24N
-    if( IfValidAnd ( ServesResZn < 1 ) )
-    then
-      0
-    else
-      DuctIns
-    endif
-  CHECKCODE : T24N
-    if( BaseSysNum > 0 .OR. IsHlthCareSys = 1 ) then
-      UNCHANGED 
-    else if ( DuctLctn = "Conditioned" .OR. DuctLctn = "Ductless" ) then
-      UNCHANGED
-    else if ( DuctLctn = "Unconditioned" .AND. ServesResZn = 1 .AND. DuctDesign = 1 ) then
-      if( SupplyDuctDesignIns < DuctInsMin - 0.01 ) then
-        PostError("The R-value of the supply duct insulation for system '%s', is 
-                   '%.1f', which does not meet the mandatory requirement in 
-                   Section 120.4(a) for ducts in unconditioned space, R-%.1f.",
-                   Name,DuctIns,DuctInsMin ) 
-      else UNCHANGED
-      endif 
-    else if ( DuctLctn = "Other" .AND. ServesResZn = 1 .AND. DuctDesign = 1 ) then
-      if( SupplyDuctDesignIns < DuctInsMin - 0.01 ) then
-        PostError("The R-value of the supply duct insulation for system '%s', is 
-                   '%.1f', which does not meet the mandatory requirement in 
-                   Section 120.4(a) for ducts that are not in conditioned or 
-                   unconditioned space, R-%.1f.",
-                   Name,DuctIns,DuctInsMin ) 
-      else UNCHANGED
-      endif
-    else UNCHANGED
-    endif endif endif endif
-  ANNUAL_PROPOSED
-    if( BaseSysNum > 0 ) 
-    then 
-      0 
-    else if( Proj:IsAddOrAlt = 0 .AND. DuctStatus = 1 ) 
-    then
-      0
-    else if( IfValidAnd ( ServesResZn < 1 ) ) 
-    then
-      0
-    else 
-      UNCHANGED 
-    endif endif endif
-ENDRULE
-
-RULE AirSys:ReturnDuctDesignIns
-  DESCRIPTION
-    ""
-  HELP
-    ""  
-  INPUTCLASS 
-    Optional
-  RESETS
-    ResetTheFollowingWhenThisIsModified
-      DuctDesign
-  DEFAULT : T24N
-    if( IfValidAnd ( ServesResZn < 1 ) )
-    then
-      0
-    else
-      DuctIns
-    endif
-  CHECKCODE : T24N
-    if( BaseSysNum > 0 .OR. IsHlthCareSys = 1 ) then
-      UNCHANGED 
-    else if ( DuctLctn = "Conditioned" .OR. DuctLctn = "Ductless" ) then
-      UNCHANGED
-    else if ( DuctLctn = "Unconditioned" .AND. ServesResZn = 1 .AND. DuctDesign = 1 ) then
-      if( ReturnDuctDesignIns < DuctInsMin - 0.01 ) then
-        PostError("The R-value of the return duct insulation for system '%s', is 
-                   '%.1f', which does not meet the mandatory requirement in 
-                   Section 120.4(a) for ducts in unconditioned space, R-%.1f.",
-                   Name,DuctIns,DuctInsMin ) 
-      else UNCHANGED
-      endif 
-    else if ( DuctLctn = "Other" .AND. ServesResZn = 1 .AND. DuctDesign = 1 ) then
-      if( ReturnDuctDesignIns < DuctInsMin - 0.01 ) then
-        PostError("The R-value of the return duct insulation for system '%s', is 
-                   '%.1f', which does not meet the mandatory requirement in 
-                   Section 120.4(a) for ducts that are not in conditioned or 
-                   unconditioned space, R-%.1f.",
-                   Name,DuctIns,DuctInsMin ) 
-      else UNCHANGED
-      endif
-    else UNCHANGED
-    endif endif endif endif
-  ANNUAL_PROPOSED
-    if( BaseSysNum > 0 ) 
-    then 
-      0 
-    else if( Proj:IsAddOrAlt = 0 .AND. DuctStatus = 1 ) 
-    then
-      0
-    else if( IfValidAnd ( ServesResZn < 1 ) ) 
-    then
-      0
-    else 
-      UNCHANGED 
-    endif endif endif
-ENDRULE
 
 // -----------------------------------------------------------------------------
 RULE ZnSys:HERSDuctReq
@@ -3340,7 +3046,7 @@ RULE AirSys:SysCtrlRpt[8]
   INPUTCLASS 
     NotInput
   ANNUAL_PROPOSED
-    if( IfValidAnd( u:OptStart> 0 ) )
+    if( IfValidAnd( OptStart> 0 ) )
     then "Optimum Start"
     else
      "NA"

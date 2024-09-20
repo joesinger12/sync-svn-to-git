@@ -573,9 +573,7 @@ RULE NEW Proj:T24BattEngyCap
   INPUTCLASS
     NotInput
   DEFAULT
-    if (IfValidAnd( AllowStdBatt > 0 )==0 .AND.
-        ( DisableAllPVBattRequirements .OR.
-          IfValidAnd( AllowStdBatt = 0 ) ))
+    if (DisableAllPVBattRequirements)
     then  0
     else if (IfValidAnd( UseReducedBattReqVal >= 0 ))
     then  UseReducedBattReqVal
@@ -621,7 +619,7 @@ RULE NEW Proj:PrscrpPVBatteryMsg
     then  "There are no PV or Battery requirements for this model based on the Prescriptive tables"
     else if (PrscrpBattEngyCap < 0.01)
     then  Format( "PV Capacity required based on Prescriptive tables:  %s kWdc  (no prescriptive battery requirement)", FltToStr( PrscrpPVSize, 1 ) )
-    else  Format( "PV and Battery required based on Prescriptive tables:  %s kWdc PV  /  Battery Energy %s kWh and Power %s kW (Time of Use control)",
+    else  Format( "PV and Battery required based on Prescriptive tables:  %s kWdc PV  /  Battery Energy %s kWh and Power %s kW",
                               FltToStr( PrscrpPVSize, 1 ), FltToStr( PrscrpBattEngyCap, 1 ), FltToStr( PrscrpBattPwrCap, 2 ) )
     endif endif endif
 ENDRULE
@@ -640,7 +638,7 @@ RULE NEW Proj:StdPVBatteryMsg
     Then  "No Standard Design PV/Battery to be included in analysis"
     else  if (IfValidAnd( T24BattEngyCap > 0.1 )==0)
           then  Format( "Standard Design PV Capacity: %s kWdc  /  (no battery)", FltToStr( T24PVSize, 1 ) )
-          else  Format( "Standard Design PV Capacity: %s kWdc  /  Battery Capacity: %s kWh  (power %s kW, Time of Use control)",
+          else  Format( "Standard Design PV Capacity: %s kWdc  /  Battery System Capacity: %s kWh  (power %s kW)",
                          FltToStr( T24PVSize, 1 ), FltToStr( T24BattEngyCap, 1 ), FltToStr( T24BattPwrCap, 2 ) )
           endif
     endif endif
@@ -1270,12 +1268,10 @@ RULE NEW Proj:UserInpPVBatteryMsg
           else  Format( "User-specified PV array(s):  %s kWdc PV  /  Battery to be excluded from analysis due to reduced Battery requirement of 0 kWh", FltToStr( PVSizeSum, 1 ) )
           endif
     else  if (DCSizeMultiplier <= 0.999)
-          then  Format( "User-specified PV and Battery:  %s kWdc PV (scaled to Standard design)  /  %s kWh Battery  (%s/%s charge/discharge rate (kW), %s control)",
-                              FltToStr( (DCSizeMultiplier*PVSizeSum), 1 ), FltToStr( BattSizeSum, 1 ),
-                              FltToStr( Batt:MaxChrgPwr, 1 ), FltToStr( Batt:MaxDschrgPwr, 1 ), Batt:Ctrl )
-          else  Format( "User-specified PV and Battery:  %s kWdc PV  /  %s kWh Battery  (%s/%s charge/discharge rate (kW), %s control)",
-                              FltToStr( PVSizeSum, 1 ), FltToStr( BattSizeSum, 1 ),
-                              FltToStr( Batt:MaxChrgPwr, 1 ), FltToStr( Batt:MaxDschrgPwr, 1 ), Batt:Ctrl )
+          then  Format( "User-specified PV and Battery equipment:  %s kWdc PV (scaled to Standard design)  /  %s kWh Battery",
+                              FltToStr( (DCSizeMultiplier*PVSizeSum), 1 ), FltToStr( BattSizeSum, 1 ) )
+          else  Format( "User-specified PV and Battery equipment:  %s kWdc PV  /  %s kWh Battery",
+                              FltToStr( PVSizeSum, 1 ), FltToStr( BattSizeSum, 1 ) )
           endif
     endif endif endif endif endif endif
 ENDRULE
@@ -1324,20 +1320,20 @@ RULE NEW Proj:HavePVBattSim
 ENDRULE
 
 // Self Utilization Credit (BattGridHarmCredit) stuff - SAC 06/05/22
-// disable BattGridHarmCredit (flexibility credit) for 2022+ codes - SAC 01/10/23 (tic #3464)
-// RESTORED access to BattGridHarmCredit (self utilization credit) for lowrise res models in 2022+ codes - SAC 08/27/23 (tic #3541)
+// diable BattGridHarmCredit (flexibility credit) for 2022+ codes - SAC 01/10/23 (tic #3464)
 RULE Proj:AllowBattGridHarmCredit
   DESCRIPTION
     "Whether taking the self utilization battery credit is allowed for this project"  
   INPUTCLASS
     NotInput 
   DEFAULT
-    if (IfValidAnd( ResDwellUnits > 0 ) .AND.
-        IfValidAnd( Bldg:AboveGrdStoryCnt < 4 ) .AND.
-        IfValidAnd( CommunitySolarProjID > 0 )==0 .AND.
-        SimBatt > 0 .AND. PVSizeSum > 0 )
+    if (IfValidAnd( Proj:StdsVersionYr >= 2022 )) then  0
+    else if (IfValidAnd( ResDwellUnits > 0 ) .AND.
+             IfValidAnd( Bldg:AboveGrdStoryCnt < 4 ) .AND.
+             IfValidAnd( CommunitySolarProjID > 0 )==0 .AND.
+             SimBatt > 0 .AND. PVSizeSum > 0 )
     then  1
-    else  0  endif
+    else  0  endif endif
 ENDRULE
 
 RULE Proj:BattGridHarmCredit

@@ -3,7 +3,7 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "020015S-OffSml-Run02"  
    BldgEngyModelVersion = 16
    CreateDate = 1400001899
-   ModDate = 1714761292
+   ModDate = 1653440753
    RunDate = 1653440754
    GeometryInpType = "Simplified"
    ZipCode = 92262
@@ -674,7 +674,6 @@ Spc   "Perimeter_ZN_1"
    Area = 1221.17
    SpcFuncDefaultsRef = "Office Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 IntWall   "Perimeter_ZN_1_wall_east"  
@@ -798,7 +797,6 @@ Spc   "Perimeter_ZN_2"
    Area = 724.411
    SpcFuncDefaultsRef = "Office Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 ExtWall   "Perimeter_ZN_2_wall_east"  
@@ -837,7 +835,6 @@ Spc   "Perimeter_ZN_3"
    Area = 1221.17
    SpcFuncDefaultsRef = "Office Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 UndgrFlr   "Perimeter_ZN_3_floor"  
@@ -898,7 +895,6 @@ Spc   "Perimeter_ZN_4"
    Area = 724.411
    SpcFuncDefaultsRef = "Office Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 IntWall   "Perimeter_ZN_4_wall_south"  
@@ -987,7 +983,6 @@ Spc   "Core_ZN"
    Area = 1610.9
    SpcFuncDefaultsRef = "Office Defaults"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 UndgrFlr   "Core_ZN_floor"  
@@ -1006,7 +1001,6 @@ Spc   "Attic"
    ThrmlZnRef = "Attic Thermal Zone"
    Area = 6113.67
    SpcFunc = "Unoccupied-Exclude from Gross Floor Area"
-   OccSensorCtrl = 1
    ..
 
 Roof   "Attic_roof_north"  

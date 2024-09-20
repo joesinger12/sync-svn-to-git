@@ -105,11 +105,9 @@ RULELIST "CSE_SimulationPrep_Com" 1 0 0 1
 ;         if (LocalCompAssigned( BattCtrlImportFile )) then  DeleteComp()  else  UNCHANGED  endif  }
    ; SAC 4/28/17 - revised logic to enable battery simulation in 2016 runs
    ; add check for BattCapMult > 0 - SAC 01/19/23
-   ; prevent battery setup if no Batt:MaxChrgPwr - SAC 05/04/23
    "Create and setup cseBATTERY object"   Proj:Action = {
          if ( ( ComponentCount( csePVARRAY ) < 1 .AND. IfValidAnd( HaveStandaloneBatt > 0 )==0 ) .OR.
-               SumAll( Batt:MaxChrgPwr ) < 0.1 .OR.
-               SumAll( Batt:MaxCap ) < 0.1 .OR. IfValidAnd( BattCapMult > 0 )==0 )
+              SumAll( Batt:MaxCap ) < 0.1 .OR. IfValidAnd( BattCapMult > 0 )==0 )
          then  UNCHANGED
          else  EvalRulelist( "CSE_SimulationPrep_Battery" )  endif  }
 ;         else if (Proj:RunAbbrev == "s"  .OR. Proj:RunAbbrev == "S" .OR. Proj:RunAbbrev == "smf" .OR.
@@ -230,10 +228,8 @@ RULELIST "CSE_Defaulting_Project_Com" 1 0 0 1
 	"Default cseTOP:wfName"			cseTOP:wfName	= {	Proj:AnnualWeatherFile  }
 
    "Set cseTOP:doMainSim"     cseTOP:doMainSim  =        ; Main/annual (YES) vs. HVAC Sizing (NO) - SAC 05/09/22
-      {  UNDEFINED  }
-   ; removed old logic that prevents sim of PV/Battery when E+ HVAC autosizing toggled on in Proj object - SAC 05/09/24
-   ;   {  if (IfValidAnd( Proj:HVACAutoSizing > 0 ))
-   ;      then  "NO"  else  UNDEFINED  endif  }
+      {  if (IfValidAnd( Proj:HVACAutoSizing > 0 ))
+         then  "NO"  else  UNDEFINED  endif  }
 
 ;	"Default cseTOP:begDay=Jan 1                     //
 ;	"Default cseTOP:endDay=Dec 31                    //
@@ -466,9 +462,7 @@ RULELIST "CSE_SimulationPrep_DHW_MFam_wsDayUse_Com" 1 0 0 1
 ;  																									else	  CreateChildren( DwellUnitDHW, DwellingUnitTypeCnt[ 1] * Mult, Name + " DU0", "Setup_DwellUnitDHW_Studio_Com" )  endif  }
 ;  	"Create 1-Bedrm DwellUnitDHW children for each Spc"	Spc:Action	= {	if ((SpcFunc != "High-Rise Residential Living Spaces" .AND.
 ;                                                                                  SpcFunc != "Hotel/Motel Guest Room") .OR.
-   ; added logic to prevent creation of DwellUnitDHW when no ResDHWSys is assigned AND ExcludeWtrHtg - SAC 06/16/24
 	"Create 1-Bedrm DwellUnitDHW children for each Spc"	Spc:Action	= {	if (SpcFunc != "Hotel/Motel Guest Room" .OR.
-                                                                               ( LocalCompAssigned( ResDHWSysRef )==0 .AND. Proj:ExcludeWtrHtg ) .OR.
                                                                                HaveResDHW < 0.5 .OR. IfValidAnd( DwellingUnitTypeArea[2] > 0 )==0 .OR.
 																																	  IfValidAnd( DwellingUnitTypeCnt[ 2] > 0 )==0) then  UNCHANGED
 																									else	  CreateChildren( DwellUnitDHW, DwellingUnitTypeCnt[ 2] * Mult, Name + " DU1", "Setup_DwellUnitDHW_1Bedroom_Com" )  endif  }
@@ -872,25 +866,6 @@ RULELIST "CSE_SimulationPrep_LoadMeters" 1 0 0 1
       {  if (IfValidAnd( LdPassingOnly > 0 )) then  DeleteComp()
          else  UNCHANGED  endif  }
 
-   ; rules to facilitate load submeters (in support of ResZnGrp:Mult > 1) - SAC 05/26/23 (tic #3392)
-   ;"dbg" Proj:Action = { if (SumAll( FluidSys:CSELoadPassing ) > 0) then  PostMessageToLog( "run %s: about to create FluidSys LoadMeter(s)", RunAbbrev )  else UNCHANGED endif }   ; debugging - SAC 05/26/23 (tic #3392)
-   "Init FluidSys:NumResZnsByZnGrpMult[*]"  for:#ZGM=(1to20)  FluidSys:NumResZnsByZnGrpMult[#ZGM] = { 0 }
-   "Increment FluidSys:NumResZnsByZnGrpMult by ResZn"       for:#ZGM=(2to20)  ResZn:CWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] =
-      {  if (IfValidAnd( Mult = #ZGM ) .AND. IfValidAnd( CWFluidSysRef:CSELoadPassing > 0 )) then  CWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] + 1  else  UNCHANGED  endif  }
-   "Increment FluidSys:NumResZnsByZnGrpMult by ResOtherZn"  for:#ZGM=(2to20)  ResOtherZn:CWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] =
-      {  if (IfValidAnd( Mult = #ZGM ) .AND. IfValidAnd( CWFluidSysRef:CSELoadPassing > 0 )) then  CWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] + 1  else  UNCHANGED  endif  }
-   ; extended CW FluidSys load submeters rules to apply to ChW & HW systems (in support of ResZnGrp:Mult > 1) - SAC 06/22/23 (tic #3392)
-   "Increment CHW FluidSys:NumResZnsByZnGrpMult by ResZn"       for:#ZGM=(2to20)  ResZn:ChWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] =
-      {  if (IfValidAnd( Mult = #ZGM ) .AND. IfValidAnd( ChWFluidSysRef:CSELoadPassing > 0 )) then  ChWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] + 1  else  UNCHANGED  endif  }
-   "Increment CHW FluidSys:NumResZnsByZnGrpMult by ResOtherZn"  for:#ZGM=(2to20)  ResOtherZn:ChWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] =
-      {  if (IfValidAnd( Mult = #ZGM ) .AND. IfValidAnd( ChWFluidSysRef:CSELoadPassing > 0 )) then  ChWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] + 1  else  UNCHANGED  endif  }
-   "Increment HW FluidSys:NumResZnsByZnGrpMult by ResZn"        for:#ZGM=(2to20)  ResZn:HWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] =
-      {  if (IfValidAnd( Mult = #ZGM ) .AND. IfValidAnd(  HWFluidSysRef:CSELoadPassing > 0 )) then  HWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] + 1  else  UNCHANGED  endif  }
-   "Increment HW FluidSys:NumResZnsByZnGrpMult by ResOtherZn"   for:#ZGM=(2to20)  ResOtherZn:HWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] =
-      {  if (IfValidAnd( Mult = #ZGM ) .AND. IfValidAnd(  HWFluidSysRef:CSELoadPassing > 0 )) then  HWFluidSysRef:NumResZnsByZnGrpMult[#ZGM] + 1  else  UNCHANGED  endif  }
-   "Create FluidSys cseLOADMETER submeters"  for:#ZGM=(2to20)  FluidSys:CSE_LoadSubMeters[#ZGM] = 
-      {  if (NumResZnsByZnGrpMult[#ZGM] > 0) then  CreateComp( cseLOADMETER, Format( "ldsubmtr-%s ZGM %g", substr( Name, 0, 46 ), #ZGM ) )  else  UNCHANGED  endif  }
-
    "call rulelist to setup cseLOADMETER for each applicable FluidSys"   FluidSys:Action =
       {  if (IfValidAnd( CSELoadPassing > 0 ))
          then  EvalRulelist( "CSE_SimulationPrep_LoadMeters_FluidSys", 1 )
@@ -899,13 +874,6 @@ RULELIST "CSE_SimulationPrep_LoadMeters" 1 0 0 1
       {  if (SumAll( FluidSys:CSELoadMeterIdx ) > 0)
          then  EvalRulelist( "CSE_SimulationPrep_LoadMeters_Export" )
          else  UNCHANGED  endif  }
-
-   ; rules to add load submeters to the main load meter by FluidSys - SAC 05/26/23 (tic #3392)
-   "add FluidSys:CSE_LoadMeter submeters"       for:#ZGM=(2to20)  FluidSys:CSE_LoadMeter:lmtSubMeters[1] =
-      {  if (NumResZnsByZnGrpMult[#ZGM] > 0) then  SetNextArrayElement( CSE_LoadSubMeters[#ZGM]:Name )  else  UNCHANGED  endif  }
-   "add FluidSys:CSE_LoadMeter submeter mults"  for:#ZGM=(2to20)  FluidSys:CSE_LoadMeter:lmtSubMeterMults[1] =
-      {  if (NumResZnsByZnGrpMult[#ZGM] > 0) then  SetNextArrayElement( #ZGM )  else  UNCHANGED  endif  }
-
 ; moved call to evaluate to end of ANNUAL transform, so that done before SDD XML file - SAC 03/19/22
 ;   "call rulelist to setup ProcLds for each applicable FluidSys"   FluidSys:Action =   ; SAC 03/19/22
 ;      {  if (IfValidAnd( CSELoadPassing > 0 ))

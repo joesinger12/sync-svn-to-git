@@ -140,7 +140,7 @@
 ;
 ;                                                 VType     NV  WA  SP    US    UL                 UT  NO  OC            CV  CP      HI    LName                 
 ;                                                ------------------------------------------------------------------------------------------
-1,           "RptOption",                         BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                           1001, "ReportOption",  "" 
+1,           "RptOption",                         BEMP_Sym,  1,  0,  0,  Dflt,  "",                 0,  0,                           1001, "ReportOption",  "" 
 
 1,           "ProjectID",                         BEMP_Flt,  1,  0,  0,   Opt,  "",                 0,  0,                           1001, "ProjectID",    ""   ; SAC 12/05/22
 1,           "Locality",                          BEMP_Str,  1,  0,  0,   Opt,  "",                 0,  0,                           1040, "Locality",  "" 
@@ -162,25 +162,6 @@
 1,           "ErrorMsg",                          BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           3020, "ErrorMessage",         ""   ; "ErrorMessage",  "" 
 1,           "ErrorInfo",                         BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           3020, "ErrorInformation",     ""   ; "ErrorInformation",  "" 
 1,           "HaveErrorInfo",                     BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           3020, "HaveErrorInformation", ""   ; "HaveErrorInformation",  "" 
-1,           "ShowPVAllocGrid",                   BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           3020, "ShowPVAllocGrid", ""   ; SAC 10/02/23
-
-1,           "NumAvailCmntySlrProjs",             BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1046, "# of Community Solar projects available for the selected ClimateZone",  ""   ; SAC 10/01/23
-1,           "CmntySlrProjsAvailMsg",             BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           1046, "UI message related to # of Community Solar projects available for the selected ClimateZone",  "" 
-1,           "CmntySlrProjCZCompat",              BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1046, "flag indicating compatibility between Climate Zone & Community Solar project selections",  "" 
-1,           "UseCommunitySolar",                 BEMP_Int,  1,  0,  0,   Opt,  "",                 0,  0,                           1046, "Whether or not this project uses a Community Solar system",  "" 
-1,           "CommunitySolarProject",             BEMP_Sym,  1,  0,  0,   Opt,  "",                 0,  0,                           1046, "The Community Solar project this home subscribes to",  "" 
-1,           "InCmntySlrProjTerritory",           BEMP_Int,  1,  0,  0,   Opt,  "",                  0,  0,                           1046, "Whether this home is within the Community Solar project service territory",  "" 
-1,           "CommunitySolarProjID",              BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1046, "The ID of the Community Solar project (or 0 if not allowed or specified)",  "" 
-;1,           "CommunitySolarSim",                 BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1046, "Flag indicating whether Community Solar is to be simulated (1) or not (0-default)",  "" 
-1,           "CommunitySolarValid",               BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1046, "Flag indicating whether Community Solar is selected and all inputs specified & valid",  "" 
-1,           "CommunitySolarSizeByBedrms",        BEMP_Flt,  7,  1,  0,   Opt,  "kW",               0,  0,                           1001, "CommunitySolarSizeByBedrooms",    ""   ; 1-Studio, 2-1bdrm, ... 7-6bdrm - SAC 10/01/23
-1,           "TotCommunitySolarSize",             BEMP_Flt,  1,  0,  0,  NInp,  "kW",               0,  0,                           1001, "TotalCommunitySolarSize",    ""   ; SAC 10/01/23
-1,           "CommunitySolarAnnCreditByBedrms",   BEMP_Flt,  7,  1,  0,  NInp,  "$",                0,  0,                           1001, "CommunitySolarAnnualCreditByBedrooms",    ""   ; 1-Studio, 2-1bdrm, ... 7-6bdrm - SAC 10/02/23
-1,           "CmntySlrProjInfo",                  BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1046, "Community Solar project info - flag to display dialog",  "" 
-1,           "CmntySlrProjInfoCap",               BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1046, "Community Solar project info dialog - caption",  "" 
-1,           "CmntySlrProjInfoMsg",               BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1046, "Community Solar project info dialog - message",  "" 
-1,           "CmntySlrProjInfoDtl",               BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1046, "Community Solar project info dialog - details",  "" 
-1,           "CmntySlrProjInfoIcn",               BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1046, "Community Solar project info dialog - icon",  "" 
 
 1,           "AffordablePVDCSysSize",             BEMP_Flt,  1,  0,  0,   Opt,  "kW",               0,  0,                           3208, "AffordablePVDCSystemSize",  ""           ; "Portion of building PV capacity dedicated to affordable housing units",  ""    ; SAC 09/09/22 (CUAC)
 1,           "PctIndivUnitPVByBedrms",            BEMP_Flt,  8,  1,  0,   Def,  "%",                0,  0,                           1001, "PercentIndividualUnitPVByBedrooms",    ""   ; SAC 12/08/22
@@ -198,58 +179,26 @@
 1,           "AffordableBattMaxCapFrac",          BEMP_Flt,  1,  0,  0,  NInp,  "frac",             0,  0,                           3208, "AffordableBatteryMaximumCapacityFraction",  ""   ; "Fraction of building Battery capacity dedicated to affordable housing units",  ""    
 1,           "ShowPVBattInputs",                  BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           3208, "ShowPVBatteryInputs",  ""    
 1,           "AffordableBattMsg",                 BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           3208, "AffordableBatteryMessage",  ""    
-1,           "TariffDate",                        BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           3208, "TariffDate",  ""      ; SAC 01/24/24
 
-1,           "ElecUtility",                       BEMP_Sym,  1,  0,  0,   Req,  "",                 0,  0,                           1001, "ElectricUtility",  "" 
-1,           "G2ElecTerritory",                   BEMP_Sym,  1,  0,  0,   Req,  "",                 0,  0,                           1001, "Gen2ElectricTerritory",  "" 
-1,           "G2ElecTariff",                      BEMP_Sym,  1,  0,  0,   Req,  "",                 0,  0,                           1001, "Gen2ElectricTariff",  "" 
-1,           "ElecTerritory",                     BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "ElectricTerritory",  "" 
-1,           "ElecTariff",                        BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "ElectricTariff",  "" 
-1,           "ElecTariffAdj",                     BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                           1001, "ElectricTariffAdjuster",  ""   ; SAC 11/28/23
-1,           "ElecTariffGen",                     BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ElectricTariffGeneration",  ""    ; 0-none / 1-original / 2-CPR (first set) - SAC 08/30/23 
-1,           "ElecTariffIsTOU",                   BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ElectricTariffIsTimeOfUse",  ""   ; SAC 09/05/23
-1,           "ElecTariffType",                    BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                           1001, "ElectricTariffType",  ""       ; Std vs. CARE - SAC 01/24/24
-1,           "ElecTariffDescrip",                 BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ElectricTariffDescription",  "" 
-1,           "G2ElecTariffERN",                   BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "Gen2ElectricTariffEncodedRateName",  ""    ; SAC 09/05/23 
-1,           "ElecBillReconBeginMo",              BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "ElectricBillReconciliationBeginMonth",  ""   ; SAC 12/10/23
-1,           "ElecBillMinMoCharge",               BEMP_Flt,  1,  0,  0,  Pres,  "$",                0,  0,                           1001, "ElectricBillMinimumMonthlyCharge",  ""     ; SAC 12/13/23
-1,           "ElecBillMinAnnCharge",              BEMP_Flt,  1,  0,  0,  Pres,  "$",                0,  0,                           1001, "ElectricBillMinimumAnnualCharge",  ""  
+1,           "ElecUtility",                       BEMP_Sym,  1,  0,  0,  Reqd,  "",                 0,  0,                           1001, "ElectricUtility",  "" 
+1,           "ElecTerritory",                     BEMP_Sym,  1,  0,  0,  Reqd,  "",                 0,  0,                           1001, "ElectricTerritory",  "" 
+1,           "ElecTariff",                        BEMP_Sym,  1,  0,  0,  Reqd,  "",                 0,  0,                           1001, "ElectricTariff",  "" 
 
-1,           "GasUtility",                        BEMP_Sym,  1,  0,  0,   Req,  "",                 0,  0,                           1001, "GasUtility",  "" 
-1,           "G2GasTerritory",                    BEMP_Sym,  1,  0,  0,   Opt,  "",                 0,  0,                           1001, "Gen2GasTerritory",  "" 
-1,           "G2GasTariff",                       BEMP_Sym,  1,  0,  0,   Opt,  "",                 0,  0,                           1001, "Gen2GasTariff",  "" 
-1,           "GasTerritory",                      BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "GasTerritory",  "" 
-1,           "GasTariff",                         BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "GasTariff",  "" 
+1,           "GasUtility",                        BEMP_Sym,  1,  0,  0,  Reqd,  "",                 0,  0,                           1001, "GasUtility",  "" 
+1,           "GasTerritory",                      BEMP_Sym,  1,  0,  0,   Opt,  "",                 0,  0,                           1001, "GasTerritory",  "" 
+1,           "GasTariff",                         BEMP_Sym,  1,  0,  0,   Opt,  "",                 0,  0,                           1001, "GasTariff",  "" 
 1,           "GasUtilitySelected",                BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "GasUtilitySelected",  "" 
 1,           "GasTerritoryValid",                 BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "GasTerritoryValid",  "" 
 1,           "GasTariffValid",                    BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "GasTariffValid",  "" 
-1,           "GasTariffGen",                      BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "GasTariffGeneration",  ""         ; 0-none / 1-original / 2-CPR (first set) - SAC 08/30/23 
-1,           "GasTariffIsTOU",                    BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "GasTariffIsTimeOfUse",  ""   ; SAC 09/05/23
-1,           "GasTariffType",                     BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                           1001, "ElectricTariffType",  ""       ; Std vs. CARE - SAC 01/25/24
-1,           "GasTariffDescrip",                  BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "GasTariffDescription",  "" 
-1,           "G2GasTariffERN",                    BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "Gen2GasTariffEncodedRateName",  ""    ; SAC 09/05/23 
-1,           "GasTariffReqd",                     BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "GasTariffRequired",  ""  ; SAC 03/08/24
 
 1,           "ElecUtilityRateRef",                BEMP_Obj,  1,  0,  0,  NInp,  "",                 0,  1, "UtilityRate",  0, "",    1001, "ElectricityUtilityRateReference",    ""    ; SAC 09/14/22 (CUAC)
 1,           "GasUtilityRateRef",                 BEMP_Obj,  1,  0,  0,  NInp,  "",                 0,  1, "UtilityRate",  0, "",    1001, "GasUtilityRateReference",    "" 
 
-1,           "OldElecUtilityID",                  BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "OldElectricUtilityID",  ""    ; SAC 09/16/23
-1,           "OldGasUtilityID",                   BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "OldGasUtilityID",  "" 
-
-; TEMPORARY
-;1,           "TestG2ElecRateFile",                BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           3208, "TestGeneration2ElectricRateFile",  ""    
-;1,           "TestG2GasRateFile",                 BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           3208, "TestGeneration2GasRateFile",  ""    
-
-1,           "CPR_ElecUtilityRateRef",            BEMP_Obj,  1,  0,  0,  NInp,  "",                 0,  1, "CPR_UtilityRate",  1, "RateType",  1001, "CPR_ElectricityUtilityRateReference",    ""     ; SAC 08/22/23 (CUAC)
-1,           "CPR_GasUtilityRateRef",             BEMP_Obj,  1,  0,  0,  NInp,  "",                 0,  1, "CPR_UtilityRate",  0, "RateType",  1001, "CPR_GasUtilityRateReference",    ""             ; SAC 08/30/23 (CUAC)
-
-1,           "IncludeDHWInUtilityBills",          BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "IncludeDHWInUtilityBills",  ""    ; SAC 09/25/23  ; switched to Prescribed - SAC 09/27/23
-
-1,           "WaterRateType",                     BEMP_Sym,  1,  0,  0,   Req,  "",                 0,  0,                           1001, "WaterRateType",  ""         ; SAC 10/25/22
+1,           "WaterRateType",                     BEMP_Sym,  1,  0,  0,  Reqd,  "",                 0,  0,                           1001, "WaterRateType",  ""         ; SAC 10/25/22
 1,           "WaterMonthlyCost",                  BEMP_Flt,  1,  0,  0,   Opt,  "$/mo",             0,  0,                           1001, "WaterMonthlyCost",  "" 
 1,           "WaterVolumeCost",                   BEMP_Flt,  1,  0,  0,   Opt,  "$/gal",            0,  0,                           1001, "WaterVolumeCost",  "" 
 
-1,           "TrashRateType",                     BEMP_Sym,  1,  0,  0,   Req,  "",                 0,  0,                           1001, "TrashRateType",  ""  
+1,           "TrashRateType",                     BEMP_Sym,  1,  0,  0,  Reqd,  "",                 0,  0,                           1001, "TrashRateType",  ""  
 1,           "TrashMonthlyCost",                  BEMP_Flt,  1,  0,  0,   Opt,  "$/mo",             0,  0,                           1001, "TrashMonthlyCost",  "" 
 
 1,           "SiteAddress",                       BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "SiteAddress",  ""      ; SAC 11/21/22 (CUAC)   ; switched to prescribed - SAC 12/07/22
@@ -269,85 +218,16 @@
 1,           "ContactDetailsLbl",                 BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           1040, "ContactDetailsLbl",  "" 
 
 1,           "RunDateFmt",                        BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "RunDateFormatted",  ""      ; SAC 10/28/22 (CUAC) 
-1,           "CUACResultsRef",                    BEMP_Obj,  7,  1,  0,  Pres,  "",                 0,  1, "CUACResults",  0, "",    1001, "CUACResultsReference",    ""    ; 1-Studio, 2-1bdrm, ... 7-6bdrm - SAC 09/14/22 (CUAC)
+1,           "CUACResultsRef",                    BEMP_Obj,  7,  1,  0,  NInp,  "",                 0,  1, "CUACResults",  0, "",    1001, "CUACResultsReference",    ""    ; 1-Studio, 2-1bdrm, ... 7-6bdrm - SAC 09/14/22 (CUAC)
 
-1,           "InOutCSVPathFile",                  BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                          39110, "InOutCSVPathFile",   ""	   ; SAC 10/20/22
+1,           "InOutCSVPathFile",                  BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                          39110, "InOutCSVPathFile",   ""	   ; SAC 10/20/22
 1,           "InOutCSVFileIdx",                   BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                          39110, "InOutCSVFileIdx",    ""	
 1,           "ModelPathFwdSlash",                 BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                          39110, "ModelPathFwdSlash",  ""	
-1,           "SubmitPDFPathFile",                 BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                          39110, "SubmitPDFPathFile",   ""	   ; SAC 10/27/22
-1,           "DetailsPDFPathFile",                BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                          39110, "DetailsPDFPathFile",   ""	
+1,           "SubmitPDFPathFile",                 BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                          39110, "SubmitPDFPathFile",   ""	   ; SAC 10/27/22
+1,           "DetailsPDFPathFile",                BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                          39110, "DetailsPDFPathFile",   ""	
 1,           "UnitTypeLabels",                    BEMP_Str,  7,  0,  0,  NInp,  "",                 0,  0,                          39110, "UnitTypeLabels",  ""	
 1,           "DaysInMonth",                       BEMP_Int, 12,  1,  0,  NInp,  "days",             0,  0,                           1001, "DaysInMonth",  ""   ; 1-12:monthly
 1,           "PVAllocMethod",                     BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "PVAllocationMethod",  ""       ; SAC 11/21/22
-
-1,           "BatchRateIdx",                      BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                          39110, "BatchRateIdx",    ""	   ; SAC 09/27/23
-
-;------------------------------------------------------------------------------------------------
-
-
-;------------------------------------------------------------------------------------------------ SAC 09/16/23 (CUAC)
-;                  LName                           Template        MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "OldCUAC",    "OldCalUtilityAllowanceCalc",   "OldCUAC <i>",    1,  0,  0, "Proj",    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                                 VType     NV  WA  SP    US    UL                 UT  NO  OC            CV  CP      HI    LName                 
-;                                                ------------------------------------------------------------------------------------------
-1,           "ProjectID",                         BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "ProjectID",    "" 
-1,           "WaterHeatingFuel",                  BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "WaterHeatingFuel",  "" 
-1,           "HeatingFuel",                       BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "HeatingFuel",  "" 
-1,           "CookingFuel",                       BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "CookingFuel",  "" 
-
-1,           "EnergyStarPlugLoad",                BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "EnergyStarPlugLoad",  "" 
-1,           "CommonLaundryFacility",             BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "CommonLaundryFacility",  "" 
-1,           "CommonWashers",                     BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "CommonWashers",  "" 
-1,           "CommonWashersEnergyStar",           BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "CommonWashersEnergyStar",  "" 
-1,           "CommonDryers",                      BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "CommonDryers",  "" 
-1,           "CommonDryersEnergyStar",            BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "CommonDryersEnergyStar",  "" 
-
-1,           "PrintFinal",                        BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "PrintFinal",  "" 
-
-1,           "AptDataRef",                        BEMP_Obj,  7,  1,  0,  Pres,  "",                 0,  1, "OldCUACApt",  0, "",     1001, "ApartmentDataReference",    ""    ; 1-Studio, 2-1bdrm, ... 7-6bdrm - SAC 09/16/23 (CUAC)
-
-1,           "OriginalAccessDBFile",              BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1005, "OriginalAccessDBFile",       ""   ; SAC 09/18/23
-1,           "EnableProjListLoad",                BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1040, "EnableProjListLoad",  "" 
-1,           "ShowProjList",                      BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1040, "ShowProjList",  "" 
-1,           "OldProjectList",                    BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "OldProjectList",  ""  
-
-;1,           "WaterHeatingFuel",                  BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "WaterHeatingFuel",  "" 
-;1,           "UnitType",                          BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "UnitType",  "" 
-;------------------------------------------------------------------------------------------------
-
-
-;------------------------------------------------------------------------------------------------ SAC 09/16/23 (CUAC)
-;                   LName                     Template           MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "OldCUACApt",  "OldCUACApartmentData",   "OldCUACApt <i>",    0,  0,  0, "Proj",    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                                 VType     NV  WA  SP    US    UL                 UT  NO  OC            CV  CP      HI    LName                 
-;                                                ------------------------------------------------------------------------------------------
-1,           "AptID",                             BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "AptID",    "" 
-1,           "NumBedrooms",                       BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "NumBedrooms",    "" 
-1,           "NumAffordableUnits",                BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "NumAffordableUnits",  "" 
-1,           "NumMarketRateUnits",                BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1040, "NumMarketRateUnits",  "" 
-
-1,           "PVSystemName",                      BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1001, "PVSystemName",    "" 
-1,           "PVGeneration",                      BEMP_Flt, 12,  1,  0,  Pres,  "kWh",              0,  0,                           1040, "PVGeneration",    "" 
-
-1,           "LightingElec",                      BEMP_Flt, 12,  1,  0,  Pres,  "kWh",              0,  0,                           1040, "LightingElec",    "" 
-1,           "HeatingElec",                       BEMP_Flt, 12,  1,  0,  Pres,  "kWh",              0,  0,                           1040, "HeatingElec",     "" 
-1,           "DHWElec",                           BEMP_Flt, 12,  1,  0,  Pres,  "kWh",              0,  0,                           1040, "DHWElec",         "" 
-1,           "CookingElec",                       BEMP_Flt, 12,  1,  0,  Pres,  "kWh",              0,  0,                           1040, "CookingElec",     "" 
-1,           "CoolingElec",                       BEMP_Flt, 12,  1,  0,  Pres,  "kWh",              0,  0,                           1040, "CoolingElec",     "" 
-1,           "RefrigeratorElec",                  BEMP_Flt, 12,  1,  0,  Pres,  "kWh",              0,  0,                           1040, "RefrigeratorElec",      "" 
-1,           "DishwasherElec",                    BEMP_Flt, 12,  1,  0,  Pres,  "kWh",              0,  0,                           1040, "DishwasherElec",    "" 
-1,           "WasherElec",                        BEMP_Flt, 12,  1,  0,  Pres,  "kWh",              0,  0,                           1040, "WasherElec",      "" 
-1,           "DryerElec",                         BEMP_Flt, 12,  1,  0,  Pres,  "kWh",              0,  0,                           1040, "DryerElec",      "" 
-1,           "PlugLoadsElec",                     BEMP_Flt, 12,  1,  0,  Pres,  "kWh",              0,  0,                           1040, "PlugLoadsElec",   "" 
-
-1,           "HeatingGas",                        BEMP_Flt, 12,  1,  0,  Pres,  "kBtu",             0,  0,                           1040, "HeatingGas",     "" 
-1,           "DHWGas",                            BEMP_Flt, 12,  1,  0,  Pres,  "kBtu",             0,  0,                           1040, "DHWGas",         "" 
-1,           "CookingGas",                        BEMP_Flt, 12,  1,  0,  Pres,  "kBtu",             0,  0,                           1040, "CookingGas",     "" 
-1,           "DryerGas",                          BEMP_Flt, 12,  1,  0,  Pres,  "kBtu",             0,  0,                           1040, "DryerGas",      "" 
 
 ;------------------------------------------------------------------------------------------------
 
@@ -390,25 +270,21 @@
 ;                                                -----------------------------------------------------------------------------------------------------
 1,           "TotCosts",                          BEMP_Flt,  2,  1,  0,  Pres,  "$",                0,  0,                           1001, "TotalCosts",  ""   ; 1-Annual, 2-Monthly
 1,           "ElecCosts",                         BEMP_Flt, 14,  1,  0,  Pres,  "$",                0,  0,                           1001, "ElectricityCosts",   ""  ; 1-Annual, 2-MonthlyAvg, 3-14-Monthly
-1,           "ElecCostPerEnergyUse",              BEMP_Flt,  1,  0,  0,  Pres,  "$/kWh",            0,  0,                           1001, "ElectricityCostPerEnergyUse",   ""   ; SAC 09/28/23
-1,           "ElecEnergyUsed",                    BEMP_Flt,  1,  0,  0,  Pres,  "kWh",              0,  0,                           1001, "ElectricityEnergyUsed",   ""         ; SAC 09/28/23
 1,           "GasCosts",                          BEMP_Flt, 14,  1,  0,  Pres,  "$",                0,  0,                           1001, "GasCosts",    ""         ; "
-1,           "GasCostPerEnergyUse",               BEMP_Flt,  1,  0,  0,  Pres,  "$/therm",          0,  0,                           1001, "GasCostPerEnergyUse",   ""     ; SAC 09/28/23
-1,           "GasEnergyUsed",                     BEMP_Flt,  1,  0,  0,  Pres,  "therms",           0,  0,                           1001, "GasEnergyUsed",   ""           ; SAC 09/28/23
 1,           "WaterCosts",                        BEMP_Flt, 14,  1,  0,  Pres,  "$",                0,  0,                           1001, "WaterCosts",  ""   ; 1-Annual, 2-MonthlyAvg, 3-14-Monthly
 1,           "TrashMonthlyCost",                  BEMP_Flt,  1,  0,  0,  Pres,  "$",                0,  0,                           1001, "TrashMonthlyCost",  "" 
 1,           "Allowances",                        BEMP_Flt, 15,  1,  0,  Pres,  "$",                0,  0,                           1001, "Allowances",  ""   ; (based on Submittal Report)
 
 1,           "CkgElecUse",                        BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "CookingElectricityUse",  ""   ; 1-12:monthly, 13:annual, 14:daily
-1,           "CkgGasUse",                         BEMP_Flt, 14,  1,  0,  Pres,  "therm",            0,  0,                           1001, "CookingGasUse",  ""     ; fix unit label: kBtu -> therm - SAC 02/09/23
+1,           "CkgGasUse",                         BEMP_Flt, 14,  1,  0,  Pres,  "kBtu",             0,  0,                           1001, "CookingGasUse",  ""  
 1,           "ClgElecUse",                        BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "CoolingElectricityUse",  "" 
 1,           "DHWElecUse",                        BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "DHWElectricityUse",  ""  
-1,           "DHWGasUse",                         BEMP_Flt, 14,  1,  0,  Pres,  "therm",            0,  0,                           1001, "DHWGasUse",  ""  
+1,           "DHWGasUse",                         BEMP_Flt, 14,  1,  0,  Pres,  "kBtu",             0,  0,                           1001, "DHWGasUse",  ""  
 1,           "DishElecUse",                       BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "DishwasherElectricityUse",  ""  
 1,           "DryerElecUse",                      BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "DryerElectricityUse",  ""  
-1,           "DryerGasUse",                       BEMP_Flt, 14,  1,  0,  Pres,  "therm",            0,  0,                           1001, "DryerGasUse",  ""  
+1,           "DryerGasUse",                       BEMP_Flt, 14,  1,  0,  Pres,  "kBtu",             0,  0,                           1001, "DryerGasUse",  ""  
 1,           "HtgElecUse",                        BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "HeatingElectricityUse",  ""  
-1,           "HtgGasUse",                         BEMP_Flt, 14,  1,  0,  Pres,  "therm",            0,  0,                           1001, "HeatingGasUse",  ""  
+1,           "HtgGasUse",                         BEMP_Flt, 14,  1,  0,  Pres,  "kBtu",             0,  0,                           1001, "HeatingGasUse",  ""  
 1,           "IAQVentElecUse",                    BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "IndoorAirQualityVentilationElectricityUse",  ""     ; SAC 10/19/22
 1,           "LtgElecUse",                        BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "LightingElectricityUse",  ""  
 1,           "PlugLdsElecUse",                    BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "PlugLoadsElectricityUse",  ""  
@@ -416,235 +292,12 @@
 1,           "WashElecUse",                       BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "WasherElectricityUse",  ""  
 1,           "PVSysElecUse",                      BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "PhotovoltaicSystemElectricityUse",  "" 
 1,           "TotalElecUse",                      BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "TotalElectricityUse",  ""   ; 1-12:monthly, 13:annual, 14:daily
-1,           "TotalGasUse",                       BEMP_Flt, 14,  1,  0,  Pres,  "therm",            0,  0,                           1001, "TotalGasUse",  ""  
+1,           "TotalGasUse",                       BEMP_Flt, 14,  1,  0,  Pres,  "kBtu",             0,  0,                           1001, "TotalGasUse",  ""  
 1,           "BillingElecUse",                    BEMP_Flt, 14,  1,  0,  Pres,  "kWh",              0,  0,                           1001, "BillingElectricityUse",  ""   ; 1-12:monthly, 13:annual, 14:daily   ; SAC 12/10/22
 
 1,           "WaterUse",                          BEMP_Flt, 14,  1,  0,  Pres,  "gallons",          0,  0,                           1001, "WaterUse",  ""   ; 1-12:monthly, 13:annual, 14:daily
 
 ;------------------------------------------------------------------------------------------------
 
-
-; SAC 08/15/23
-;------------------------------------------------------------------------------------------------
-;---------------------       CUAC CPR Utility Rate Objects/Properties       ---------------------
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                        LName                Template           MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                       ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_UtilityRate",  "CPR_UtilityRate",   "UtilityRate <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                     VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                  HI    LName                  
-;                                    -----------------------------------------------------------------------------------------------------------
-1,           "RateType",              BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Enum to represent different types of rates",  "" 
-1,           "Utility",               BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Utility that uses this rate",  "" 
-1,           "RateTerritory",         BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Utility rate territory for this rate",  "" 
-1,           "RateName",              BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Name of the rate",  "" 
-1,           "PublicId",              BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "PublicId of the rate",  "" 
-1,           "EncodedRateName",       BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Unique id that describes the rate",  ""       ; SAC 08/31/23 (CUAC)
-1,           "Description",           BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Extra description for the rate",  "" 
-1,           "PathFileLoadedFrom",    BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "path/filename of file rate loaded from",  "n/a"  ; SAC 08/28/23
-1,           "MeteringType",          BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Metering type for the rate",  "" 
-1,           "ReconciliationPeriod",  BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "The net metering true up period",  "" 
-1,           "NettingPeriodInterval", BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Netting period interval for the rate",  "" 
-1,           "DemandInterval",        BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Utility that uses this rate",  "" 
-1,           "AnnualBilling",         BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Marks the rate as annual billing or not",  "" 
-1,           "NumRateSeasons",        BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Number of seasons in the rate",  "n/a" 
-1,           "RateSeasons",           BEMP_Obj, 12,  1,  0,  Pres,  "",                 0,  1, "CPR_RateSeason", 0, "",     1005, "List of seasons in the rate",  "" 
-1,           "NumHourlyTOUCosts",     BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                              1005, "Number of hourly TOU costs in the rate",  "n/a" 
-1,           "HourlyTOUCosts",        BEMP_Obj, 12,  1,  0,  Pres,  "",                 0,  1, "CPR_HourlyTOUCost", 0, "",  1005, "List of hourly TOU costs in the rate",    "HourlyTOUCostComponents" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                       LName               Template          MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                      ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_RateSeason",  "CPR_RateSeason",   "RateSeason <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                     VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                         HI    LName                  
-;                                    --------------------------------------------------------------------------------------------------------------
-1,           "SeasonName",            BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                                     1005, "Name for the season",  "" 
-1,           "NumSeasonPeriods",      BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                     1005, "Number of SeasonPeriods in the RateSeason",  "n/a" 
-1,           "SeasonPeriods",         BEMP_Obj, 12,  1,  0,  Pres,  "",                 0,  1, "CPR_SeasonTimePeriod", 0, "",      1005, "Utility that uses this rate",  "" 
-1,           "NumTimeOfUsePeriods",   BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                     1005, "Number of TimeOfUsePeriods in the RateSeason",  "n/a" 
-1,           "TimeOfUsePeriods",      BEMP_Obj, 12,  1,  0,  Pres,  "",                 0,  1, "CPR_TOUPeriod", 0, "",             1005, "List of time of use periods that break down the season",  "" 
-1,           "SeasonCosts",           BEMP_Obj,  1,  0,  0,  Pres,  "",                 0,  1, "CPR_SeasonCost", 0, "",            1005, "Season specific cost components",    "SeasonCostComponents" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                             LName                     Template                MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                            ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_SeasonTimePeriod",  "CPR_SeasonTimePeriod",   "SeasonTimePeriod <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                     VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                     HI    LName                  
-;                                    ----------------------------------------------------------------------------------------------------------
-1,           "StartDay",              BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Start day of the time period",  "" 
-1,           "StartMonth",            BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Start month of the time period",  "" 
-1,           "EndDay",                BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "End day of the time period",  "" 
-1,           "EndMonth",              BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "End month of the time period",  "" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                      LName                    Template         MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                     ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_TOUPeriod",  "CPR_TimeOfUsePeriod",   "TOUPeriod <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                     VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                     HI    LName                  
-;                                    ----------------------------------------------------------------------------------------------------------
-1,           "TOUName",               BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Name of the time of use period",    "Name" 
-1,           "NumTimePeriods",        BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Number of TimePeriods in the TOUPeriod",  "n/a" 
-1,           "TimePeriods",           BEMP_Obj, 20,  1,  0,  Pres,  "",                 0,  1, "CPR_DailyTimePeriod", 0, "",   1005, "List of contiguous time periods that represent the TOU period",  "" 
-1,           "CostComponents",        BEMP_Obj,  1,  0,  0,  Pres,  "",                 0,  1, "CPR_PeriodCost", 0, "",        1005, "Cost components that apply to the TOU period",  "" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                            LName                    Template               MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                           ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_DailyTimePeriod",  "CPR_DailyTimePeriod",   "DailyTimePeriod <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                     VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                     HI    LName                  
-;                                    ----------------------------------------------------------------------------------------------------------
-1,           "StartTime",             BEMP_Flt,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Start time of the time period inclusive",  "" 
-1,           "EndTime",               BEMP_Flt,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "End time of the time period exclusive",  "" 
-1,           "ApplicableDays",        BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Days of the week this applies to",  "" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                       LName               Template          MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                      ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_SeasonCost",  "CPR_SeasonCost",   "SeasonCost <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                               VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                               HI    LName                  
-;                                              --------------------------------------------------------------------------------------------------------------------
-1,           "NumFixedCosts",                   BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                            1005, "Number of FixedCosts in the SeasonCost",  "n/a" 
-1,           "FixedCosts",                      BEMP_Obj, 20,  1,  0,  Pres,  "",                 0,  1, "CPR_FixedCost", 0, "",                    1005, "List of fixed cost components that apply to the season",    "FixedCostComponents" 
-1,           "NumMinimumBillCosts",             BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                            1005, "Number of MinimumBillCosts in the SeasonCost",  "n/a" 
-1,           "MinimumBillCosts",                BEMP_Obj, 20,  1,  0,  Pres,  "",                 0,  1, "CPR_FixedCost", 0, "",                    1005, "List of minimum bill cost components that apply to the season",    "MinimumBillCostComponents" 
-1,           "NumNetSurplusCompensationCosts",  BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                            1005, "Number of NetSurplusCompensationCosts in the SeasonCost",  "n/a" 
-1,           "NetSurplusCompensationCosts",     BEMP_Obj, 20,  1,  0,  Pres,  "",                 0,  1, "CPR_NetSurplusCompensationCost", 0, "",   1005, "List of net surplus compensation cost components that apply to the season",    "NetSurplusCompensationCostComponents" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                      LName              Template         MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                     ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_FixedCost",  "CPR_FixedCost",   "FixedCost <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                     VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                     HI    LName                  
-;                                    ----------------------------------------------------------------------------------------------------------
-1,           "CostName",              BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Name of the cost component",    "Name" 
-1,           "Amount",                BEMP_Flt,  1,  0,  0,  Pres,  "$",                0,  0,                                 1005, "Amount of the fixed charge",  "" 
-1,           "PeriodType",            BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Enum to indicate strategy of how often to apply this charge per billing period",    "CostComponentPeriodType" 
-1,           "Delivery",              BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Boolean indicating if this is a delivery charge or not",  "" 
-1,           "NonBypassable",         BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Boolean indicating if this charge is not offsettable by generation credits",  "" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                                       LName                               Template                  MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                                      ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_NetSurplusCompensationCost",  "CPR_NetSurplusCompensationCost",   "NetSurplusCompCost <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                     VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                     HI    LName                  
-;                                    ----------------------------------------------------------------------------------------------------------
-1,           "CostName",              BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Name of the cost component",    "Name" 
-1,           "NumTiers",              BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Number of Tiers in the NetSurplusCompensationCost",  "n/a" 
-1,           "Tiers",                 BEMP_Obj, 20,  1,  0,  Pres,  "",                 0,  1, "CPR_Tier", 0, "",              1005, "List of tiers for the cost component",  "" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                       LName               Template          MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                      ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_PeriodCost",  "CPR_PeriodCost",   "PeriodCost <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                       VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                       HI    LName                  
-;                                      ------------------------------------------------------------------------------------------------------------
-1,           "NumDemandCosts",          BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                   1005, "Number of DemandCosts in the PeriodCost",  "n/a" 
-1,           "DemandCosts",             BEMP_Obj, 20,  1,  0,  Pres,  "",                 0,  1, "CPR_DemandCost", 0, "",          1005, "List of Demand cost components that apply to the TOU period",    "DemandCostComponents" 
-1,           "NumEnergyCosts",          BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                   1005, "Number of EnergyCosts in the PeriodCost",  "n/a" 
-1,           "EnergyCosts",             BEMP_Obj, 20,  1,  0,  Pres,  "",                 0,  1, "CPR_EnergyCost", 0, "",          1005, "List of energy cost components that apply to the TOU period",    "EnergyCostComponents" 
-1,           "NumNetExcessCreditCosts", BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                   1005, "Number of NetExcessCreditCosts in the PeriodCost",  "n/a" 
-1,           "NetExcessCreditCosts",    BEMP_Obj, 20,  1,  0,  Pres,  "",                 0,  1, "CPR_NetExcessCreditCost", 0, "", 1005, "List of net excess credit cost components that apply to the TOU period",    "NetExcessCreditCostComponents" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                       LName               Template          MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                      ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_DemandCost",  "CPR_DemandCost",   "DemandCost <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                     VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                     HI    LName                  
-;                                    ----------------------------------------------------------------------------------------------------------
-1,           "CostName",              BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Name of the cost component",    "Name" 
-1,           "DemandChargeStrategy",  BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Strategy for converting maximum demand to charges",  "" 
-1,           "NonBypassable",         BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Boolean indicating if this charge is not offsettable by generation credits",  "" 
-1,           "NumTiers",              BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Number of Tiers in the DemandCost",  "n/a" 
-1,           "Tiers",                 BEMP_Obj, 20,  1,  0,  Pres,  "",                 0,  1, "CPR_Tier", 0, "",              1005, "List of tiers for the cost component",  "" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                       LName               Template          MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                      ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_EnergyCost",  "CPR_EnergyCost",   "EnergyCost <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                        VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                     HI    LName                  
-;                                       ----------------------------------------------------------------------------------------------------------
-1,           "CostName",                 BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Name of the cost component",    "Name" 
-1,           "PeriodType",               BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Enum to indicate strategy of how often to apply this charge per billing period",    "CostComponentPeriodType" 
-1,           "Delivery",                 BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Boolean indicating if this is a delivery charge or not",  "" 
-1,           "NonBypassable",            BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Boolean indicating if this charge is not offsettable by generation credits",  "" 
-1,           "TotalConsumption",         BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Boolean indicating if this cost component uses total consumption. This means that it should be applied on the total inflow load rather than the net load.",  "" 
-1,           "NumTiers",                 BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Number of Tiers in the EnergyCost",  "n/a" 
-1,           "Tiers",                    BEMP_Obj, 20,  1,  0,  Pres,  "",                 0,  1, "CPR_Tier", 0, "",              1005, "List of tiers for the cost component",  "" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                                LName                        Template                   MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                               ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_NetExcessCreditCost",  "CPR_NetExcessCreditCost",   "NetExcessCreditCost <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                     VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                     HI    LName                  
-;                                    ----------------------------------------------------------------------------------------------------------
-1,           "CostName",              BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Name of the cost component",    "Name" 
-1,           "CostPeriodType",        BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Enum to indicate strategy of how often to apply this charge per billing period",    "CostComponentPeriodType" 
-1,           "NumTiers",              BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Number of Tiers in the NetExcessCreditCost",  "n/a" 
-1,           "Tiers",                 BEMP_Obj, 20,  1,  0,  Pres,  "",                 0,  1, "CPR_Tier", 0, "",              1005, "List of tiers for the cost component",  "" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                          LName                  Template             MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                         ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_HourlyTOUCost",  "CPR_HourlyTOUCost",   "HourlyTOUCost <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                        VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                     HI    LName                  
-;                                       ----------------------------------------------------------------------------------------------------------
-1,           "CostName",                 BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Name of the cost component",    "Name" 
-1,           "ApplicableDays",           BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Days of the week this applies to",  "" 
-1,           "NumHourlyTimeOfUseMonths", BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Number of HourlyTimeOfUseMonths in the HourlyTOUCost",  "n/a" 
-1,           "HourlyTimeOfUseMonths",    BEMP_Obj, 12,  1,  0,  Pres,  "",                 0,  1, "CPR_HourlyTOUMonth", 0, "",    1005, "List of tiers for the cost component",  "" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                           LName                   Template              MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                          ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_HourlyTOUMonth",  "CPR_HourlyTOUMonth",   "HourlyTOUMonth <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                     VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                     HI    LName                  
-;                                    ----------------------------------------------------------------------------------------------------------
-1,           "MonthName",             BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Name of the month",  "" 
-1,           "Prices",                BEMP_Flt, 24,  1,  0,  Pres,  "$/unit",           0,  0,                                 1005, "Array with 24 indexes representing the hourly export price for each hour of the day in this month",  "" 
-;------------------------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------------------------
-;                 LName         Template    MD  MR  AC   Parent1   P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
-;                ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "CPR_Tier",  "CPR_Tier",   "Tier <i>",   0,  0,  0, "",        "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  0,   1000
-;
-;                                     VType     NV  WA  SP    US    UL                UT  NO  OC     CV  CP                     HI    LName                  
-;                                    ----------------------------------------------------------------------------------------------------------
-1,           "TierNumber",            BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                                 1005, "Tier number for ordering",  "" 
-1,           "Price",                 BEMP_Flt,  1,  0,  0,  Pres,  "$/unit",           0,  0,                                 1005, "Price per kwh/thm for the tier",  "" 
-1,           "Quantity",              BEMP_Flt,  1,  0,  0,  Pres,  "units",            0,  0,                                 1005, "Quantity of kwh/thm needed to fill the tier",  "" 
-;------------------------------------------------------------------------------------------------
-
-
-;------------------------------------------------------------------------------------------------
-;------------------------------------------------------------------------------------------------
 
 -1 

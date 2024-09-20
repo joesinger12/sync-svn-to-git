@@ -113,8 +113,8 @@ RULELIST "CF1RPRF01E_Proposed"  1 0 0 1
    ; SAC 7/3/19 - moved A14, A16 & A18 areas from Auto to here to enable logic related to RunScope (tic #1118)
    "Set cf1rSection_A:A14_NewConditionedFloorArea"         cf1rSection_A:A14_NewConditionedFloorArea         =
       {  if (ResProj:RunScope = 1 .AND. ResProj:IsAddAlone > 0)
-         then  atof( Format( "%.2f", ResProj:AddAloneAddedAreaWithMult ) )
-         else  atof( Format( "%.2f", ResProj:CondAdditionSizeWithMult ) )  endif  }
+         then  atof( Format( "%.2f", ResProj:AddAloneAddedArea ) )
+         else  atof( Format( "%.2f", ResProj:CondAdditionSize ) )  endif  }
 
    "Set cf1rSection_A:A16_ExistingConditionedFloorArea"    cf1rSection_A:A16_ExistingConditionedFloorArea    =    ; SAC 7/24/19 - mods to set ExistArea based on project runscope (issue from CEC/MS)
       {  if (ResProj:RunScope == 2 .AND. IfValidAnd( ResProj:CondFloorArea >= ResProj:AdditionCFA ))
@@ -1635,10 +1635,6 @@ RULELIST "CF1RPRF01E_Proposed"  1 0 0 1
                   case 194 :  "Generic26kW"      ; "generic 26kW"
                   case 195 :  "Generic40kW"      ; "generic 40kW"
                   case 196 :  "Generic45kW"      ; "generic 45kW"
-                  case 87 :  "Tier4Generic40"   ; "AWHSTier4Generic40"    ; NEEA generic tier 4 options - SAC 04/25/24 (tic #3595)
-                  case 88 :  "Tier4Generic50"   ; "AWHSTier4Generic50"
-                  case 89 :  "Tier4Generic65"   ; "AWHSTier4Generic65"
-                  case 90 :  "Tier4Generic80"   ; "AWHSTier4Generic80"
                   default :  UNDEFINED
                endswitch  endif  }
 
@@ -1762,10 +1758,6 @@ RULELIST "CF1RPRF01E_Proposed"  1 0 0 1
                   case 194 :  "Generic26kW"      ; "generic 26kW"
                   case 195 :  "Generic40kW"      ; "generic 40kW"
                   case 196 :  "Generic45kW"      ; "generic 45kW"
-                  case 87 :  "Tier4Generic40"   ; "AWHSTier4Generic40"    ; NEEA generic tier 4 options - SAC 04/25/24 (tic #3595)
-                  case 88 :  "Tier4Generic50"   ; "AWHSTier4Generic50"
-                  case 89 :  "Tier4Generic65"   ; "AWHSTier4Generic65"
-                  case 90 :  "Tier4Generic80"   ; "AWHSTier4Generic80"
                   default :  UNDEFINED
                endswitch  endif  }
 
@@ -2179,10 +2171,6 @@ RULELIST "CF1RPRF01E_Proposed"  1 0 0 1
                                     case "Rheem 2020 Builder 65"   :  "Rheem2020Build65"
                                     case "Rheem 2020 Builder 80"   :  "Rheem2020Build80"
                                     case "AO Smith CAHP-120"       :  "AOSmithCAHP120"    ; SAC 02/20/21 (tic #1260)
-                                    case "AWHSTier4Generic40" :  "AWHSTier4Generic40"  ; SAC 04/25/24 (tic #3595)
-                                    case "AWHSTier4Generic50" :  "AWHSTier4Generic50"
-                                    case "AWHSTier4Generic65" :  "AWHSTier4Generic65"
-                                    case "AWHSTier4Generic80" :  "AWHSTier4Generic80"
                                     default  :  UNDEFINED
                                 endswitch
                     endif endif  }
@@ -4244,7 +4232,7 @@ RULELIST "CF1RPRF01E_Proposed"  1 0 0 1
                   default  :  UNDEFINED
                endswitch  }         ; other options: BalancedCentralVent / BalancedERV / CentralFanIntegrated / SupplyCentralVent
     "Set IAQVentRpt:CF1R_FanIAQRow:Ee05_RecoveryEfficiency" IAQVentRpt:CF1R_FanIAQRow:Ee05_RecoveryEfficiency  =
-      {  if (IfValidAnd( Proj:AnalysisVersion >= 190200 )==0 .AND. IfValidAnd( IAQRecovEffect >= 0 )) then  atof( Format( "%.2f", IAQRecovEffect ) )  else  UNDEFINED  endif  }
+      {  if (IfValidAnd( ResProj:AnalysisVersion >= 190200 )==0 .AND. IfValidAnd( IAQRecovEffect >= 0 )) then  atof( Format( "%.2f", IAQRecovEffect ) )  else  UNDEFINED  endif  }
 ;    "Set IAQVentRpt:CF1R_FanIAQRow:Ee06_IAQ_VentilationVerificationRequired" IAQVentRpt:CF1R_FanIAQRow:Ee06_IAQ_VentilationVerificationRequired  = {  
 ;           if ( ResProj:HERSOther:IAQFan > 0 )
 ;           then ResProj:HERSOther:IAQFanRptMsg
@@ -4252,12 +4240,12 @@ RULELIST "CF1RPRF01E_Proposed"  1 0 0 1
 ;           else UNDEFINED endif }
 
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee05a_SensibleRecoveryEfficiency"           IAQVentRpt:CF1R_FanIAQRow:Ee05a_SensibleRecoveryEfficiency  =     ; SAC 2/10/20 (tic #1174)
-      {  if (IfValidAnd( Proj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( SensRecovEff > 0 )) then  int( SensRecovEff + 0.5 )  else  UNDEFINED  endif  }
+      {  if (IfValidAnd( ResProj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( SensRecovEff > 0 )) then  int( SensRecovEff + 0.5 )  else  UNDEFINED  endif  }
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee05a_NotApplicableMessage"                 IAQVentRpt:CF1R_FanIAQRow:Ee05a_NotApplicableMessage  =  
       {  if (LocalStatus( CF1R_FanIAQRow:Ee05a_SensibleRecoveryEfficiency ) < 1) then  "n/a"  else  UNDEFINED  endif  }
 
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee05b_AdjustedSensibleRecoveryEfficiency"   IAQVentRpt:CF1R_FanIAQRow:Ee05b_AdjustedSensibleRecoveryEfficiency  =
-      {  if (IfValidAnd( Proj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( AdjSensRecovEff > 0 )) then  int( AdjSensRecovEff + 0.5 )  else  UNDEFINED  endif  }
+      {  if (IfValidAnd( ResProj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( AdjSensRecovEff > 0 )) then  int( AdjSensRecovEff + 0.5 )  else  UNDEFINED  endif  }
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee05b_NotApplicableMessage"                 IAQVentRpt:CF1R_FanIAQRow:Ee05b_NotApplicableMessage  =  
       {  if (LocalStatus( CF1R_FanIAQRow:Ee05b_AdjustedSensibleRecoveryEfficiency ) < 1) then  "n/a"  else  UNDEFINED  endif  }
 
@@ -4283,32 +4271,32 @@ RULELIST "CF1RPRF01E_Proposed"  1 0 0 1
          else  ResProj:SFamIAQExtArea  endif  }
 
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee12_LowRatedFanFlowCapacity"   IAQVentRpt:CF1R_FanIAQRow:Ee12_LowRatedFanFlowCapacity  =             ; SAC 2/10/20 (tic #1174)
-      {  if (IfValidAnd( Proj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpCFM[1]  > 0 )) then  atof( Format( "%.2f", HVIListedInterpCFM[1] ) )  else  UNDEFINED  endif  }
+      {  if (IfValidAnd( ResProj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpCFM[1]  > 0 )) then  atof( Format( "%.2f", HVIListedInterpCFM[1] ) )  else  UNDEFINED  endif  }
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee12_NotApplicableMessage"      IAQVentRpt:CF1R_FanIAQRow:Ee12_NotApplicableMessage  =  
       {  if (LocalStatus( CF1R_FanIAQRow:Ee12_LowRatedFanFlowCapacity ) < 1) then  "n/a"  else  UNDEFINED  endif  }
 
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee13_LowRatedCFM_SRE"           IAQVentRpt:CF1R_FanIAQRow:Ee13_LowRatedCFM_SRE  =  
-      {  if (IfValidAnd( Proj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpSRE[1]  > 0 )) then  int( HVIListedInterpSRE[1]  + 0.5 )  else  UNDEFINED  endif  }
+      {  if (IfValidAnd( ResProj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpSRE[1]  > 0 )) then  int( HVIListedInterpSRE[1]  + 0.5 )  else  UNDEFINED  endif  }
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee13_NotApplicableMessage"      IAQVentRpt:CF1R_FanIAQRow:Ee13_NotApplicableMessage  =  
       {  if (LocalStatus( CF1R_FanIAQRow:Ee13_LowRatedCFM_SRE ) < 1) then  "n/a"  else  UNDEFINED  endif  }
 
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee14_LowRatedCFM_ASRE"          IAQVentRpt:CF1R_FanIAQRow:Ee14_LowRatedCFM_ASRE  =  
-      {  if (IfValidAnd( Proj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpASRE[1] > 0 )) then  int( HVIListedInterpASRE[1] + 0.5 )  else  UNDEFINED  endif  }
+      {  if (IfValidAnd( ResProj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpASRE[1] > 0 )) then  int( HVIListedInterpASRE[1] + 0.5 )  else  UNDEFINED  endif  }
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee14_NotApplicableMessage"      IAQVentRpt:CF1R_FanIAQRow:Ee14_NotApplicableMessage  =  
       {  if (LocalStatus( CF1R_FanIAQRow:Ee14_LowRatedCFM_ASRE ) < 1) then  "n/a"  else  UNDEFINED  endif  }
 
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee15_HighRatedFanFlowCapacity"  IAQVentRpt:CF1R_FanIAQRow:Ee15_HighRatedFanFlowCapacity  =  
-      {  if (IfValidAnd( Proj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpCFM[1]  > 0 )) then  atof( Format( "%.2f", HVIListedInterpCFM[2] ) )  else  UNDEFINED  endif  }
+      {  if (IfValidAnd( ResProj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpCFM[1]  > 0 )) then  atof( Format( "%.2f", HVIListedInterpCFM[2] ) )  else  UNDEFINED  endif  }
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee15_NotApplicableMessage"      IAQVentRpt:CF1R_FanIAQRow:Ee15_NotApplicableMessage  =  
       {  if (LocalStatus( CF1R_FanIAQRow:Ee15_HighRatedFanFlowCapacity ) < 1) then  "n/a"  else  UNDEFINED  endif  }
 
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee16_HighRatedCFM_SRE"          IAQVentRpt:CF1R_FanIAQRow:Ee16_HighRatedCFM_SRE  =  
-      {  if (IfValidAnd( Proj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpSRE[2]  > 0 )) then  int( HVIListedInterpSRE[2]  + 0.5 )  else  UNDEFINED  endif  }
+      {  if (IfValidAnd( ResProj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpSRE[2]  > 0 )) then  int( HVIListedInterpSRE[2]  + 0.5 )  else  UNDEFINED  endif  }
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee16_NotApplicableMessage"      IAQVentRpt:CF1R_FanIAQRow:Ee16_NotApplicableMessage  =  
       {  if (LocalStatus( CF1R_FanIAQRow:Ee16_HighRatedCFM_SRE ) < 1) then  "n/a"  else  UNDEFINED  endif  }
 
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee17_HighRatedCFM_ASRE"         IAQVentRpt:CF1R_FanIAQRow:Ee17_HighRatedCFM_ASRE  =  
-      {  if (IfValidAnd( Proj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpASRE[2] > 0 )) then  int( HVIListedInterpASRE[2] + 0.5 )  else  UNDEFINED  endif  }
+      {  if (IfValidAnd( ResProj:AnalysisVersion >= 190200 ) .AND. IfValidAnd( HVIListedInterpASRE[2] > 0 )) then  int( HVIListedInterpASRE[2] + 0.5 )  else  UNDEFINED  endif  }
    "Set IAQVentRpt:CF1R_FanIAQRow:Ee17_NotApplicableMessage"      IAQVentRpt:CF1R_FanIAQRow:Ee17_NotApplicableMessage  =  
       {  if (LocalStatus( CF1R_FanIAQRow:Ee17_HighRatedCFM_ASRE ) < 1) then  "n/a"  else  UNDEFINED  endif  }
 
@@ -5540,14 +5528,6 @@ RULELIST "CF1RPRF01E_cf1rSection_DwellInfo_Proposed_MultiFamily"  1 0 0 1
       "Set DwellUnitRpt:CF1R_DwellUnitRow:DwellInfo01_ResidentialDwellingUnitName" DwellUnitRpt:CF1R_DwellUnitRow:DwellInfo01_ResidentialDwellingUnitName  = {  DwellUnitRpt:Name  }
       "Set DwellUnitRpt:CF1R_DwellUnitRow:DwellInfo02_ResidentialDwellingUnitDescriptor" DwellUnitRpt:CF1R_DwellUnitRow:DwellInfo02_ResidentialDwellingUnitDescriptor  = {  DwellUnitRpt:DwellUnitTypeRef  }
       "Set DwellUnitRpt:CF1R_DwellUnitRow:DwellInfo03_ThermalZoneName" DwellUnitRpt:CF1R_DwellUnitRow:DwellInfo03_ThermalZoneName  = {  DwellUnitRpt:ZoneRef  }
-      ; NK 6/26/23 Added DwellInfo04_ZoneGroupMultiplier per GH 2022-CBECC-NonRes-PRF-Schema Issue #82
-      "Set DwellUnitRpt:CF1R_DwellUnitRow:DwellInfo04_ZoneGroupMultiplier" DwellUnitRpt:CF1R_DwellUnitRow:DwellInfo04_ZoneGroupMultiplier  = {  DwellUnitRpt:ZoneMultRef  }
-      ; RJH 6/25/23 Added DwellInfo04a_ImprovementStatus per GH 2022-CBECC-NonRes-PRF-Schema Issue #43
-      "Set DwellUnitRpt:CF1R_DwellUnitRow:DwellInfo04a_ImprovementStatus" DwellUnitRpt:CF1R_DwellUnitRow:DwellInfo04a_ImprovementStatus  = { if (EnumString(Proj:ResCompOpt) = "Addition and/or Alteration" .AND. EnumString(ZoneRef:Status) = "Existing") 
-                                                                                                                                           then "Existing"
-                                                                                                                                           else "New"
-                                                                                                                                           endif }
-                                                                                                                                                 
   ; Rule to add Dwelling Unit Report table rows to the cf1rTableDwellingUnits
       "Set DwellUnitRpt:CF1R_DwellUnitRow:Parent"
          DwellUnitRpt:CF1R_DwellUnitRow:Parent  = {  cf1rTableDwellingUnits:Name  }
@@ -5573,25 +5553,25 @@ RULELIST "CF1RPRF01E_cf1rSection_DwellType_Proposed_MultiFamily"  1 0 0 1
       "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType03_BedroomCount" DwellUnitType:CF1R_DwellUnitTypeRow:DwellType03_BedroomCount  = {  DwellUnitType:NumBedrooms  }
       "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType04_DwellingUnitsIdenticalCount" DwellUnitType:CF1R_DwellUnitTypeRow:DwellType04_DwellingUnitsIdenticalCount  = {  DwellUnitType:NumAssigningDUs  }
     "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[1]"
-         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[1]  = {  if (LocalCompAssigned( SCSysRptRef[1] ) > 0) then  EnumString(SCSysRptRef[1])  else  UNDEFINED  endif  }
+         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[1]  = {  if (LocalStatus( SCSysRptRef[1] ) > 0) then  EnumString(SCSysRptRef[1])  else  UNDEFINED  endif  }
     "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[2]"
-         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[2]  = {  if (LocalCompAssigned( SCSysRptRef[2] ) > 0) then  EnumString(SCSysRptRef[2])  else  UNDEFINED  endif  }
+         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[2]  = {  if (LocalStatus( SCSysRptRef[2] ) > 0) then  EnumString(SCSysRptRef[2])  else  UNDEFINED  endif  }
     "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[3]"
-         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[3]  = {  if (LocalCompAssigned( SCSysRptRef[3] ) > 0) then  EnumString(SCSysRptRef[3])  else  UNDEFINED  endif  }
+         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[3]  = {  if (LocalStatus( SCSysRptRef[3] ) > 0) then  EnumString(SCSysRptRef[3])  else  UNDEFINED  endif  }
     "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[4]"
-         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[4]  = {  if (LocalCompAssigned( SCSysRptRef[4] ) > 0) then  EnumString(SCSysRptRef[4])  else  UNDEFINED  endif  }
+         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[4]  = {  if (LocalStatus( SCSysRptRef[4] ) > 0) then  EnumString(SCSysRptRef[4])  else  UNDEFINED  endif  }
     "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[5]"
-         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[5]  = {  if (LocalCompAssigned( SCSysRptRef[5] ) > 0) then  EnumString(SCSysRptRef[5])  else  UNDEFINED  endif  }
+         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[5]  = {  if (LocalStatus( SCSysRptRef[5] ) > 0) then  EnumString(SCSysRptRef[5])  else  UNDEFINED  endif  }
     "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[6]"
-         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[6]  = {  if (LocalCompAssigned( SCSysRptRef[6] ) > 0) then  EnumString(SCSysRptRef[6])  else  UNDEFINED  endif  }
+         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[6]  = {  if (LocalStatus( SCSysRptRef[6] ) > 0) then  EnumString(SCSysRptRef[6])  else  UNDEFINED  endif  }
     "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[7]"
-         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[7]  = {  if (LocalCompAssigned( SCSysRptRef[7] ) > 0) then  EnumString(SCSysRptRef[7])  else  UNDEFINED  endif  }
+         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[7]  = {  if (LocalStatus( SCSysRptRef[7] ) > 0) then  EnumString(SCSysRptRef[7])  else  UNDEFINED  endif  }
     "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[8]"
-         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[8]  = {  if (LocalCompAssigned( SCSysRptRef[8] ) > 0) then  EnumString(SCSysRptRef[8])  else  UNDEFINED  endif  }
+         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[8]  = {  if (LocalStatus( SCSysRptRef[8] ) > 0) then  EnumString(SCSysRptRef[8])  else  UNDEFINED  endif  }
     "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[9]"
-         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[9]  = {  if (LocalCompAssigned( SCSysRptRef[9] ) > 0) then  EnumString(SCSysRptRef[9])  else  UNDEFINED  endif  }
+         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[9]  = {  if (LocalStatus( SCSysRptRef[9] ) > 0) then  EnumString(SCSysRptRef[9])  else  UNDEFINED  endif  }
     "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[10]"
-         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[10] = {  if (LocalCompAssigned( SCSysRptRef[10]) > 0) then  EnumString(SCSysRptRef[10]) else  UNDEFINED  endif  }
+         DwellUnitType:CF1R_DwellUnitTypeRow:DwellType05_DwellingUnitSpaceConditioningSystemName[10] = {  if (LocalStatus( SCSysRptRef[10]) > 0) then  EnumString(SCSysRptRef[10]) else  UNDEFINED  endif  }
       "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType06_DomesticHotWaterSystemName" DwellUnitType:CF1R_DwellUnitTypeRow:DwellType06_DomesticHotWaterSystemName  = {  DwellUnitType:DHWSysRef  }
       "Set DwellUnitType:CF1R_DwellUnitTypeRow:DwellType07_IAQ_VentilationFanName" DwellUnitType:CF1R_DwellUnitTypeRow:DwellType07_IAQ_VentilationFanName  = {  EnumString( DwellUnitType:IAQOption )  }
 
@@ -6019,17 +5999,16 @@ RULELIST "CF1RPRF01E_cf1rSection_Fenmf_Proposed"  1 0 0 1
       "Set ResWin:CF1R_FenmfRow:Fen04mf_Azimuth" ResWin:CF1R_FenmfRow:Fen04mf_Azimuth  = {  atof( Format( "%.2f", Azimuth ) )  }
       "Set ResWin:CF1R_FenmfRow:Fen05mf_NotApplicableMessage" ResWin:CF1R_FenmfRow:Fen05mf_NotApplicableMessage  = {  "NotApplicable"  }
       "Set ResWin:CF1R_FenmfRow:Fen06mf_NotApplicableMessage" ResWin:CF1R_FenmfRow:Fen06mf_NotApplicableMessage  = {  "NotApplicable"  }
-      "Set ResWin:CF1R_FenmfRow:Fen07mf_FenestrationIdenticalMultiplier" ResWin:CF1R_FenmfRow:Fen07mf_FenestrationIdenticalMultiplier  = {  atof( Format( "%.2f", ResZnGrp:Mult * Multiplier ) )  }
+      "Set ResWin:CF1R_FenmfRow:Fen07mf_FenestrationIdenticalMultiplier" ResWin:CF1R_FenmfRow:Fen07mf_FenestrationIdenticalMultiplier  = {  atof( Format( "%.2f", Multiplier ) )  }
       "Set ResWin:CF1R_FenmfRow:Fen07mf_NotApplicableMessage" ResWin:CF1R_FenmfRow:Fen07mf_NotApplicableMessage  =
          {  if (LocalStatus( CF1R_FenmfRow:Fen07mf_FenestrationIdenticalMultiplier ) < 1) then  "NotApplicable"  else  UNDEFINED  endif  }
-      "Set ResWin:CF1R_FenmfRow:Fen08mf_FenestrationAssemblyArea" ResWin:CF1R_FenmfRow:Fen08mf_FenestrationAssemblyArea  = {  atof( Format( "%.2f", Area * Multiplier * ResZnGrp:Mult ) )  }
+      "Set ResWin:CF1R_FenmfRow:Fen08mf_FenestrationAssemblyArea" ResWin:CF1R_FenmfRow:Fen08mf_FenestrationAssemblyArea  = {  atof( Format( "%.2f", Area * Multiplier ) )  }
       "Set ResWin:CF1R_FenmfRow:Fen09mf_FenestrationAssemblyUFactor" ResWin:CF1R_FenmfRow:Fen09mf_FenestrationAssemblyUFactor  = {  atof( Format( "%.2f", NFRCUfactor ) )  }
-      ; replaced 'ADFP' w/ 'NA6' - SAC 04/20/24 (tic #3576)
       "Set ResWin:CF1R_FenmfRow:Fen10mf_FenestrationCertificationMethod" ResWin:CF1R_FenmfRow:Fen10mf_FenestrationCertificationMethod  = { 
                                                                                                                            switch( EnumString( UfactorSHGCSource ) )
                                                                                                                               case "NFRC"    :  "NFRCRated"
                                                                                                                               case "default" :  "CECDefaultPerformance"
-                                                                                                                              case "NA6"     :  "NA6Equations"
+                                                                                                                              case "ADFP"    :  "NA6Equations"
                                                                                                                               default  :  UNDEFINED
                                                                                                                            endswitch  }
       "Set ResWin:CF1R_FenmfRow:Fen11mf_FenestrationAssemblySHGC" ResWin:CF1R_FenmfRow:Fen11mf_FenestrationAssemblySHGC  = {  atof( Format( "%.2f", NFRCSHGC ) )  }
@@ -6037,7 +6016,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Fenmf_Proposed"  1 0 0 1
                                                                                                                            switch( EnumString( UfactorSHGCSource ) )
                                                                                                                               case "NFRC"    :  "NFRCRated"
                                                                                                                               case "default" :  "CECDefaultPerformance"
-                                                                                                                              case "NA6"     :  "NA6Equations"
+                                                                                                                              case "ADFP"    :  "NA6Equations"
                                                                                                                               default  :  UNDEFINED
                                                                                                                            endswitch  }
       "Set ResWin:CF1R_FenmfRow:Fen12mf_NotApplicableMessage" ResWin:CF1R_FenmfRow:Fen12mf_NotApplicableMessage  =
@@ -6076,12 +6055,11 @@ RULELIST "CF1RPRF01E_cf1rSection_Fenmf_Proposed"  1 0 0 1
       "Set ResSkylt:CF1R_FenmfRow:Fen03mf_NotApplicableMessage" ResSkylt:CF1R_FenmfRow:Fen03mf_NotApplicableMessage  =
          {  if (LocalStatus( CF1R_FenmfRow:Fen03mf_PartitionName ) < 1) then  "NotApplicable"  else  UNDEFINED  endif  }
       "Set ResSkylt:CF1R_FenmfRow:Fen04mf_Azimuth" ResSkylt:CF1R_FenmfRow:Fen04mf_Azimuth  = {  atof( Format( "%.2f", Azimuth ) )  }
-      ; replaced 'ADFP' w/ 'NA6' - SAC 04/20/24 (tic #3576)
       "Set ResSkylt:CF1R_FenmfRow:Fen05mf_FenestrationCertificationMethod" ResSkylt:CF1R_FenmfRow:Fen05mf_FenestrationCertificationMethod  = { 
                                                                                                                            switch( EnumString( UfactorSHGCSource ) )
                                                                                                                               case "NFRC"    :  "NFRCRated"
                                                                                                                               case "default" :  "CECDefaultPerformance"
-                                                                                                                              case "NA6"     :  "NA6Equations"
+                                                                                                                              case "ADFP"    :  "ADFP"
                                                                                                                               default  :  UNDEFINED
                                                                                                                            endswitch  }
       "Set ResSkylt:CF1R_FenmfRow:Fen06mf_AssemblyContext" ResSkylt:CF1R_FenmfRow:Fen06mf_AssemblyContext  = {  "unknown"  }
@@ -6094,7 +6072,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Fenmf_Proposed"  1 0 0 1
                                                                                                                            switch( EnumString( UfactorSHGCSource ) )
                                                                                                                               case "NFRC"    :  "NFRCRated"
                                                                                                                               case "default" :  "CECDefaultPerformance"
-                                                                                                                              case "NA6"     :  "NA6Equations"
+                                                                                                                              case "ADFP"    :  "NA6Equations"
                                                                                                                               default  :  UNDEFINED
                                                                                                                            endswitch  }
       "Set ResSkylt:CF1R_FenmfRow:Fen11mf_FenestrationAssemblySHGC" ResSkylt:CF1R_FenmfRow:Fen11mf_FenestrationAssemblySHGC  = {  atof( Format( "%.2f", NFRCSHGC ) )  }
@@ -6102,7 +6080,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Fenmf_Proposed"  1 0 0 1
                                                                                                                            switch( EnumString( UfactorSHGCSource ) )
                                                                                                                               case "NFRC"    :  "NFRCRated"
                                                                                                                               case "default" :  "CECDefaultPerformance"
-                                                                                                                              case "NA6"     :  "NA6Equations"
+                                                                                                                              case "ADFP"    :  "ADFP"
                                                                                                                               default  :  UNDEFINED
                                                                                                                            endswitch  }
 
@@ -6770,35 +6748,8 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
                                              IfValidAnd( exFloorAreaServed > FloorAreaServed )) then  UNCHANGED
                                     else  CreateComp( cf1rtblRowDistMF, Name + "DistributionMFRow" )  endif endif  }
 
-   ; create cf1rtblRowDistMF objects for each VCHP system referenced in analysis - SAC 07/02/23 (gh issue #49)
-   "Create cf1rtblRowDistMF object for each pertinent VCHP ResHtPumpSys"     ResHtPumpSys:CF1R_DistRow =
-      {  if (LocalCompAssigned( CF1R_DistRow ) > 0 .OR.
-             IfValidAnd( Type = 22 )==0 .OR.
-             IfValidAnd( VCHPDucts = 0 )) then  UNDEFINED   ; "VCHP - Meets requirements of the VCHP compliance option"
-         else if (FloorAreaServed > 0 .AND. (IsNew .OR. IsAltered)) then  CreateComp( cf1rtblRowDistMF, Format( "%s DistributionMFRow", Name ) )
-         else UNDEFINED endif endif  }
-
-  ; RJH 20230627 Section_Distmf rules to create individual DistributionMF table rows for AirSys:ServesResZn = 1
-   "Create cf1rtblRowDistMF for all relevant AirSys instances"
-      AirSys:CF1R_DistRow   = {  if (IfValidAnd( ServesResZn = 1 )==0) then  UNDEFINED
-                                    else  CreateComp( cf1rtblRowDistMF, Name + "DistributionMFRow" )  endif  }
-
-
   ; Rules to populate New DistributionMF table rows for ALL HVACDist instances
       "Set HVACDist:CF1R_DistRow:Distmf01_SpaceConditioningDistributionSystemName" HVACDist:CF1R_DistRow:Distmf01_SpaceConditioningDistributionSystemName  = {  Name  }
-
-      ; RJH 12/18/23 Per GitHub 2022-CBECC-Com-Schema Issue #111 add output of Status
-      "Set HVACDist:CF1R_DistRow:Distmf01a_Status" HVACDist:CF1R_DistRow:Distmf01a_Status  = { if (Status == 3 .OR. Status == 4) 
-                                                                                               then "New"
-                                                                                               else if (Status == 1) 
-                                                                                                    then "ExistingUnchanged"
-                                                                                                    else if (Status == 2) 
-                                                                                                         then "ExistingAlteration"
-                                                                                                         else UNDEFINED 
-                                                                                                         endif
-                                                                                                    endif
-                                                                                               endif }
-
       "Set HVACDist:CF1R_DistRow:Distmf02_DuctLocation" HVACDist:CF1R_DistRow:Distmf02_DuctLocation  = {  
 																				switch(TypeAbbrevStr)  
 																					case "DuctsAttic"    : "UnconditionedAttic"
@@ -6927,145 +6878,8 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
          {  if ( LocalStatus ( CF1R_DistRow:Distmf08Return_DuctSurfaceArea ) < 1 ) then "n/a" else UNDEFINED endif  }
 
 
-  ; Rules to populate New DistributionMF table rows for ALL VCHP ResHtPumpSys instances
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf01_SpaceConditioningDistributionSystemName" ResHtPumpSys:CF1R_DistRow:Distmf01_SpaceConditioningDistributionSystemName  = {  Name  }
-
-      ; RJH 12/18/23 Per GitHub 2022-CBECC-Com-Schema Issue #111 DO NOT output of Status for ResHtPumpSys (I do not think this Status is assigned in CBECC anyway)
-
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf02_DuctLocation" ResHtPumpSys:CF1R_DistRow:Distmf02_DuctLocation      = {  "ConditionedSpace"  }
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf02_DuctDesignType" ResHtPumpSys:CF1R_DistRow:Distmf02_DuctDesignType  = {  "false"  }
-
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf03Supply_DuctRValue"            ResHtPumpSys:CF1R_DistRow:Distmf03Supply_DuctRValue  = {  UNDEFINED  }
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf03Supply_NotApplicableMessage"  ResHtPumpSys:CF1R_DistRow:Distmf03Supply_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf03Supply_DuctRValue ) < 1 ) then "n/a" else UNDEFINED endif  }
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf03bSupply_DuctRValueNum" ResHtPumpSys:CF1R_DistRow:Distmf03bSupply_DuctRValueNum     = {  UNDEFINED  }
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf03bSupply_NotApplicableMessage" ResHtPumpSys:CF1R_DistRow:Distmf03bSupply_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf03bSupply_DuctRValueNum ) < 1 ) then "n/a" else UNDEFINED endif  }
-
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf04Return_DuctRValue" ResHtPumpSys:CF1R_DistRow:Distmf04Return_DuctRValue  = {  UNDEFINED  }
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf04Return_NotApplicableMessage" ResHtPumpSys:CF1R_DistRow:Distmf04Return_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf04Return_DuctRValue ) < 1 ) then "n/a" else UNDEFINED endif  }
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf04bReturn_DuctRValueNum" ResHtPumpSys:CF1R_DistRow:Distmf04bReturn_DuctRValueNum  = {  UNDEFINED  }
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf04bReturn_NotApplicableMessage" ResHtPumpSys:CF1R_DistRow:Distmf04bReturn_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf04bReturn_DuctRValueNum ) < 1 ) then "n/a" else UNDEFINED endif  }
-
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf05Supply_DuctSpaceType" ResHtPumpSys:CF1R_DistRow:Distmf05Supply_DuctSpaceType  = {  "ConditionedZone"  }
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf06Return_DuctSpaceType" ResHtPumpSys:CF1R_DistRow:Distmf06Return_DuctSpaceType  = {  "ConditionedZone"  }
-
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf07Supply_DuctSurfaceArea" ResHtPumpSys:CF1R_DistRow:Distmf07Supply_DuctSurfaceArea  = {  UNDEFINED  }
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf07Supply_NotApplicableMessage" ResHtPumpSys:CF1R_DistRow:Distmf07Supply_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf07Supply_DuctSurfaceArea ) < 1 ) then "n/a" else UNDEFINED endif  }
-
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf08Return_DuctSurfaceArea" ResHtPumpSys:CF1R_DistRow:Distmf08Return_DuctSurfaceArea  = {  UNDEFINED  }
-      "Set ResHtPumpSys:CF1R_DistRow:Distmf08Return_NotApplicableMessage" ResHtPumpSys:CF1R_DistRow:Distmf08Return_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf08Return_DuctSurfaceArea ) < 1 ) then "n/a" else UNDEFINED endif  }
-
-
-  ; Rules to populate New DistributionMF table rows for relevant AirSys instances RJH 20230702 GH Issue #84
-      "Set AirSys:CF1R_DistRow:Distmf01_SpaceConditioningDistributionSystemName" AirSys:CF1R_DistRow:Distmf01_SpaceConditioningDistributionSystemName  = {  Name + "- Air Dist"  }
-
-      ; RJH 12/18/23 Per GitHub 2022-CBECC-Com-Schema Issue #111 add output of Status
-      "Set AirSys:CF1R_DistRow:Distmf01a_Status" AirSys:CF1R_DistRow:Distmf01a_Status  = { if (DuctStatus == 1) 
-                                                                                           then "ExistingUnchanged"
-                                                                                           else if (Status == 1) 
-                                                                                                then "New"
-                                                                                                else if (Status == 2) 
-                                                                                                     then "ExistingUnchanged"
-                                                                                                     else if (Status == 3) 
-                                                                                                          then "ExistingAlteration"
-                                                                                                          else UNDEFINED
-                                                                                                          endif
-                                                                                                     endif
-                                                                                                endif
-                                                                                           endif }
-
-      "Set AirSys:CF1R_DistRow:Distmf02_DuctLocation" AirSys:CF1R_DistRow:Distmf02_DuctLocation  = { switch(EnumString( DuctLctn ))  
-																										case "Conditioned"   : "ConditionedSpace"
-																										case "Unconditioned" : "UnconditionedSpace"
-																										case "Other"         : "Other" 
-																										case "Ductless"      : "Ductless" 
-																										default : UNDEFINED
-																									 endswitch  }
-      
-      "Set AirSys:CF1R_DistRow:Distmf02_DuctDesignType" AirSys:CF1R_DistRow:Distmf02_DuctDesignType  = { if (IfValidAnd( DuctDesign > 0 )) then "true" else "false" endif }
-
-;      "Set AirSys:CF1R_DistRow:Distmf03Supply_DuctRValue" AirSys:CF1R_DistRow:Distmf03Supply_DuctRValue  = {  DuctInsRpt  }
-      "Set AirSys:CF1R_DistRow:Distmf03Supply_NotApplicableMessage" AirSys:CF1R_DistRow:Distmf03Supply_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf03Supply_DuctRValue ) < 1 ) then "n/a" else UNDEFINED endif  }
-
-      "Set AirSys:CF1R_DistRow:Distmf03bSupply_DuctRValueNum" AirSys:CF1R_DistRow:Distmf03bSupply_DuctRValueNum  = { if (IfValidAnd( DuctDesign > 0 )) 
-                                                                                                                     then atof( Format( "%.2f", ValidOr( SupplyDuctDesignIns, 0 ) ) ) 
-                                                                                                                     else atof( Format( "%.2f", ValidOr( DuctIns, 0 ) ) ) 
-                                                                                                                     endif }
-      "Set AirSys:CF1R_DistRow:Distmf03bSupply_NotApplicableMessage" AirSys:CF1R_DistRow:Distmf03bSupply_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf03bSupply_DuctRValueNum ) < 1 ) then "n/a" else UNDEFINED endif  }
-
-;      "Set AirSys:CF1R_DistRow:Distmf04Return_DuctRValue" AirSys:CF1R_DistRow:Distmf04Return_DuctRValue  = {  DuctInsRpt  }
-      "Set AirSys:CF1R_DistRow:Distmf04Return_NotApplicableMessage" AirSys:CF1R_DistRow:Distmf04Return_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf04Return_DuctRValue ) < 1 ) then "n/a" else UNDEFINED endif  }
-
-      "Set AirSys:CF1R_DistRow:Distmf04bReturn_DuctRValueNum" AirSys:CF1R_DistRow:Distmf04bReturn_DuctRValueNum  = { if (IfValidAnd( DuctDesign > 0 )) 
-                                                                                                                     then atof( Format( "%.2f", ValidOr( ReturnDuctDesignIns, 0 ) ) ) 
-                                                                                                                     else atof( Format( "%.2f", ValidOr( DuctIns, 0 ) ) ) 
-                                                                                                                     endif }
-      "Set AirSys:CF1R_DistRow:Distmf04bReturn_NotApplicableMessage" AirSys:CF1R_DistRow:Distmf04bReturn_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf04bReturn_DuctRValueNum ) < 1 ) then "n/a" else UNDEFINED endif  }
-
-      "Set AirSys:CF1R_DistRow:Distmf05Supply_DuctSpaceType" AirSys:CF1R_DistRow:Distmf05Supply_DuctSpaceType  = { 
-																											switch(EnumString( DuctLctn ))  
-																												case "Conditioned"   : "ConditionedZone"
-																												case "Unconditioned" : "UnconditionedZone"
-																												case "Other"         : "Other" 
-																												case "Ductless"      : "Ductless" 
-																												default : UNDEFINED
-																											endswitch  }
-      "Set AirSys:CF1R_DistRow:Distmf06Return_DuctSpaceType" AirSys:CF1R_DistRow:Distmf06Return_DuctSpaceType  = { 
-																											switch(EnumString( DuctLctn ))  
-																												case "Conditioned"   : "ConditionedZone"
-																												case "Unconditioned" : "UnconditionedZone"
-																												case "Other"         : "Other" 
-																												case "Ductless"      : "Ductless" 
-																												default : UNDEFINED
-																											endswitch  }
-
-      "Set AirSys:CF1R_DistRow:Distmf07Supply_DuctSurfaceArea" AirSys:CF1R_DistRow:Distmf07Supply_DuctSurfaceArea  = {  atof( Format( "%.2f", ValidOr( SupplyDuctArea, 0 ) ) ) }
-      "Set AirSys:CF1R_DistRow:Distmf07Supply_NotApplicableMessage" AirSys:CF1R_DistRow:Distmf07Supply_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf07Supply_DuctSurfaceArea ) < 1 ) then "n/a" else UNDEFINED endif  }
-
-      "Set AirSys:CF1R_DistRow:Distmf08Return_DuctSurfaceArea" AirSys:CF1R_DistRow:Distmf08Return_DuctSurfaceArea  = {  atof( Format( "%.2f", ValidOr( ReturnDuctArea, 0 ) ) ) }
-      "Set AirSys:CF1R_DistRow:Distmf08Return_NotApplicableMessage" AirSys:CF1R_DistRow:Distmf08Return_NotApplicableMessage  =
-         {  if ( LocalStatus ( CF1R_DistRow:Distmf08Return_DuctSurfaceArea ) < 1 ) then "n/a" else UNDEFINED endif  }
-
-
-  ; ----------------------------------------------------------------------
-  ; Rule to set Parent for ALL cf1rTableDistributionMF table rows
-   "Set cf1rtblRowDistMF parent"   cf1rtblRowDistMF:Parent  = {
-         cf1rTableDistributionMF:Name  }
-
-
-
-
-   "Create & initialize new cf1rTableDistributionMFHERS object"
-      cf1rSection_Distmf:Action   = {  CreateChildren( cf1rTableDistributionMFHERS, 1, "DistributionMFHERS" )  }     ; no init needed
-  ; ----------------------------------------------------------------------
-  ; Rules to create individual TableDistributionMFHERS table rows
-   "Create cf1rtblRowDistMFHERS for all HVACDist instances"
-      HVACDist:CF1R_DistMFHERSRow   = {   if (IfValidAnd( FloorAreaServed > 0 )==0) then  UNCHANGED
-                                          else if (IsAltered .AND. IsVerified .AND. IsExisting .AND.
-                                                   IfValidAnd( exFloorAreaServed > FloorAreaServed )) then  UNCHANGED
-                                          else  CreateComp( cf1rtblRowDistMFHERS, Name + "DistributionMFHERSRow" )  endif endif  }
-
-   ; create cf1rtblRowDistMFHERS objects for each VCHP system referenced in analysis
-   "Create cf1rtblRowDistMFHERS object for each pertinent VCHP ResHtPumpSys"     ResHtPumpSys:CF1R_DistMFHERSRow =
-      {  if (LocalCompAssigned( CF1R_DistMFHERSRow ) > 0 .OR.
-             IfValidAnd( Type = 22 )==0 .OR.
-             IfValidAnd( VCHPDucts = 0 )) then  UNDEFINED   ; "VCHP - Meets requirements of the VCHP compliance option"
-         else if (FloorAreaServed > 0 .AND. (IsNew .OR. IsAltered)) then  CreateComp( cf1rtblRowDistMFHERS, Format( "%s DistributionMFHERSRow", Name ) )
-         else UNDEFINED endif endif  }
-
-  ; Rules to populate TableDistributionMFHERS properties for HVACDist rows
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf09a_SpaceConditioningDistributionSystemName" HVACDist:CF1R_DistMFHERSRow:Distmf09a_SpaceConditioningDistributionSystemName  = {  Name  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf09_DuctLeakageTestRequired" HVACDist:CF1R_DistMFHERSRow:Distmf09_DuctLeakageTestRequired  = {
+  ; Rules to populate LMCC Not Reported HERSDist properties
+      "Set HVACDist:CF1R_DistRow:Distmf09_DuctLeakageTestRequired" HVACDist:CF1R_DistRow:Distmf09_DuctLeakageTestRequired  = {
             if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( HERSCheck:DuctLeakage > 0 ))
                  then  "true"
@@ -7073,7 +6887,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
                  endif 
             else UNDEFINED
             endif  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf10_DuctSystemLeakageTarget" HVACDist:CF1R_DistMFHERSRow:Distmf10_DuctSystemLeakageTarget  = {
+      "Set HVACDist:CF1R_DistRow:Distmf10_DuctSystemLeakageTarget" HVACDist:CF1R_DistRow:Distmf10_DuctSystemLeakageTarget  = {
             if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( DuctLeakageValRpt > 0 ))
                  then  atof( Format( "%.2f", DuctLeakageValRpt ) )
@@ -7081,15 +6895,15 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
                  endif 
             else UNDEFINED
             endif  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf10_NotApplicableMessage" HVACDist:CF1R_DistMFHERSRow:Distmf10_NotApplicableMessage  =
+      "Set HVACDist:CF1R_DistRow:Distmf10_NotApplicableMessage" HVACDist:CF1R_DistRow:Distmf10_NotApplicableMessage  =
          {  if (IfValidAnd(Proj:IsLowRiseMFam > 0 )) 
-            then if (LocalStatus ( CF1R_DistMFHERSRow:Distmf10_DuctSystemLeakageTarget ) < 1 ) 
+            then if (LocalStatus ( CF1R_DistRow:Distmf10_DuctSystemLeakageTarget ) < 1 ) 
                  then "n/a" 
                  else UNDEFINED 
                  endif
             else UNDEFINED
             endif  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf11_DuctSystemLeakageTargetMessage" HVACDist:CF1R_DistMFHERSRow:Distmf11_DuctSystemLeakageTargetMessage  = {
+      "Set HVACDist:CF1R_DistRow:Distmf11_DuctSystemLeakageTargetMessage" HVACDist:CF1R_DistRow:Distmf11_DuctSystemLeakageTargetMessage  = {
             if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (LocalStatus( HERSCheck:DuctLkgRptMsg ) > 0)
                  then  HERSCheck:DuctLkgRptMsg
@@ -7098,49 +6912,48 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
                  else  UNDEFINED  endif endif 
             else UNDEFINED
             endif  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf11_NotApplicableMessage" HVACDist:CF1R_DistMFHERSRow:Distmf11_NotApplicableMessage  =
+      "Set HVACDist:CF1R_DistRow:Distmf11_NotApplicableMessage" HVACDist:CF1R_DistRow:Distmf11_NotApplicableMessage  =
          {  if (IfValidAnd(Proj:IsLowRiseMFam > 0 )) 
-            then if (LocalStatus ( CF1R_DistMFHERSRow:Distmf11_DuctSystemLeakageTargetMessage ) < 1 ) 
+            then if (LocalStatus ( CF1R_DistRow:Distmf11_DuctSystemLeakageTargetMessage ) < 1 ) 
                  then "n/a" 
                  else UNDEFINED 
                  endif
             else UNDEFINED
             endif  }
-      ; added checks to prevent rule eval errors when ResDistSys:HERSCheck is not created/assigned (happens when assigned flr area = 0) - SAC 08/12/24
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf12_IsDuctLocationVerificationRequired" HVACDist:CF1R_DistMFHERSRow:Distmf12_IsDuctLocationVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+      "Set HVACDist:CF1R_DistRow:Distmf12_IsDuctLocationVerificationRequired" HVACDist:CF1R_DistRow:Distmf12_IsDuctLocationVerificationRequired  = {
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( HERSCheck:DuctLocation > 0 ))
                  then  "true"
                  else  "false"  
                  endif 
             else UNDEFINED
             endif  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf13_DuctsInCondExcept12CreditTaken" HVACDist:CF1R_DistMFHERSRow:Distmf13_DuctsInCondExcept12CreditTaken  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+      "Set HVACDist:CF1R_DistRow:Distmf13_DuctsInCondExcept12CreditTaken" HVACDist:CF1R_DistRow:Distmf13_DuctsInCondExcept12CreditTaken  = {
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (EnumString( HERSCheck:DuctLocRptMsg ) == "Ducts located within the conditioned space (except < 12 lineal ft)")
                  then  "true"
                  else  "false"  
                  endif 
             else UNDEFINED
             endif  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf14_DuctDesignVerificationRequired" HVACDist:CF1R_DistMFHERSRow:Distmf14_DuctDesignVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+      "Set HVACDist:CF1R_DistRow:Distmf14_DuctDesignVerificationRequired" HVACDist:CF1R_DistRow:Distmf14_DuctDesignVerificationRequired  = {
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( HERSCheck:RetDuctDesign > 0 ) .OR. IfValidAnd( HERSCheck:SupDuctDesign > 0 ))
                  then  "true"
                  else  "false"  
                  endif 
             else UNDEFINED
             endif  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf15_DuctsBuriedVerificationRequired" HVACDist:CF1R_DistMFHERSRow:Distmf15_DuctsBuriedVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+      "Set HVACDist:CF1R_DistRow:Distmf15_DuctsBuriedVerificationRequired" HVACDist:CF1R_DistRow:Distmf15_DuctsBuriedVerificationRequired  = {
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( HERSCheck:BuriedDucts > 0 ))
                  then  "true"
                  else  "false"  
                  endif 
             else UNDEFINED
             endif  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf16_DuctsDeeplyBuriedComplianceCreditTaken" HVACDist:CF1R_DistMFHERSRow:Distmf16_DuctsDeeplyBuriedComplianceCreditTaken  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+      "Set HVACDist:CF1R_DistRow:Distmf16_DuctsDeeplyBuriedComplianceCreditTaken" HVACDist:CF1R_DistRow:Distmf16_DuctsDeeplyBuriedComplianceCreditTaken  = {
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( HERSCheck:DeeplyBuriedDucts > 0 ))
                  then  "true"
                  else  "false"  
@@ -7148,8 +6961,8 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
             else UNDEFINED
             endif  }
          ; SAC 7/1/19 - revised following rule to flag Bb08_LowLeakageAirHandlingUnitVerificationRequired true iff user specifies "Low Leakage Air Handler" (tic #1127)
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf17_LowLeakageAirHandlingUnitVerificationRequired" HVACDist:CF1R_DistMFHERSRow:Distmf17_LowLeakageAirHandlingUnitVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+      "Set HVACDist:CF1R_DistRow:Distmf17_LowLeakageAirHandlingUnitVerificationRequired" HVACDist:CF1R_DistRow:Distmf17_LowLeakageAirHandlingUnitVerificationRequired  = {
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd( HERSCheck:cf1rLowLeakageAH > 0 ))
                  then  "true"
                  else  "false"  
@@ -7157,9 +6970,7 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
             else UNDEFINED
             endif  }
          ; SAC 4/30/19 - fixed bug in following rule, replacing left side HERSDist:... w/ HVACDist:HERSCheck:... to have access to HVACDist properties
-         ; RJH 12/22/23 - Per GitHub 2022-CBECC-Com-Schema Issue #120: switch EnumString test for Distmf18_ and Distmf19_ and change Distmf19_ element name
-         ; RJH 2/29/24 - Per GitHub 2022-CBECC-Com-Schema Issue #120: switch back EnumString test for Distmf18_ and Distmf19_
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf18_LowLeakDuctsConditionedVerificationRequired" HVACDist:CF1R_DistMFHERSRow:Distmf18_LowLeakDuctsConditionedVerificationRequired  = {
+      "Set HVACDist:CF1R_DistRow:Distmf18_LowLeakDuctsConditionedVerificationRequired" HVACDist:CF1R_DistRow:Distmf18_LowLeakDuctsConditionedVerificationRequired  = {
             if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (EnumString( Type ) == "Verified low-leakage ducts entirely in conditioned space")
                  then  "true"
@@ -7167,15 +6978,15 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
                  endif 
             else UNDEFINED
             endif  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf19_DuctsInConditionedSpaceVerification" HVACDist:CF1R_DistMFHERSRow:Distmf19_DuctsInConditionedSpaceVerification  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ) .AND. LocalCompAssigned( HERSCheck ) > 0)
+      "Set HVACDist:CF1R_DistRow:Distmf19_DuctsInCondSpc" HVACDist:CF1R_DistRow:Distmf19_DuctsInCondSpc  = {
+            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (EnumString( HERSCheck:DuctLocRptMsg ) == "Ducts located entirely in conditioned space confirmed by duct leakage testing")
                  then  "true"
                  else  "false"  
                  endif 
             else UNDEFINED
             endif  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf20_HasBypassDuct" HVACDist:CF1R_DistMFHERSRow:Distmf20_HasBypassDuct  = {
+      "Set HVACDist:CF1R_DistRow:Distmf20_HasBypassDuct" HVACDist:CF1R_DistRow:Distmf20_HasBypassDuct  = {
             if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
             then if (IfValidAnd(DuctsPresent > 0) .AND. IfValidAnd(HasBypassDuct > 0))
                  then  "true"
@@ -7183,107 +6994,16 @@ RULELIST "CF1RPRF01E_cf1rSection_Distmf_Proposed"  1 0 0 1
                  endif 
             else UNDEFINED
             endif  }
-      "Set HVACDist:CF1R_DistMFHERSRow:Distmf20_NotApplicableMessage" HVACDist:CF1R_DistMFHERSRow:Distmf20_NotApplicableMessage = {
+      "Set HVACDist:CF1R_DistRow:Distmf20_NotApplicableMessage" HVACDist:CF1R_DistRow:Distmf20_NotApplicableMessage = {
             if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then if (LocalStatus( CF1R_DistMFHERSRow:Distmf20_HasBypassDuct ) < 1) then  "n/a"  else  UNDEFINED  endif
+            then if (LocalStatus( CF1R_DistRow:Distmf20_HasBypassDuct ) < 1) then  "n/a"  else  UNDEFINED  endif
             else UNDEFINED
             endif }
 
 
-  ; Rules to populate TableDistributionMFHERS properties for ResHtPumpSys rows
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf09a_SpaceConditioningDistributionSystemName" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf09a_SpaceConditioningDistributionSystemName  = {  Name  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf09_DuctLeakageTestRequired" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf09_DuctLeakageTestRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then if ( IsNew .OR. IsAltered )
-                 then  "true"
-                 else  "false"  
-                 endif 
-            else UNDEFINED
-            endif  }
-
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf10_DuctSystemLeakageTarget" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf10_DuctSystemLeakageTarget  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then UNDEFINED  
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf10_NotApplicableMessage" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf10_NotApplicableMessage  =
-         {  if (IfValidAnd(Proj:IsLowRiseMFam > 0 )) 
-            then if (LocalStatus ( CF1R_DistMFHERSRow:Distmf10_DuctSystemLeakageTarget ) < 1 ) 
-                 then "n/a" 
-                 else UNDEFINED 
-                 endif
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf11_DuctSystemLeakageTargetMessage" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf11_DuctSystemLeakageTargetMessage  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then UNDEFINED
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf11_NotApplicableMessage" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf11_NotApplicableMessage  =
-         {  if (IfValidAnd(Proj:IsLowRiseMFam > 0 )) 
-            then if (LocalStatus ( CF1R_DistMFHERSRow:Distmf11_DuctSystemLeakageTargetMessage ) < 1 ) 
-                 then "n/a" 
-                 else UNDEFINED 
-                 endif
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf12_IsDuctLocationVerificationRequired" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf12_IsDuctLocationVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then "true"    ; ???
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf13_DuctsInCondExcept12CreditTaken" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf13_DuctsInCondExcept12CreditTaken  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then "false"  
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf14_DuctDesignVerificationRequired" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf14_DuctDesignVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then "false"  
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf15_DuctsBuriedVerificationRequired" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf15_DuctsBuriedVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then "false"  
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf16_DuctsDeeplyBuriedComplianceCreditTaken" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf16_DuctsDeeplyBuriedComplianceCreditTaken  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then "false"  
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf17_LowLeakageAirHandlingUnitVerificationRequired" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf17_LowLeakageAirHandlingUnitVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then "false"  
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf18_LowLeakDuctsConditionedVerificationRequired" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf18_LowLeakDuctsConditionedVerificationRequired  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then "false"  
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf19_DuctsInConditionedSpaceVerification" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf19_DuctsInConditionedSpaceVerification  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then "false"   ; ???
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf20_HasBypassDuct" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf20_HasBypassDuct  = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then "false"  
-            else UNDEFINED
-            endif  }
-      "Set ResHtPumpSys:CF1R_DistMFHERSRow:Distmf20_NotApplicableMessage" ResHtPumpSys:CF1R_DistMFHERSRow:Distmf20_NotApplicableMessage = {
-            if (IfValidAnd(Proj:IsLowRiseMFam > 0 ))
-            then if (LocalStatus( CF1R_DistMFHERSRow:Distmf20_HasBypassDuct ) < 1) then  "n/a"  else  UNDEFINED  endif
-            else UNDEFINED
-            endif }
-
-  ; ----------------------------------------------------------------------
-  ; Rule to set Parent for ALL cf1rTableDistributionMFHERS table rows
-   "Set cf1rtblRowDistMFHERS parent"   cf1rtblRowDistMFHERS:Parent  = {
-         cf1rTableDistributionMFHERS:Name  }
-
-
+  ; Rule to add DistributionMF table rows to the cf1rTableDistributionMF
+      "Set HVACDist:CF1R_DistRow:Parent"
+         HVACDist:CF1R_DistRow:Parent  = {  cf1rTableDistributionMF:Name  }
 END
 ;*************************************************************************
 

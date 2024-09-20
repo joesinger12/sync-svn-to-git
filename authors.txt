@@ -1,10 +1,10 @@
 scriswellwsf:Scott Criswell <scott.a.criswell@gmail.com>
-nkapur:Nikhil Kapur <>
+nkapur:Nikhil Kapur <nkapur@noresco.com>
 davidreddy:David Reddy <david@OBrien360.com>
 jireh360:Jireh Peng <Jireh@obrien360.com>
 chuangye360:Ryan Guan <>
 ivanjose360:Unknown <>
-robhitchcock:Rob Hitchcock <>
+robhitchcock:Rob Hitchcock <rjhitchcock@gmail.com>
 johnarent:John Arent <>
 rogerhedrick:Roger Hedrick  <>
 *anonymous:Unknown <>
@@ -34,4 +34,4 @@ nczech:Unknown <>
 johnarent415:John Arent <>
 dianepepetone:Diane Pepetone <>
 skonopacki:Steven Konopacki <>
-xiafang123:Xia Fang <>
+xiafang123:Xia Fang <fangxia6@gmail.com>

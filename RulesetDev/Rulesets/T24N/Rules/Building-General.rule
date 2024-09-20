@@ -89,7 +89,7 @@ RULE Proj:IsLowRiseMFam
   INPUTCLASS 
     NotInput
   DEFAULT
-    if (IfValidAnd( ResDwellUnits > 0 ) .AND. IfValidAnd( Bldg:AboveGrdStoryCnt < 4 ))
+    if (IfValidAnd( ResDwellUnits > 0 ) .AND. Bldg:AboveGrdStoryCnt < 4)
     then  1
     else  0  endif
 ENDRULE
@@ -100,7 +100,7 @@ RULE Proj:IsHighRiseMFam
   INPUTCLASS 
     NotInput
   DEFAULT
-    if (IfValidAnd( ResDwellUnits > 0 ) .AND. IfValidAnd( Bldg:AboveGrdStoryCnt >= 4 ))
+    if (IfValidAnd( ResDwellUnits > 0 ) .AND. Bldg:AboveGrdStoryCnt >= 4)
     then  1
     else  0  endif
 ENDRULE
@@ -128,7 +128,7 @@ RULE NEW Story:TotFlrAreaWithMult
   DEFAULT 
     SumChildren( Spc:FlrAreaWithMult )
 ENDRULE
-; SAC 09/16/21 (MFam)  ; updated to include Mults - SAC 05/25/23 (tic #3392)
+; SAC 09/16/21 (MFam)
 RULE NEW ResZnGrp:TotFlrAreaWithMult
   DATATYPE
     Float
@@ -146,8 +146,8 @@ RULE NEW ResZnGrp:TotFlrAreaWithMult
   REPORTPRECISION
     0
   DEFAULT 
-    SumChildren( ResZn:FlrAreaWithMult ) +
-    SumChildren( ResOtherZn:FlrAreaWithMult )
+    SumChildren( ResZn:FloorArea ) +
+    SumChildren( ResOtherZn:Area )
 ENDRULE
 
 RULE Bldg:TotFlrArea
@@ -517,7 +517,7 @@ RULE NEW ResZnGrp:HighRiseResCondFlrAreaWithMult
   UNITS 
     ft2  
   DEFAULT 
-    if (IfValidAnd( Bldg:AboveGrdStoryCnt >= 4 ))
+    if (IfValidAnd( Bldg:TotStoryCnt >= 4 ))
     then  SumChildren( ResZn:CondFlrAreaWithMult )
     else  0  endif
   SIZING
@@ -548,24 +548,6 @@ RULE ResZnGrp:TreeDescrip
     then  TreeDescrip + Format( " (%s ft2 uncond)", FltToStr( (SumChildren( ResOtherZn:Area ) - SumChildren( ResOtherZn:CondFloorArea )) ) )
     else  UNCHANGED  endif
 ENDRULE
-
-; SAC 04/22/24 (tic #3554)
-RULE ResZnGrp:HasIntCorridors
-  DESCRIPTION
-    "Whether this zone group includes interior corridor space(s), impacting how
-     natural (cooling) ventilation is simulated." 
-  INPUTCLASS
-    Default
-  DEFAULT
-    if ( SumChildrenIf( ResOtherZn:Area, ResOtherZn:SpcFunc = "- specify -"                              ) > 1 .OR.
-         SumChildrenIf( ResOtherZn:Area, ResOtherZn:SpcFunc = "Aging Eye/Low-vision (Corridor Area)"     ) > 1 .OR.
-         SumChildrenIf( ResOtherZn:Area, ResOtherZn:SpcFunc = "Corridor Area"                            ) > 1 .OR.
-         SumChildrenIf( ResOtherZn:Area, ResOtherZn:SpcFunc = "Unoccupied-Exclude from Gross Floor Area" ) > 1 .OR.
-         SumChildrenIf( ResOtherZn:Area, ResOtherZn:SpcFunc = "Unoccupied-Include in Gross Floor Area"   ) > 1 .OR.
-         SumChildrenIf( ResOtherZn:Area, ResOtherZn:SpcFunc = "All other"                                ) > 1 )
-    then  1  else  0  endif
-ENDRULE
-         // ??   317,    "Concourse and Atria Area"
 
 
 RULE NEW Bldg:HighRiseResFlrArea
@@ -947,33 +929,24 @@ RULE Bldg:BldgType
     Relocatable Public School Building
     Hotel-Motel
     High-Rise Residential
-    Low-Rise Residential
     Nonresidential
     Mixed Occupancy
-    Healthcare
   DEFAULT
     if( Bldg:RelocPubSchoolBldg = 1 )
     then 
       "Relocatable Public School Building"
-    else if( IfValidAnd( Proj:HlthCareFacility = 1 ) )
-    then
-      "Healthcare"
     else if( IfValidAnd( Bldg:HotelMotelGuestRmCnt > 5 ) )
     then 
       "Hotel-Motel"
-    else if( Bldg:AboveGrdStoryCnt >= 4 .AND.
-             ( ValidOr( ResFlrArea, 0 ) / ValidOr( TotCondFlrArea, 1 ) ) >= 0.8 )
+    else if( Bldg:TotStoryCnt >= 4 .AND.
+             ( ValidOr( HighRiseResFlrArea, 0 ) / ValidOr( TotCondFlrArea, 1 ) ) >= 0.8 )
     then
       "High-Rise Residential"
-    else if( Bldg:AboveGrdStoryCnt < 4 .AND. IfValidAnd( Bldg:LowRiseResLivingUnitCnt > 0 ) .AND.
-             ( ValidOr( ResFlrArea, 0 ) / ValidOr( TotCondFlrArea, 1 ) ) >= 0.8 )
-    then
-      "Low-Rise Residential"
-    else if( Bldg:AboveGrdStoryCnt > 0 .AND.
-             ( ValidOr( ResFlrArea, 0 ) <= 0 ) )
+    else if( Bldg:TotStoryCnt < 4 .OR.
+             ( ValidOr( HighRiseResFlrArea, 0 ) / ValidOr( TotCondFlrArea, 1 ) ) < 0.2 )
     then "Nonresidential" 
     else "Mixed Occupancy"
-    endif endif endif endif endif endif
+    endif endif endif endif
   CHECKCODE : T24N_2016 T24N_2019
     if( AboveGrdStoryCnt < 4 .AND.
         HighRiseResFlrArea >= ( TotCondFlrArea * 0.20 ) )
@@ -1036,7 +1009,7 @@ RULE NEW Proj:ResTDVSrcEmisFacChange
     if( ResTDVSrcEmisFac > 0 .AND. IfValidAnd(Bldg:HotelMotelGuestRmCnt > 5)  )
     then 1
     else
-    if( ResTDVSrcEmisFac > 0 .AND. IfValidAnd( Bldg:AboveGrdStoryCnt >= 4 ) .AND. IfValidAnd(Bldg:HighRiseResLivingUnitCnt > 0) )
+    if( ResTDVSrcEmisFac > 0 .AND. Bldg:TotStoryCnt >= 4 .AND. IfValidAnd(Bldg:HighRiseResLivingUnitCnt > 0) )
     then 1
     else 0
     endif endif

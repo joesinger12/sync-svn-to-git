@@ -43,18 +43,18 @@ RULELIST  "Reporting_SummarizeModel" 1 0 0 0
 ;MJB 12/19/13 - update to match E+A+A rules
 ; mjb	2/19/14 - add SkyLt area into WinArea totals; add area-weighted window U-factor pre-calc
 ; SAC 2/20/15 - modified to REMOVE E+A+A Additions window/skylight area from New (item 2) and added separate Additions array element
-	"Re-calculate ResWin:TotAreaInclMult[1] - total"								ResWin:TotAreaInclMult[1]		= {	Area * Multiplier * Parent2( Mult )  }    ; ResZnGrp:Mult - SAC 04/27/23 (tic #3392)
+	"Re-calculate ResWin:TotAreaInclMult[1] - total"								ResWin:TotAreaInclMult[1]		= {	Area * Multiplier  }
 	"Re-calculate ResWin:TotAreaInclMult[3] - existing"							ResWin:TotAreaInclMult[3]		= {	if ( ResProj:RunScope == 2 .AND. Status == 1) then  TotAreaInclMult[1]  else  0  endif  }
 	"Re-calculate ResWin:TotAreaInclMult[2] - new (not add)"						ResWin:TotAreaInclMult[2]		= {	if (Status == 3 .AND. IsEAAAddZoneGChild == 0) then  TotAreaInclMult[1]  else  0  endif  }
 	"Re-calculate ResWin:TotAreaInclMult[4] - additions"							ResWin:TotAreaInclMult[4]		= {	if (IsEAAAddZoneGChild) then  TotAreaInclMult[1]  else  0  endif  }
 	"Calculate ResWin:AreaUfactorMult"													ResWin:AreaUfactorMult			=     ; SAC 5/19/20 - add check to set only for SkyLts of Conditioned Zones (tic #1221)
-      {  if (Status != 1 .AND. IfValidAnd( ParentIsCond > 0 )) then  Area * Multiplier * Parent2( Mult ) * NFRCUfactor  else  0  endif   }      ; ResZnGrp:Mult - SAC 04/27/23 (tic #3392)
-	"Calculate ResSkylt:TotAreaInclMult[1] - total"									ResSkylt:TotAreaInclMult[1]		= {	Area * Multiplier * Parent2( Mult )  }    ; ResZnGrp:Mult - SAC 04/27/23 (tic #3392)
+      {  if (Status != 1 .AND. IfValidAnd( ParentIsCond > 0 )) then  Area * Multiplier * NFRCUfactor  else  0  endif   }
+	"Calculate ResSkylt:TotAreaInclMult[1] - total"									ResSkylt:TotAreaInclMult[1]		= {	Area * Multiplier  }
 	"Calculate ResSkylt:TotAreaInclMult[3] - existing"								ResSkylt:TotAreaInclMult[3]		= {	if ( ResProj:RunScope == 2 .AND. Status == 1) then  TotAreaInclMult[1]  else  0  endif  }
 	"Calculate ResSkylt:TotAreaInclMult[2] - new (not add)"						ResSkylt:TotAreaInclMult[2]		= {	if (Status == 3 .AND. IsEAAAddZoneGChild == 0) then  TotAreaInclMult[1]  else  0  endif  }
 	"Calculate ResSkylt:TotAreaInclMult[4] - additions"							ResSkylt:TotAreaInclMult[4]		= {	if (IsEAAAddZoneGChild) then  TotAreaInclMult[1]  else  0  endif  }
 	"Calculate ResSkylt:AreaUfactorMult"												ResSkylt:AreaUfactorMult			=     ; SAC 5/19/20 - add check to set only for SkyLts of Conditioned Zones (tic #1221)
-      {  if (Status != 1 .AND. IfValidAnd( ParentIsCond > 0 )) then  Area * Multiplier * Parent2( Mult ) * NFRCUfactor  else  0  endif   }      ; ResZnGrp:Mult - SAC 04/27/23 (tic #3392)
+      {  if (Status != 1 .AND. IfValidAnd( ParentIsCond > 0 )) then  Area * Multiplier * NFRCUfactor  else  0  endif   }
 	"Sum window area into parent ResExtWall objects[1] - total" 	     		ResExtWall:TotWinArea[1]		= {	SumChildren( ResWin:TotAreaInclMult[1] )  }
 	"Sum window area into parent ResExtWall objects[3] - existing" 	  		ResExtWall:TotWinArea[3]		= {	SumChildren( ResWin:TotAreaInclMult[3] )  }
 	"Sum window area into parent ResExtWall objects[2] - new (not add)"		ResExtWall:TotWinArea[2]		= {	SumChildren( ResWin:TotAreaInclMult[2] )  }
@@ -75,7 +75,7 @@ RULELIST  "Reporting_SummarizeModel" 1 0 0 0
 	"Sum cond zone window across entire model[3] - existing"					ResProj:TotCondZoneWinArea[3]	= {	SumAll( ResZn:TotCondZoneWinArea[3] ) + SumAll( ResOtherZn:TotCondZoneWinArea[3] )  }
 	"Sum cond zone window across entire model[2] - new (not add)"			ResProj:TotCondZoneWinArea[2]	= {	SumAll( ResZn:TotCondZoneWinArea[2] ) + SumAll( ResOtherZn:TotCondZoneWinArea[2] )  }
 	"Sum cond zone window across entire model[4] - additions"				ResProj:TotCondZoneWinArea[4]	= {	SumAll( ResZn:TotCondZoneWinArea[4] ) + SumAll( ResOtherZn:TotCondZoneWinArea[4] )  }
-	"Set model's TOTAL win area / cond floor area ratio"		ResProj:CondWinAreaCFARat	= {	if (CondFloorArea > 0) then  TotCondZoneWinArea[1] / CondFloorAreaWithMult  else  0  endif  }   ; CondFloorAreaWithMult - SAC 04/27/23 (tic #3392)
+	"Set model's TOTAL win area / cond floor area ratio"		ResProj:CondWinAreaCFARat	= {	if (CondFloorArea > 0) then  TotCondZoneWinArea[1] / CondFloorArea  else  0  endif  }
 
 	; SAC 2/20/15 - new rules to set addition window area ratios based on prescriptive additions table
 	"Set ResProj:CondAddWinAreaCFARat"		ResProj:CondAddWinAreaCFARat	= {	if (CondAdditionSize < 0.1) then  0  else  TotCondZoneWinArea[4] / CondAdditionSize  endif  }
@@ -83,20 +83,20 @@ RULELIST  "Reporting_SummarizeModel" 1 0 0 0
 																								else  max(	PrescripAdditions_MaxGlazingArea:MaxWinArea(     "AdditionSize", AdditionSize ) / CondAdditionSize,
 																												PrescripAdditions_MaxGlazingArea:MaxFracWinArea( "AdditionSize", AdditionSize ) )		endif  }
 
-;	"Set model's cond zone Existing win area multiplier"		ResProj:CondExWinAreaMult	= {	if (CondWinAreaCFARat <= 0.2 .OR. CondFloorAreaWithMult <= 0 .OR. TotCondZoneWinArea[3] <= 0) then  1.0
-;																														else if (TotCondZoneWinArea[3] / CondFloorAreaWithMult <= 0.2) then  1.0
-;																														else  0.2 / (TotCondZoneWinArea[3] / CondFloorAreaWithMult)  endif endif  }
-;	"Set model's cond zone New/Altered win area multiplier"	ResProj:CondNewWinAreaMult	= {	if (CondWinAreaCFARat <= 0.2 .OR. CondFloorAreaWithMult <= 0 .OR. TotCondZoneWinArea[2] <= 0) then  1.0
+;	"Set model's cond zone Existing win area multiplier"		ResProj:CondExWinAreaMult	= {	if (CondWinAreaCFARat <= 0.2 .OR. CondFloorArea <= 0 .OR. TotCondZoneWinArea[3] <= 0) then  1.0
+;																														else if (TotCondZoneWinArea[3] / CondFloorArea <= 0.2) then  1.0
+;																														else  0.2 / (TotCondZoneWinArea[3] / CondFloorArea)  endif endif  }
+;	"Set model's cond zone New/Altered win area multiplier"	ResProj:CondNewWinAreaMult	= {	if (CondWinAreaCFARat <= 0.2 .OR. CondFloorArea <= 0 .OR. TotCondZoneWinArea[2] <= 0) then  1.0
 ;																														else if (TotCondZoneWinArea[3] > 0 .AND. CondExWinAreaMult < 1.0) then  0.0
-;																														else  ((0.2 * CondFloorAreaWithMult) - (TotCondZoneWinArea[3] / (TotCondZoneWinArea[1] - TotCondZoneWinArea[3]))) endif endif  }
+;																														else  ((0.2 * CondFloorArea) - (TotCondZoneWinArea[3] / (TotCondZoneWinArea[1] - TotCondZoneWinArea[3]))) endif endif  }
 ; SAC 7/14/14 - apply same fix to above rules as was applied in BudgetConversion rules 12/31/13 - fixing bug where CondNewWinAreaMult invalid when New win area exceeds limit of 0.2 Win/CFA
 ; SAC 2/20/15 - revised logic to use floor and window areas that exclude AdditionSize
 	"Set model's cond zone Existing win area multiplier"		ResProj:CondExWinAreaMult	= {	1.0	}
 	"Set model's cond zone New/Altered win area multiplier"	ResProj:CondNewWinAreaMult	= {	if (AdditionSize < 0.1)
-																														then  if (CondWinAreaCFARat <= 0.2 .OR. (CondFloorAreaWithMult - CondAdditionSizeWithMult) <= 0 .OR. TotCondZoneWinArea[2] <= 0) then  1.0
-																																else  (0.2 * (CondFloorAreaWithMult - CondAdditionSizeWithMult)) / TotCondZoneWinArea[2]  endif
-																														else	if (CondAddWinAreaCFARat <= MaxAddWinAreaCFARat .OR. CondAdditionSizeWithMult <= 0 .OR. TotCondZoneWinArea[4] <= 0) then  1.0
-																																else  (MaxAddWinAreaCFARat * CondAdditionSizeWithMult) / TotCondZoneWinArea[4]  endif
+																														then  if (CondWinAreaCFARat <= 0.2 .OR. (CondFloorArea - CondAdditionSize) <= 0 .OR. TotCondZoneWinArea[2] <= 0) then  1.0
+																																else  (0.2 * (CondFloorArea - CondAdditionSize)) / TotCondZoneWinArea[2]  endif
+																														else	if (CondAddWinAreaCFARat <= MaxAddWinAreaCFARat .OR. CondAdditionSize <= 0 .OR. TotCondZoneWinArea[4] <= 0) then  1.0
+																																else  (MaxAddWinAreaCFARat * CondAdditionSize) / TotCondZoneWinArea[4]  endif
 																														endif  }
 
 	"Set ResWin:WinAreaMult"	ResWin:WinAreaMult	= {	if (IsNew .OR. IsAltered) then  ResProj:CondNewWinAreaMult  else  ResProj:CondExWinAreaMult  endif  }
@@ -162,50 +162,49 @@ RULELIST  "Reporting_SummarizeModel" 1 0 0 0
 ;		"Set ResGarage:ExtWallDoorAreaByWallType[3] - concrete/CMU"	ResGarage:ExtWallDoorAreaByWallType[3] = {   SumChildren( ResExtWall:DoorAreaByWallType[3] )  }
 ;		"Set ResGarage:ExtWallDoorAreaByWallType[4] - total"			ResGarage:ExtWallDoorAreaByWallType[4] = {   ExtWallDoorAreaByWallType[1] + ExtWallDoorAreaByWallType[2] + ExtWallDoorAreaByWallType[3]  }
 
-   "evaluate rules to set all RezZn & ResOtherZn surface area sums"  Proj:Action = {  EvalRulelist( "SetSurfaceAreaSums" )  }    ; SAC 04/28/23 (tic #3392)
-	;  "Set ResZn:ExtWallArea"				ResZn:ExtWallArea				= {	SumChildren( ResExtWall:Area )  }
-	;  "Set ResZn:UndWallArea"				ResZn:UndWallArea				= {	SumChildren( ResUndgrWall:Area )  }
-	;  "Set ResZn:ClgBlwAtticArea"		ResZn:ClgBlwAtticArea		= {	SumChildren( ResCeilingBelowAttic:Area )  }
-	;  "Set ResZn:CathCeilingArea"		ResZn:CathCeilingArea		= {	SumChildren( ResCathedralCeiling:Area )  }
-	;  "Set ResZn:CondClgBlwAtticArea"	ResZn:CondClgBlwAtticArea	= {	if (Type < 10) then  ClgBlwAtticArea  else  0  endif  }
-	;  "Set ResZn:SlabFloorArea"			ResZn:SlabFloorArea			= {	SumChildren( ResSlabFlr:Area )  }
-	;  "Set ResZn:UndFloorArea"			ResZn:UndFloorArea			= {	SumChildren( ResUndgrFlr:Area )  }
-	;  "Set ResZn:ExtFloorArea"			ResZn:ExtFloorArea 			= {	SumChildren( ResExtFlr:Area ) + SumChildren( ResFlrOverCrawlSpc:Area )  }
-	;  "Set ResZn:FlrOverUncondZnArea"	ResZn:FlrOverUncondZnArea	= {	SumChildren( ResIntFlr:ParCndZnAdjUZnArea )  }
-	;  "Set ResZn:AdjUncondZnWallArea"	ResZn:AdjUncondZnWallArea	= {	SumChildren( ResIntWall:ParCndZnAdjUZnArea ) + SumRevRef( ResIntWall:Outside, ResIntWall:ParUZnAdjCndZnArea )	}
-	;  "Set ResZn:AdjUncondZnArea"		ResZn:AdjUncondZnArea		= {	AdjUncondZnWallArea + SumChildren( ResIntFlr:ParCndZnAdjUZnArea ) +
-   ;                                                                    SumRevRef( ResIntCeiling:Outside, ResIntCeiling:ParUZnAdjCndZnArea ) +
-   ;                                                                    SumRevRef( ResIntFlr:Outside,     ResIntFlr:ParUZnAdjCndZnArea )	}
-   ;  
-	;  "Set ResOtherZn:ExtWallArea"			   ResOtherZn:ExtWallArea			   = {	SumChildren( ResExtWall:Area )  }            ; SAC 9/20/19 - OtherZone (MFamProto)
-	;  "Set ResOtherZn:UndWallArea"			   ResOtherZn:UndWallArea			   = {	SumChildren( ResUndgrWall:Area )  }
-	;  "Set ResOtherZn:ClgBlwAtticArea"		   ResOtherZn:ClgBlwAtticArea		   = {	SumChildren( ResCeilingBelowAttic:Area )  }
-	;  "Set ResOtherZn:CathCeilingArea"		   ResOtherZn:CathCeilingArea		   = {	SumChildren( ResCathedralCeiling:Area  )  }
-	;  "Set ResOtherZn:CondClgBlwAtticArea"	ResOtherZn:CondClgBlwAtticArea	= {	if (Type < 10) then  ClgBlwAtticArea  else  0  endif  }
-	;  "Set ResOtherZn:SlabFloorArea"			ResOtherZn:SlabFloorArea			= {	SumChildren( ResSlabFlr:Area )  }
-	;  "Set ResOtherZn:UndFloorArea"			   ResOtherZn:UndFloorArea			   = {	SumChildren( ResUndgrFlr:Area )  }
-	;  "Set ResOtherZn:ExtFloorArea"			   ResOtherZn:ExtFloorArea 			= {	SumChildren( ResExtFlr:Area ) + SumChildren( ResFlrOverCrawlSpc:Area )  }
-	;  "Set ResOtherZn:AdjUncondZnWallArea"	ResOtherZn:AdjUncondZnWallArea	= {	SumChildren( ResIntWall:ParCndOZnAdjUZnArea) + SumRevRef( ResIntWall:Outside, ResIntWall:ParUZnAdjCndOZnArea )	}
-	;  "Set ResOtherZn:AdjUncondZnArea"	      ResOtherZn:AdjUncondZnArea	      = {	AdjUncondZnWallArea + SumChildren( ResIntFlr:ParCndOZnAdjUZnArea ) +
-   ;                                                                                SumRevRef( ResIntCeiling:Outside, ResIntCeiling:ParUZnAdjCndOZnArea ) +
-   ;                                                                                SumRevRef( ResIntFlr:Outside,     ResIntFlr:ParUZnAdjCndOZnArea )	}
-   ;  
-	;  "Set ResProj:BldgExtWallArea"			ResProj:BldgExtWallArea			= {	SumAll( ResZn:ExtWallArea     )  }
-	;  "Set ResProj:BldgClgBlwAtticArea"	ResProj:BldgClgBlwAtticArea	= {	SumAll( ResZn:ClgBlwAtticArea )  }
-	;  "Set ResProj:BldgCathCeilingArea"	ResProj:BldgCathCeilingArea	= {	SumAll( ResZn:CathCeilingArea )  }
-	;  "Set ResProj:BldgExtFloorArea"		ResProj:BldgExtFloorArea		= {	SumAll( ResZn:ExtFloorArea    )  }
-   ;  ;	"Set ResProj:BldgSlabFloorArea"		ResProj:BldgSlabFloorArea		= {	SumAll( ResZn:SlabFloorArea   )  }
-   ;  ;	"Set ResProj:CptSlabFloorArea"		ResProj:CptSlabFloorArea		= {	SumAll( ResSlabFlr:CarpetedArea )  }
-   ;  ;	"Set ResProj:ExpSlabFloorArea"		ResProj:ExpSlabFloorArea		= {	SumAll( ResSlabFlr:ExposedArea  )  }
-	;  "Set ResProj:BldgUndWallArea"			ResProj:BldgUndWallArea			= {	SumAll( ResZn:UndWallArea     ) + SumAll( ResOtherZn:UndWallArea )  }   ; SAC 7/11/20 - only used here for reporting, so no need to store separate 'OZ' version
-	;  "Set ResProj:BldgZnAdjUZnArea"		ResProj:BldgZnAdjUZnArea	   = {   SumAll( ResZn:AdjUncondZnArea )  }     ; SAC 11/30/20
-	;  "Set ResProj:BldgOZExtWallArea"			ResProj:BldgOZExtWallArea			= {	SumAll( ResOtherZn:ExtWallArea     )  }    ; SAC 7/10/20
-	;  "Set ResProj:BldgOZClgBlwAtticArea" 	ResProj:BldgOZClgBlwAtticArea 	= {	SumAll( ResOtherZn:ClgBlwAtticArea )  }
-	;  "Set ResProj:BldgOZCathCeilingArea" 	ResProj:BldgOZCathCeilingArea 	= {	SumAll( ResOtherZn:CathCeilingArea )  }
-	;  "Set ResProj:BldgOZExtFloorArea" 		ResProj:BldgOZExtFloorArea 		= {	SumAll( ResOtherZn:ExtFloorArea    )  }
-	;  "Set ResProj:BldgOZSlabFloorArea"		ResProj:BldgOZSlabFloorArea		= {	SumAll( ResOtherZn:SlabFloorArea   )  }
-	;  "Set ResProj:BldgOZCondZnSlabFlrArea"	ResProj:BldgOZCondZnSlabFlrArea	= {   SumAcrossif( ResOtherZn:SlabFloorArea, ResOtherZn:Type < 10 )  }
-	;  "Set ResProj:BldgOZAdjUZnArea"		   ResProj:BldgOZAdjUZnArea	      = {   SumAll( ResOtherZn:AdjUncondZnArea )  }      ; SAC 11/30/20
+	"Set ResZn:ExtWallArea"				ResZn:ExtWallArea				= {	SumChildren( ResExtWall:Area )  }
+	"Set ResZn:UndWallArea"				ResZn:UndWallArea				= {	SumChildren( ResUndgrWall:Area )  }
+	"Set ResZn:ClgBlwAtticArea"			ResZn:ClgBlwAtticArea			= {	SumChildren( ResCeilingBelowAttic:Area )  }
+	"Set ResZn:CathCeilingArea"			ResZn:CathCeilingArea			= {	SumChildren( ResCathedralCeiling:Area )  }
+	"Set ResZn:CondClgBlwAtticArea"	ResZn:CondClgBlwAtticArea	= {	if (Type < 10) then  ClgBlwAtticArea  else  0  endif  }
+	"Set ResZn:SlabFloorArea"			ResZn:SlabFloorArea			= {	SumChildren( ResSlabFlr:Area )  }
+	"Set ResZn:UndFloorArea"				ResZn:UndFloorArea				= {	SumChildren( ResUndgrFlr:Area )  }
+	"Set ResZn:ExtFloorArea"				ResZn:ExtFloorArea 			= {	SumChildren( ResExtFlr:Area ) + SumChildren( ResFlrOverCrawlSpc:Area )  }
+	"Set ResZn:FlrOverUncondZnArea"	ResZn:FlrOverUncondZnArea	= {	SumChildren( ResIntFlr:ParCndZnAdjUZnArea )  }
+	"Set ResZn:AdjUncondZnWallArea"	ResZn:AdjUncondZnWallArea	= {	SumChildren( ResIntWall:ParCndZnAdjUZnArea ) + SumRevRef( ResIntWall:Outside, ResIntWall:ParUZnAdjCndZnArea )	}
+	"Set ResZn:AdjUncondZnArea"		   ResZn:AdjUncondZnArea		   = {	AdjUncondZnWallArea + SumChildren( ResIntFlr:ParCndZnAdjUZnArea ) +
+                                                                     SumRevRef( ResIntCeiling:Outside, ResIntCeiling:ParUZnAdjCndZnArea ) +
+                                                                     SumRevRef( ResIntFlr:Outside,   ResIntFlr:ParUZnAdjCndZnArea )	}
+
+	"Set ResOtherZn:ExtWallArea"			ResOtherZn:ExtWallArea			= {	SumChildren( ResExtWall:Area )  }            ; SAC 9/20/19 - OtherZone (MFamProto)
+	"Set ResOtherZn:UndWallArea"			ResOtherZn:UndWallArea			= {	SumChildren( ResUndgrWall:Area )  }
+	"Set ResOtherZn:ClgBlwAtticArea"		ResOtherZn:ClgBlwAtticArea		= {	SumChildren( ResCeilingBelowAttic:Area )  }
+	"Set ResOtherZn:CathCeilingArea"		ResOtherZn:CathCeilingArea		= {	SumChildren( ResCathedralCeiling:Area  )  }
+	"Set ResOtherZn:CondClgBlwAtticArea"	ResOtherZn:CondClgBlwAtticArea	= {	if (Type < 10) then  ClgBlwAtticArea  else  0  endif  }
+	"Set ResOtherZn:SlabFloorArea"			ResOtherZn:SlabFloorArea			= {	SumChildren( ResSlabFlr:Area )  }
+	"Set ResOtherZn:UndFloorArea"			ResOtherZn:UndFloorArea			= {	SumChildren( ResUndgrFlr:Area )  }
+	"Set ResOtherZn:ExtFloorArea"			ResOtherZn:ExtFloorArea 			= {	SumChildren( ResExtFlr:Area ) + SumChildren( ResFlrOverCrawlSpc:Area )  }
+	"Set ResOtherZn:AdjUncondZnWallArea"	ResOtherZn:AdjUncondZnWallArea	= {	SumChildren( ResIntWall:ParCndOZnAdjUZnArea) + SumRevRef( ResIntWall:Outside, ResIntWall:ParUZnAdjCndOZnArea )	}
+	"Set ResOtherZn:AdjUncondZnArea"	   ResOtherZn:AdjUncondZnArea	   = {	AdjUncondZnWallArea + SumChildren( ResIntFlr:ParCndOZnAdjUZnArea ) +
+                                                                           SumRevRef( ResIntCeiling:Outside, ResIntCeiling:ParUZnAdjCndOZnArea ) +
+                                                                           SumRevRef( ResIntFlr:Outside,   ResIntFlr:ParUZnAdjCndOZnArea )	}
+
+	"Set ResProj:BldgExtWallArea"			ResProj:BldgExtWallArea			= {	SumAll( ResZn:ExtWallArea     )  }
+	"Set ResProj:BldgClgBlwAtticArea"	ResProj:BldgClgBlwAtticArea	= {	SumAll( ResZn:ClgBlwAtticArea )  }
+	"Set ResProj:BldgCathCeilingArea"	ResProj:BldgCathCeilingArea	= {	SumAll( ResZn:CathCeilingArea )  }
+	"Set ResProj:BldgExtFloorArea"		ResProj:BldgExtFloorArea		= {	SumAll( ResZn:ExtFloorArea    )  }
+;	"Set ResProj:BldgSlabFloorArea"		ResProj:BldgSlabFloorArea		= {	SumAll( ResZn:SlabFloorArea   )  }
+;	"Set ResProj:CptSlabFloorArea"		ResProj:CptSlabFloorArea		= {	SumAll( ResSlabFlr:CarpetedArea )  }
+;	"Set ResProj:ExpSlabFloorArea"		ResProj:ExpSlabFloorArea		= {	SumAll( ResSlabFlr:ExposedArea  )  }
+	"Set ResProj:BldgUndWallArea"			ResProj:BldgUndWallArea			= {	SumAll( ResZn:UndWallArea     ) + SumAll( ResOtherZn:UndWallArea )  }   ; SAC 7/11/20 - only used here for reporting, so no need to store separate 'OZ' version
+	"Set ResProj:BldgZnAdjUZnArea"		ResProj:BldgZnAdjUZnArea	   = {   SumAll( ResZn:AdjUncondZnArea )  }     ; SAC 11/30/20
+	"Set ResProj:BldgOZExtWallArea"			ResProj:BldgOZExtWallArea			= {	SumAll( ResOtherZn:ExtWallArea     )  }    ; SAC 7/10/20
+	"Set ResProj:BldgOZClgBlwAtticArea" 	ResProj:BldgOZClgBlwAtticArea 	= {	SumAll( ResOtherZn:ClgBlwAtticArea )  }
+	"Set ResProj:BldgOZCathCeilingArea" 	ResProj:BldgOZCathCeilingArea 	= {	SumAll( ResOtherZn:CathCeilingArea )  }
+	"Set ResProj:BldgOZExtFloorArea" 		ResProj:BldgOZExtFloorArea 		= {	SumAll( ResOtherZn:ExtFloorArea    )  }
+	"Set ResProj:BldgOZSlabFloorArea"		ResProj:BldgOZSlabFloorArea		= {	SumAll( ResOtherZn:SlabFloorArea   )  }
+	"Set ResProj:BldgOZCondZnSlabFlrArea"	ResProj:BldgOZCondZnSlabFlrArea	= {   SumAcrossif( ResOtherZn:SlabFloorArea, ResOtherZn:Type < 10 )  }
+	"Set ResProj:BldgOZAdjUZnArea"		   ResProj:BldgOZAdjUZnArea	      = {   SumAll( ResOtherZn:AdjUncondZnArea )  }      ; SAC 11/30/20
 
    ; moved over to defaulting rules - SAC 7/12/20
 	;"Set ResExtWall:Azimuth"		ResExtWall:Azimuth	= {	ResExtWall:OrientationValue + ResProj:FrontOrientation  }
@@ -344,15 +343,15 @@ RULELIST "SetupWallWindowDoorAreaTotals"  1 0 0 0
 	;"debug message"		ResExtWall:Action		= {	if (LocalCompAssigned( Construction ) == 0 ) then  PostMessageToLog( "ResExtWall '%s':  No Construction assigned", Name )
 	;															else	switch( Construction:Type )
 	;																		case  0 :	if (IsNew > 0.5) then  PostMessageToLog( "ResExtWall '%s':  Wood framed area %g", Name, Area )		; "Wood Framed Wall"  
-	;																						else  PostMessageToLog( "ResExtWall '%s':  Wood framed area based on New window area %g * WinAreaMult %g = %g", Name, TotWinArea[2], ValidOr( ResProj:CondNewWinAreaMult, 0 ),
-	;																												(TotWinArea[2] * ValidOr( ResProj:CondNewWinAreaMult, 0 )) )  endif
+	;																						else  PostMessageToLog( "ResExtWall '%s':  Wood framed area based on New window area %g * WinAreaMult %g = %g", Name, TotWinArea[2], ValidOr( Proj:CondNewWinAreaMult, 0 ),
+	;																												(TotWinArea[2] * ValidOr( Proj:CondNewWinAreaMult, 0 )) )  endif
 	;																		default :	UNCHANGED	endswitch  endif  }
 	"Set ResExtWall:AreaByWallType[1] - wood framed"		ResExtWall:AreaByWallType[1]		= {	if( LocalCompAssigned( Construction ) == 0 ) then  0
 																														else	switch( Construction:Type )
 																																	case  0 :	if (IsNew > 0.5) then  Area		; "Wood Framed Wall"  
-																																					else  (TotWinArea[2] * ValidOr( ResProj:CondNewWinAreaMult, 0 )) + TotDoorArea  endif
+																																					else  (TotWinArea[2] * ValidOr( Proj:CondNewWinAreaMult, 0 )) + TotDoorArea  endif
 																																	case  5 :	if (IsNew > 0.5) then  Area		; "SIPS Wall"  
-																																					else  (TotWinArea[2] * ValidOr( ResProj:CondNewWinAreaMult, 0 )) + TotDoorArea  endif
+																																					else  (TotWinArea[2] * ValidOr( Proj:CondNewWinAreaMult, 0 )) + TotDoorArea  endif
 																																	default :	0	endswitch  endif  }
 																											;			if( LocalCompAssigned( Construction ) == 0 .OR. IsNew == 0 ) then  0
 																											;			else	switch( Construction:Type )
@@ -361,7 +360,7 @@ RULELIST "SetupWallWindowDoorAreaTotals"  1 0 0 0
 	"Set ResExtWall:AreaByWallType[2] - steel framed"		ResExtWall:AreaByWallType[2]		= {	if( LocalCompAssigned( Construction ) == 0 ) then  0
 																														else	switch( Construction:Type )
 																																	case  1 :	if (IsNew > 0.5) then  Area		; "Steel Framed Wall" 
-																																					else  (TotWinArea[2] * ValidOr( ResProj:CondNewWinAreaMult, 0 )) + TotDoorArea  endif
+																																					else  (TotWinArea[2] * ValidOr( Proj:CondNewWinAreaMult, 0 )) + TotDoorArea  endif
 																																	default :	0	endswitch  endif  }
 																											;			if( LocalCompAssigned( Construction ) == 0 .OR. IsNew == 0 ) then  0
 																											;			else	switch( Construction:Type )
@@ -371,7 +370,7 @@ RULELIST "SetupWallWindowDoorAreaTotals"  1 0 0 0
 																														else if ( Construction:Type == 2 .OR. Construction:Type == 3 .OR. Construction:Type == 4 .OR.   ; "Concrete / ICF / Brick" or "Hollow Unit Masonry" or "Adobe / Strawbale / Log"
 																																	 Construction:Type == 9 )				; "No Frame (concrete/CMU)"
 																														then	if (IsNew > 0.5) then  Area	
-																																else  (TotWinArea[2] * ValidOr( ResProj:CondNewWinAreaMult, 0 )) + TotDoorArea  endif
+																																else  (TotWinArea[2] * ValidOr( Proj:CondNewWinAreaMult, 0 )) + TotDoorArea  endif
 																														else	0  endif endif  }
 																											;			if( LocalCompAssigned( Construction ) == 0 .OR. IsNew == 0 ) then  0
 																											;			else	switch( Construction:Type )
@@ -610,7 +609,6 @@ RULELIST  "Reporting_HERS_SpecialFeaturesSummary" 1 0 0 0
 ;  mjb	do not produce HVAC Cooling verification requirements when there is no cooling or no ducts	2/19/14
 ;	mjb	do not produce HVAC verification reqs. when equipment does not match what was modeled for Prop. Design	4/17/14
 ;
-;"debug" Proj:Action = { StoreBEMProc( Format( "HERScr8s-b4-%s", RunAbbrev ), 0 ) }  ; SAC 05/05/23
 	"Ensure HVACCool:HERSCheck exists"			HVACCool:Action	= {	if (LocalCompAssigned( HERSCheck )) then  UNCHANGED
 																							else if (FloorAreaServed > 0.5) then 
 																										EvalRulelist( "CreateAndAssignAsUserDefined_HVACCool_HERSCool", 1 )
@@ -766,17 +764,11 @@ RULELIST  "Reporting_HERS_SpecialFeaturesSummary" 1 0 0 0
          then  EvalRulelist( "CreateAndAssignAsUserDefined_HVACHtPump_HERSHtPump_Populate", 1 )
          else  UNCHANGED  endif endif  }
 
-;"debug" Proj:Action = { StoreBEMProc( Format( "HERScr8s-aft-%s", RunAbbrev ), 0 ) }  ; SAC 05/05/23
-
-   ; mjb 7/9/14 - avoid setting HERS report flag for existing ducts
-   ; mjb 7/29/14 - use IsLessThanForty flag to keep short additions of ducts from triggering HERS check; also make sure to include Status = 4 (existing + new)
-   ; SAC 5/28/19 - split logic into before & after 2019 & added new logic for 2019+
-   ; added exception for 2022+ HiRiseRes MFam in CZs 1/3/5/7 - SAC 10/24/23
+; mjb 7/9/14 - avoid setting HERS report flag for existing ducts
+;	mjb	7/29/14 - use IsLessThanForty flag to keep short additions of ducts from triggering HERS check; also make sure to include Status = 4 (existing + new)
+; SAC 5/28/19 - split logic into before & after 2019 & added new logic for 2019+
 	"Check for Duct Leakage"					ResDistSys:HERSCheck:DuctLeakage = 
       {  if ( FloorAreaServed < 0.5 .OR. IsExisting ) then  0
-         else if ( ResProj:EnergyCodeYearNum >= 2022 .AND. IfValidAnd( Proj:BldgTypeTblStr = "HiRiseRes" ) .AND.
-                   SumRevRef( DwellUnitType:HVACDistRef, DwellUnitType:DUFloorAreaServed ) >= (FloorAreaServed - 1) .AND.
-                   (Proj:CliZnNum == 1 .OR. Proj:CliZnNum == 3 .OR. Proj:CliZnNum == 5 .OR. Proj:CliZnNum == 7) ) then  0
          else if ( ResProj:EnergyCodeYearNum < 2019)
          then  ; 2016 and prior
                   if ( Type == 8 .OR. IfValidAnd(IsLessThanFortyFt > 0.5) ) then 0 else 1 endif 
@@ -785,7 +777,7 @@ RULELIST  "Reporting_HERS_SpecialFeaturesSummary" 1 0 0 0
                   else if ( IsNew .OR. IsAltered ) then  1
                   else if ( Status = 4 .AND. IsLessThanFortyFt = 0 ) then  1
                   else  0  endif endif endif
-         endif endif endif  }
+         endif endif  }
 ;	mjb	7/17/14 - need to set duct leakage flag even if NoCooling; using DuctsCreatedForAnalysis instead of TypeRpt
 ;	"2nd Check for Duct Leakage"				ResDistSys:HERSCheck:DuctLeakage = { if ( MaxRevRef( ResHVACSys:DistribSystem, ResHVACSys:NoCoolingRpt ) > 0.5 .OR. IfValidAnd(TypeRpt < 0.5) ) then 0 else UNCHANGED endif  }
 ;	"2nd Check for Duct Leakage"				ResDistSys:HERSCheck:DuctLeakage = { if ( IfValidAnd(DuctsCreatedForAnalysis > 0.5) ) then 0 else UNCHANGED endif  }
@@ -806,8 +798,7 @@ RULELIST  "Reporting_HERS_SpecialFeaturesSummary" 1 0 0 0
 																													else	Format( "%s", FltToStr( DuctLeakageValRpt, 1, 0, 3 ) )  endif
 																												else if ( LowLkgAH > 0.5 .AND. DuctLeakage > 100 ) then 
 																													if ( ResProj:IsMultiFamily > 0.5 .AND. ResProj:IsMFamDupOrTownhm < 0.5 )
-; RJH 03/01/24 per 2022-CBECC-Com-Schema Issue 126 truncate string to remove LTO value								then	Format( "total leakage <= 12.0 or leakage to outdoors <= %s", FltToStr( DuctLeakageValRpt, 1, 0, 3 ) )
-																													then	"total leakage <= 12.0"
+																													then	Format( "total leakage <= 12.0 or leakage to outdoors <= %s", FltToStr( DuctLeakageValRpt, 1, 0, 3 ) )
 																													else	Format( "%s", FltToStr( DuctLeakageValRpt, 1, 0, 3 ) )  endif	
 																												else FltToStr( DuctLeakageValRpt, 1, 0, 3 ) endif endif endif												
 																											 else UNDEFINED endif }
@@ -1596,14 +1587,11 @@ RULELIST  "Reporting_HERS_SpecialFeaturesSummary" 1 0 0 0
 	"Check for SpeclFtr:BatterySystem"  ResProj:SpeclFeatrs:BatterySystem     	= {	if (IfValidAnd( SimulateBattery > 0.5 ) .AND. IfValidAnd( Proj:BattGridHarmCredit > 0.5 )==0) then 1 else 0 endif }	; SAC 7/12/17 - tic #863
    ; SAC 2/20/18 - revised battery capacity decimal precision from (input)->2 (tic #921)
 	"Write SpeclFtr:BatterySystemMsg"  	ResProj:SpeclFeatrs:BatterySystemMsg  	= {	if ( SpeclFeatrs:BatterySystem < 0.5 ) then UNDEFINED
-	         else if (Proj:IsSFamResRuleset)
-            then  Format( "Battery System: %s kWh", FltToStr( BattMaxCap, 2, 0, 0, 1 ) )
-            else  Format( "Battery System: %s kWh", FltToStr( SumAll( Batt:MaxCap ), 2, 0, 0, 1 ) )  endif endif }	; SAC 7/12/17 - tic #863   ; update to reference Batt:MaxCap for CBECC - SAC 03/21/23
+	                                                                              else  Format( "Battery System: %s kWh", FltToStr( BattMaxCap, 2, 0, 0, 1 ) )  endif }	; SAC 7/12/17 - tic #863
 
 	"Check for SpeclFtr:SelfUtilCredit" ResProj:SpeclFeatrs:SelfUtilCredit   	= {	if (IfValidAnd( SimulateBattery > 0.5 ) .AND. IfValidAnd( Proj:BattGridHarmCredit > 0.5 )) then 1 else 0 endif }	   ; SAC 5/23/19 / SAC 5/24/19
-	"Write SpeclFtr:SelfUtilCreditMsg"  ResProj:SpeclFeatrs:SelfUtilCreditMsg 	=        ; replace BattMaxCap w/ SumAll( Batt:MaxCap ) (Res->Com) - SAC 08/27/23 (tic #3541)
-      {	if ( SpeclFeatrs:SelfUtilCredit < 0.5 ) then UNDEFINED
-	      else  Format( "Battery System: %s kWh (Self Utilization Credit taken)", FltToStr( SumAll( Batt:MaxCap ), 2, 0, 0, 1 ) )  endif }
+	"Write SpeclFtr:SelfUtilCreditMsg"  ResProj:SpeclFeatrs:SelfUtilCreditMsg 	= {	if ( SpeclFeatrs:SelfUtilCredit < 0.5 ) then UNDEFINED
+	                                                                              else  Format( "Battery System: %s kWh (Self Utilization Credit taken)", FltToStr( BattMaxCap, 2, 0, 0, 1 ) )  endif }
 END
 ;*************************************************************************
 
@@ -1924,7 +1912,6 @@ RULELIST "Default_DwellUnitReportObject" 0 0 0 0
 	"Set DwellUnitRpt:DwellUnitRef"			DwellUnitRpt:DwellUnitRef		= {	Parent( Name )  }
 	"Set DwellUnitRpt:DwellUnitTypeRef"		DwellUnitRpt:DwellUnitTypeRef	= {	Parent( DwellUnitTypeRef )  }
 	"Set DwellUnitRpt:ZoneRef"					DwellUnitRpt:ZoneRef				= {	Parent2( Name )  }
-	"Set DwellUnitRpt:ZoneMultRef"			DwellUnitRpt:ZoneMultRef				= {	Parent2( Mult )  }	
 END
 ;*************************************************************************
 

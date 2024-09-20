@@ -43,9 +43,7 @@ RULELIST "ProposedInput_HVAC" 0 0 0 0
    ;--------------------------------------------------------------------
 ;	"Set ResZn:Top"			ResZn:Top 	= {	Local( Bottom ) + (Local( FloorHeight ) * Local( NumStories ))  }
 	"Set ResZn:Top"			ResZn:Top 	= {	Bottom + (FloorHeight * (NumStories - 1)) + CeilingHeight  }
-   "Set ResOtherZn:FloorHeight"  ResOtherZn:FloorHeight =
-      {  if (LocalStatus( FloorHeight ) > 0) then  UNCHANGED  else  max( ValidOr( CeilingHeight, 5 ) + 1, 9 )  endif  }    ; copy default rule here to avoid eval error in following rule - SAC 03/09/24
-	"Set ResOtherZn:Top"	ResOtherZn:Top = {	Bottom + (FloorHeight * (ValidOr( NumStories, 1 ) - 1)) + ValidOr( CeilingHeight, 9 )  }      ; SAC 9/18/19 - (MFamProto)
+	"Set ResOtherZn:Top"	ResOtherZn:Top 	= {	Bottom + (FloorHeight * (NumStories - 1)) + ValidOr( CeilingHeight, 9 )  }      ; SAC 9/18/19 - (MFamProto)
 
 ; debugging
 ;"dbg" ResProj:Action = { MessageBox( "ResProj:NumStories >\n   MaxAll( ResZn:Top ) = %g\n   MaxAll( ResOtherZn:Top ) = %g\n   MinAll( ResZn:Bottom ) = %g\n   MinAll( ResOtherZn:Bottom ) = %g\n   SumAll( ResZn:CeilingHeight ) = %g\n   SumAll( ResOtherZn:CeilingHeight ) = %g\n   # Zone + OtherZone = %g",
@@ -64,10 +62,10 @@ RULELIST "ProposedInput_HVAC" 0 0 0 0
 		       (SumAll( ResZn:CeilingHeight ) / ComponentCount( Zone ))
 		endif endif endif  }
 
-   "Set ResZn:Top_HasDHW"            ResZn:Top_HasDHW         = {   if (HasDHWUse) then  Top    + ((FloorHeight/2) * (Mult - 1))  else  UNDEFINED  endif  }    ; SAC 08/30/20
-   "Set ResOtherZn:Top_HasDHW"       ResOtherZn:Top_HasDHW    = {   if (HasDHWUse) then  Top    + ((FloorHeight/2) * (Mult - 1))  else  UNDEFINED  endif  }    ; adjusted for flr mults - SAC 04/26/23 (tic #3392)
-   "Set ResZn:Bottom_HasDHW"         ResZn:Bottom_HasDHW      = {   if (HasDHWUse) then  Bottom - ((FloorHeight/2) * (Mult - 1))  else  UNDEFINED  endif  }
-   "Set ResOtherZn:Bottom_HasDHW"    ResOtherZn:Bottom_HasDHW = {   if (HasDHWUse) then  Bottom - ((FloorHeight/2) * (Mult - 1))  else  UNDEFINED  endif  }
+   "Set ResZn:Top_HasDHW"            ResZn:Top_HasDHW         = {   if (HasDHWUse) then  Top     else  UNDEFINED  endif  }      ; SAC 08/30/20
+   "Set ResOtherZn:Top_HasDHW"       ResOtherZn:Top_HasDHW    = {   if (HasDHWUse) then  Top     else  UNDEFINED  endif  }
+   "Set ResZn:Bottom_HasDHW"         ResZn:Bottom_HasDHW      = {   if (HasDHWUse) then  Bottom  else  UNDEFINED  endif  }
+   "Set ResOtherZn:Bottom_HasDHW"    ResOtherZn:Bottom_HasDHW = {   if (HasDHWUse) then  Bottom  else  UNDEFINED  endif  }
 	"Set ResProj:NumStories_HasDHW"		ResProj:NumStories_HasDHW	=                                ; added for DHW-related calcs - SAC 08/30/20
 	{	if (ComponentCount( Zone ) < 1 .AND. ComponentCount( OtherZone ) < 1) then  1
 		else if (SumAll( ResZn:Top_HasDHW ) < 1 .AND. SumAll( ResOtherZn:Top_HasDHW ) < 1) then  1
@@ -228,9 +226,6 @@ RULELIST "Default_AllHVAC" 0 0 0 0
             else if ((SumAll( ResCrawlSpc:Area ) / CondFloorArea) > ((DuctsInCrawlMinPctArea/100)-0.0001))
             then  1  else  0  endif endif  }
 
-; DEBUGGING
-; "dbg" Proj:Action = { StoreBEMProc( Format( "dflt-rnd %g", ValidOr( DefaultingRounds, 0 ) ), 0 ) }
-
 	"Set ResHVACSys:TypeAbbrev"			ResHVACSys:TypeAbbrev		= {  Local( Type )  }
 	"Set ResHVACSys:TypeAbbrevStr"		ResHVACSys:TypeAbbrevStr	= {  EnumString( TypeAbbrev )  }
 
@@ -244,10 +239,10 @@ RULELIST "Default_AllHVAC" 0 0 0 0
 ;
   ; SAC 12/5/13 - added logic to take into account Alt & Ex HVAC assignments
 	"Set ResHVACSys:FloorAreaServed[1]"	ResHVACSys:FloorAreaServed[1]	= {
-      SumRevRef( ResZn:HVACSystem,		ResZn:HVACNewCondFloorAreaWithMult ) +
-      SumRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:HVACNewCondFloorAreaWithMult ) +
-      SumRevRef( ResZn:AltHVACSystem,	ResZn:HVACAltCondFloorAreaWithMult ) +
-      SumRevRef( ResZn:exHVACSystem,		ResZn:HVACExCondFloorAreaWithMult  )  }
+      SumRevRef( ResZn:HVACSystem,		ResZn:HVACNewCondFloorArea ) +
+      SumRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:HVACNewCondFloorArea ) +
+      SumRevRef( ResZn:AltHVACSystem,	ResZn:HVACAltCondFloorArea ) +
+      SumRevRef( ResZn:exHVACSystem,		ResZn:HVACExCondFloorArea  )  }
 																		;				switch ( type )
 																		;		; SAC 1/11/13 - revised default for whole house fan floor area served to be ALL CFA if fan data defaulted
 																		;		;			case 10 :	SumRevRef( ResZn:CoolVentSystem, ResZn:CondFloorArea )
@@ -272,16 +267,16 @@ RULELIST "Default_AllHVAC" 0 0 0 0
 
 "Set ResHVACSys:FloorAreaSrvdInclV - Floor area served by this system (including altered/verified system area)"
       ResHVACSys:FloorAreaSrvdInclV	= {
-         FloorAreaServed[1] + SumRevRef( ResZn:exHVACSystem, ResZn:HVACExVCondFloorAreaWithMult )  }
+         FloorAreaServed[1] + SumRevRef( ResZn:exHVACSystem, ResZn:HVACExVCondFloorArea )  }
 
 	"Set ResHVACSys:AtticArea"				ResHVACSys:AtticArea				= {
       SumRevRef( ResZn:HVACSystem,		ResZn:AtticArea ) +
-      SumRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:AtticArea ) +
+      SumRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:AtticArea ) +
       SumRevRef( ResZn:AltHVACSystem,	ResZn:AtticArea ) +
       SumRevRef( ResZn:exHVACSystem,		ResZn:AtticArea  )  }
 	"Set ResHVACSys:UncondAtticArea"		ResHVACSys:UncondAtticArea		= {
       SumRevRef( ResZn:HVACSystem,		ResZn:UncondAtticArea ) +
-      SumRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:UncondAtticArea ) +
+      SumRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:UncondAtticArea ) +
       SumRevRef( ResZn:AltHVACSystem,	ResZn:UncondAtticArea ) +
       SumRevRef( ResZn:exHVACSystem,		ResZn:UncondAtticArea  )  }
 
@@ -409,11 +404,6 @@ RULELIST "Default_AllHVAC" 0 0 0 0
 	"Set ResHVACSys:HtPmpFlrAreaServed[9]"		ResHVACSys:HtPmpFlrAreaServed[9]   = {	if (IfValidAnd( TypeOK > 0.5 ) .AND. Type == 2 .AND. IfValidAnd( NumHtPumpSystemTypes >= 9 ) .AND. IfValidAnd( HtPumpSystem[9]:Type > 0 )) then  FloorAreaServed[9]  else  0  endif  }
 	"Set ResHVACSys:HtPmpFlrAreaServed[10]"	ResHVACSys:HtPmpFlrAreaServed[10]  = {	if (IfValidAnd( TypeOK > 0.5 ) .AND. Type == 2 .AND. IfValidAnd( NumHtPumpSystemTypes >=10 ) .AND. IfValidAnd( HtPumpSystem[10]:Type >0 )) then  FloorAreaServed[10] else  0  endif  }
 
-   ; EAA system setup fix - SAC 09/13/24
-   "Set ResHVACSys:ExFlrAreaServed"    ResHVACSys:ExFlrAreaServed    = {	if (Status == 1 .AND. (ResProj:RunScope == 2 .OR. ResProj:IsAddAlone > 0.5)) then  FloorAreaServed[1]  else  0  endif  }
-   "Set ResHVACSys:AltFlrAreaServed"   ResHVACSys:AltFlrAreaServed   = {	if (Status == 2 .AND. (ResProj:RunScope == 2 .OR. ResProj:IsAddAlone > 0.5)) then  FloorAreaServed[1]  else  0  endif  }
-   "Set ResHVACSys:NewFlrAreaServed"   ResHVACSys:NewFlrAreaServed   = {	if (Status == 3) then  FloorAreaServed[1]  else  0  endif  }
-
 ;  mjb   11/12/14  poplate the HVACSys Status arrays
 ; SAC 11/21/14 - switched to using separate property name for Status ARRAY, to avoid third party vendor data model questions/issues
 	"Set ResHVACSys:StatusArray[1]"		ResHVACSys:StatusArray[1]   = {	Status  }
@@ -428,12 +418,12 @@ RULELIST "Default_AllHVAC" 0 0 0 0
 	"Set ResHVACSys:StatusArray[10]"		ResHVACSys:StatusArray[10]  = {	Status  }
 
 	"Set ResHVACSys:MinFloorHeight"		ResHVACSys:MinFloorHeight	=
-	   {	if (SumRevRef( ResOtherZn:ActiveHVACSystem,  ResOtherZn:CondFloorArea ) > 0 .AND.
+	   {	if (SumRevRef( ResOtherZn:ozHVACSystem,  ResOtherZn:CondFloorArea ) > 0 .AND.
 	          SumRevRef(      ResZn:HVACSystem  ,       ResZn:CondFloorArea ) > 0)
-	      then  min( MinRevRef( ResOtherZn:ActiveHVACSystem,  ResOtherZn:FloorHeight ),
+	      then  min( MinRevRef( ResOtherZn:ozHVACSystem,  ResOtherZn:FloorHeight ),
 	                 MinRevRef(      ResZn:HVACSystem  ,       ResZn:FloorHeight ) )
-	      else if (SumRevRef(  ResOtherZn:ActiveHVACSystem,  ResOtherZn:CondFloorArea ) > 0)
-	      then  MinRevRef(     ResOtherZn:ActiveHVACSystem,  ResOtherZn:FloorHeight )
+	      else if (SumRevRef(  ResOtherZn:ozHVACSystem,  ResOtherZn:CondFloorArea ) > 0)
+	      then  MinRevRef(     ResOtherZn:ozHVACSystem,  ResOtherZn:FloorHeight )
 	      else  MinRevRef( ResZn:HVACSystem    , ResZn:FloorHeight )
 	      endif endif  }
 																		;				switch ( type )
@@ -444,14 +434,14 @@ RULELIST "Default_AllHVAC" 0 0 0 0
 																		;					default :	MinRevRef( ResZn:HVACSystem    , ResZn:FloorHeight )
 																		;				endswitch  }
 	"Set ResHVACSys:FloorZRange"			ResHVACSys:FloorZRange		=
-	   {	if (SumRevRef( ResOtherZn:ActiveHVACSystem,  ResOtherZn:CondFloorArea ) > 0 .AND.
+	   {	if (SumRevRef( ResOtherZn:ozHVACSystem,  ResOtherZn:CondFloorArea ) > 0 .AND.
 	          SumRevRef(      ResZn:HVACSystem  ,       ResZn:CondFloorArea ) > 0)
-	      then  max( MaxRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:Bottom ),
+	      then  max( MaxRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:Bottom ),
 	                 MaxRevRef(      ResZn:HVACSystem  ,      ResZn:Bottom ) ) -
-	            min( MinRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:Bottom ),
+	            min( MinRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:Bottom ),
 	                 MinRevRef(      ResZn:HVACSystem  ,      ResZn:Bottom ) )
-	      else if (SumRevRef(  ResOtherZn:ActiveHVACSystem,  ResOtherZn:CondFloorArea ) > 0)
-	      then  MaxRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:Bottom ) - MinRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:Bottom )
+	      else if (SumRevRef(  ResOtherZn:ozHVACSystem,  ResOtherZn:CondFloorArea ) > 0)
+	      then  MaxRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:Bottom ) - MinRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:Bottom )
 	      else  MaxRevRef( ResZn:HVACSystem    , ResZn:Bottom ) - MinRevRef( ResZn:HVACSystem    , ResZn:Bottom )
 	      endif endif  }
 																		;				switch ( type )
@@ -465,10 +455,10 @@ RULELIST "Default_AllHVAC" 0 0 0 0
 	"Set ResHVACSys:NumStoriesServed"	ResHVACSys:NumStoriesServed = {	if (IfValidAnd( FloorAreaServed[1] > 0.1 ) == 0) then  0
 																						else if (IfValidAnd( MinFloorHeight > 0.1 ))
 																						then  max( max( MaxRevRef( ResZn:HVACSystem       , ResZn:NumStories ),
-																						                MaxRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:NumStories ) ),
+																						                MaxRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:NumStories ) ),
 																						           int( (FloorZRange / MinFloorHeight) ) + 1 )
 																						else  max( MaxRevRef( ResZn:HVACSystem       , ResZn:NumStories ),
-																						           MaxRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:NumStories ) )
+																						           MaxRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:NumStories ) )
 																						endif endif  }
 																		;				switch ( type )
 																		;					case 10 :	if (Local( MinFloorHeight ) > 0.1)
@@ -500,7 +490,7 @@ RULELIST "Default_AllHVAC" 0 0 0 0
    "Set ResHVACSys:NumDUsServed - # dwelling units served by this system"     ResHVACSys:NumDUsServed =           ; SAC 04/21/21
       {  if (ResProj:IsMultiFamily < 0.5) then  1
          else  max( SumRevRef( ResZn:HVACSystem, ResZn:NumDwellingUnits ), 1 ) + 
-               SumRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:HVACSysAssigned )
+               SumRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:HVACSysAssigned )
          endif  }
 
 ; SAC 8/26/13 - added CFI (Central Fan Integrated) Cool Vent properties and defaulting
@@ -1390,11 +1380,6 @@ RULELIST "Default_AllHVAC" 0 0 0 0
 	"Incrament DwellUnitType:IAQFanRef[3]:NumAssignments"		DwellUnitType:IAQFanRef[3]:NumAssignments	= {	if (ResProj:IsMultiFamily > 0.5 .AND. IAQOption == 2 .AND. IfValidAnd( AssignedDUFlrArea = 0 )==0) then  IAQFanRef[3]:NumAssignments + 1  else  UNCHANGED  endif  }
 	"Incrament DwellUnitType:IAQFanRef[4]:NumAssignments"		DwellUnitType:IAQFanRef[4]:NumAssignments	= {	if (ResProj:IsMultiFamily > 0.5 .AND. IAQOption == 2 .AND. IfValidAnd( AssignedDUFlrArea = 0 )==0) then  IAQFanRef[4]:NumAssignments + 1  else  UNCHANGED  endif  }
 
-   "Incrament ResOtherZn:IAQFanRef[1-4]:NumAssignments"   for:#Fan=(1to4)   ResOtherZn:IAQFanRef[#Fan]:NumAssignments  =      ; SAC 06/26/23
-      {  if (IfValidAnd(IAQDisabled < 1) .AND. IfValidAnd(AllowIAQInps > 0) .AND.
-             IAQOption == 2 .AND. IfValidAnd( IAQNumFanRefs >= #Fan ))
-         then  IAQFanRef[#Fan]:NumAssignments + 1  else  UNCHANGED  endif  }
-
    "Set ResIAQFan:WperCFMIAQRpt - iff this fan is referenced in analysis (for reporting as special feature)"   ResIAQFan:WperCFMIAQRpt  =   ; SAC 2/10/20 (tic #1174)
       {  if (IfValidAnd( Proj:AnalysisVersion >= 190200 )==0 .OR. NumAssignments < 1 .OR. IfValidAnd( WperCFMIAQ > 0 )==0) then  UNDEFINED
          else  WperCFMIAQ  endif  }
@@ -2122,11 +2107,8 @@ RULELIST "SetupHVACSys_Round1_HeatPump" 0 0 0 0
 
 ; SAC 9/29/13 - added logic to cause standard design HPs to auto-size their heat caps
 ; SAC 10/27/15 - added check for design rating run abbreviation (ResProj:RunAbbrev == "dr")
-   ; added logic to prevent setting ResHVACSys:AutoSizeHeatInp to 1 for Existing Std design systems - SAC 07/13/23
-	"Default ResHVACSys:AutoSizeHeatInp"	ResHVACSys:AutoSizeHeatInp			=
-      {  if (GlobalStatus( ResProj:RunAbbrev ) < 1) then  0
-         else if (Status > 1 .AND. (ResProj:RunAbbrev == "s" .OR. ResProj:RunAbbrev == "zb" .OR.
-                                    ResProj:RunAbbrev == "S" .OR. ResProj:RunAbbrev == "smf" .OR. ResProj:RunAbbrev == "dr")) then  1  else  0  endif endif  }
+	"Default ResHVACSys:AutoSizeHeatInp"	ResHVACSys:AutoSizeHeatInp			= {	if (GlobalStatus( ResProj:RunAbbrev ) < 1) then  0
+																									else if (ResProj:RunAbbrev == "s" .OR. ResProj:RunAbbrev == "zb" .OR. ResProj:RunAbbrev == "S" .OR. ResProj:RunAbbrev == "smf" .OR. ResProj:RunAbbrev == "dr") then  1  else  0  endif endif  }
 	"Set ResHVACSys:AutoSizeHeat[1]"			ResHVACSys:AutoSizeHeat[1]			= {	0  }   ; never cause AUTOSIZE to get set for heating portion of HP in CSE
 	"Default ResHVACSys:AutoSizeCoolInp"	ResHVACSys:AutoSizeCoolInp			= {	1  }
 	"Set ResHVACSys:AutoSizeCool[1]"			ResHVACSys:AutoSizeCool[1]			= {	1  }
@@ -2187,11 +2169,8 @@ RULELIST "SetupHVACSys_Round1_Central_FPFC" 0 0 0 0
 
 ; SAC 9/29/13 - added logic to cause standard design HPs to auto-size their heat caps
 ; SAC 10/27/15 - added check for design rating run abbreviation (ResProj:RunAbbrev == "dr")
-   ; added logic to prevent setting ResHVACSys:AutoSizeHeatInp to 1 for Existing Std design systems - SAC 07/13/23
-	"Default ResHVACSys:AutoSizeHeatInp"	ResHVACSys:AutoSizeHeatInp			=
-      {  if (GlobalStatus( ResProj:RunAbbrev ) < 1) then  0
-         else if (Status > 1 .AND. (ResProj:RunAbbrev == "s" .OR. ResProj:RunAbbrev == "zb" .OR.
-                                    ResProj:RunAbbrev == "S" .OR. ResProj:RunAbbrev == "smf" .OR. ResProj:RunAbbrev == "dr")) then  1  else  0  endif endif  }
+	"Default ResHVACSys:AutoSizeHeatInp"	ResHVACSys:AutoSizeHeatInp			= {	if (GlobalStatus( ResProj:RunAbbrev ) < 1) then  0
+																									else if (ResProj:RunAbbrev == "s" .OR. ResProj:RunAbbrev == "zb" .OR. ResProj:RunAbbrev == "S" .OR. ResProj:RunAbbrev == "smf" .OR. ResProj:RunAbbrev == "dr") then  1  else  0  endif endif  }
 	"Set ResHVACSys:AutoSizeHeat[1]"      ResHVACSys:AutoSizeHeat[1]  = {	1 }   ; SAC 04/05/22 (WSHP)
 	"Default ResHVACSys:AutoSizeCoolInp"  ResHVACSys:AutoSizeCoolInp  = {	1 }
 	"Set ResHVACSys:AutoSizeCool[1]"      ResHVACSys:AutoSizeCool[1]  = {	1 }
@@ -2280,11 +2259,8 @@ RULELIST "SetupHVACSys_Round1_Central_WSHP" 0 0 0 0
 
 ; SAC 9/29/13 - added logic to cause standard design HPs to auto-size their heat caps
 ; SAC 10/27/15 - added check for design rating run abbreviation (ResProj:RunAbbrev == "dr")
-   ; added logic to prevent setting ResHVACSys:AutoSizeHeatInp to 1 for Existing Std design systems - SAC 07/13/23
-	"Default ResHVACSys:AutoSizeHeatInp"	ResHVACSys:AutoSizeHeatInp			=
-      {  if (GlobalStatus( ResProj:RunAbbrev ) < 1) then  0
-         else if (Status > 1 .AND. (ResProj:RunAbbrev == "s" .OR. ResProj:RunAbbrev == "zb" .OR.
-                                    ResProj:RunAbbrev == "S" .OR. ResProj:RunAbbrev == "smf" .OR. ResProj:RunAbbrev == "dr")) then  1  else  0  endif endif  }
+	"Default ResHVACSys:AutoSizeHeatInp"	ResHVACSys:AutoSizeHeatInp			= {	if (GlobalStatus( ResProj:RunAbbrev ) < 1) then  0
+																									else if (ResProj:RunAbbrev == "s" .OR. ResProj:RunAbbrev == "zb" .OR. ResProj:RunAbbrev == "S" .OR. ResProj:RunAbbrev == "smf" .OR. ResProj:RunAbbrev == "dr") then  1  else  0  endif endif  }
 	"Set ResHVACSys:AutoSizeHeat[1]"			ResHVACSys:AutoSizeHeat[1]			= {	1  }   ; SAC 04/05/22 (WSHP)
 	"Default ResHVACSys:AutoSizeCoolInp"	ResHVACSys:AutoSizeCoolInp			= {	1  }
 	"Set ResHVACSys:AutoSizeCool[1]"			ResHVACSys:AutoSizeCool[1]			= {	1  }
@@ -2380,11 +2356,8 @@ RULELIST "SetupHVACSys_Round1_Central_VRF" 0 0 0 0
 
 ; SAC 9/29/13 - added logic to cause standard design HPs to auto-size their heat caps
 ; SAC 10/27/15 - added check for design rating run abbreviation (ResProj:RunAbbrev == "dr")
-   ; added logic to prevent setting ResHVACSys:AutoSizeHeatInp to 1 for Existing Std design systems - SAC 07/13/23
-	"Default ResHVACSys:AutoSizeHeatInp"	ResHVACSys:AutoSizeHeatInp			=
-      {  if (GlobalStatus( ResProj:RunAbbrev ) < 1) then  0
-         else if (Status > 1 .AND. (ResProj:RunAbbrev == "s" .OR. ResProj:RunAbbrev == "zb" .OR.
-                                    ResProj:RunAbbrev == "S" .OR. ResProj:RunAbbrev == "smf" .OR. ResProj:RunAbbrev == "dr")) then  1  else  0  endif endif  }
+	"Default ResHVACSys:AutoSizeHeatInp"	ResHVACSys:AutoSizeHeatInp			= {	if (GlobalStatus( ResProj:RunAbbrev ) < 1) then  0
+																									else if (ResProj:RunAbbrev == "s" .OR. ResProj:RunAbbrev == "zb" .OR. ResProj:RunAbbrev == "S" .OR. ResProj:RunAbbrev == "smf" .OR. ResProj:RunAbbrev == "dr") then  1  else  0  endif endif  }
 	"Set ResHVACSys:AutoSizeHeat[1]"			ResHVACSys:AutoSizeHeat[1]			= {	0  }   ; SAC 04/05/22 (VRF)
 	"Default ResHVACSys:AutoSizeCoolInp"	ResHVACSys:AutoSizeCoolInp			= {	0  }
 	"Set ResHVACSys:AutoSizeCool[1]"			ResHVACSys:AutoSizeCool[1]			= {	0  }
@@ -2806,14 +2779,10 @@ RULELIST "SetupHVACSys_Round2_HeatPump" 0 0 0 0
 ;	"debug HtPumpSystem[1]:TypeAbbrevStr"		ResHVACSys:Action		= {	PostWarning( "HtPumpSystem[1]:TypeAbbrevStr '%s'", HtPumpSystem[1]:TypeAbbrevStr )  }
    ; SAC 6/25/20 - revised logic to set HtPumpSysTypeAbbrev properly for Std, SMF & DR models (tic #1225 & #1226)
    ; revised logic to ensure HtPumpSysTypeAbbrev NOT updated for Existing systems in Std, SMF & DR models - SAC 06/24/21
-   ; "dbg ResHVACSys:HtPumpSysTypeAbbrev" ResHVACSys:Action = { PostMessageToLog( "ResHVACSys '%s' HtPumpSysTypeAbbrev (was '%s'):  HtPumpSystem[1] '%s' type %s / MinRevRef( ResZn:ActiveHVACSystem, ResZn:HVACSysStatus ) %g / MinRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:HVACSysStatus ) %g", Name, ValidOr( HtPumpSysTypeAbbrev, "?" ), ValidOr( HtPumpSystem[1]:Name, "missing" ), ValidOr( HtPumpSystem[1]:TypeAbbrevStr, "?" ), MinRevRef( ResZn:ActiveHVACSystem, ResZn:HVACSysStatus ), MinRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:HVACSysStatus ) )  }
-   ; added logic to ensure ResHVACSys:HtPumpSysTypeAbbrev properly setup for Std design HVAC assigned to ResOtherZn objects - SAC 07/13/23
 	"Set ResHVACSys:HtPumpSysTypeAbbrev"	ResHVACSys:HtPumpSysTypeAbbrev	=
       {  if (NumHtPumpSystemTypes > 0 .AND. LocalCompAssigned( HtPumpSystem[1] ))
          then  if (ResProj:RunAbbrev == "s" .OR. ResProj:RunAbbrev == "zb" .OR. ResProj:RunAbbrev == "smf" .OR. ResProj:RunAbbrev == "dr")
-               then  if ( (ResProj:RunScope == 2 .OR. ResProj:IsAddAlone > 0.5) .AND.
-                          ( ( MinRevRef(      ResZn:ActiveHVACSystem,      ResZn:HVACSysStatus ) > 0 .AND. MinRevRef(      ResZn:ActiveHVACSystem,      ResZn:HVACSysStatus ) < 2 ) .OR.
-                            ( MinRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:HVACSysStatus ) > 0 .AND. MinRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:HVACSysStatus ) < 2 ) ))
+               then  if ((ResProj:RunScope == 2 .OR. ResProj:IsAddAlone > 0.5) .AND. MinRevRef( ResZn:ActiveHVACSystem, ResZn:HVACSysStatus ) < 2)
                      then  UNCHANGED
                      else if (HtOrClDucted < 0.5)
                      then T24RHeatingEquipment:DuctlessStdSys( "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", HtPumpSystem[1]:TypeAbbrevStr )
@@ -3498,16 +3467,16 @@ RULELIST "SetupHVACSys_Round2_CentralHtgClg_WSHP" 0 0 0 0
 
 ; RULES TO SUMMARIZE ADDIITONAL COOLING PERFORMANCE PARAMETERS PASSED INTO CSE FOR SIMULATION
 
-	"Set ResHVACSys:ClSysSizingFactor - 1"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 0 ) .AND. LocalCompAssigned( HVACCentralRef[1]  ) .AND. IfValidAnd( CentralEquipCount[1]  > 0 ) .AND. IfValidAnd( HVACCentralRef[1]:ClgSizingFactor  > 0 )) then                      (HVACCentralRef[1]:ClgSizingFactor  * ValidOr(CentralEquipCount[1], 1 ))  else      0      endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 2"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 1 ) .AND. LocalCompAssigned( HVACCentralRef[2]  ) .AND. IfValidAnd( CentralEquipCount[2]  > 0 ) .AND. IfValidAnd( HVACCentralRef[2]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[2]:ClgSizingFactor  * ValidOr(CentralEquipCount[2], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 3"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 2 ) .AND. LocalCompAssigned( HVACCentralRef[3]  ) .AND. IfValidAnd( CentralEquipCount[3]  > 0 ) .AND. IfValidAnd( HVACCentralRef[3]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[3]:ClgSizingFactor  * ValidOr(CentralEquipCount[3], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 4"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 3 ) .AND. LocalCompAssigned( HVACCentralRef[4]  ) .AND. IfValidAnd( CentralEquipCount[4]  > 0 ) .AND. IfValidAnd( HVACCentralRef[4]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[4]:ClgSizingFactor  * ValidOr(CentralEquipCount[4], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 5"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 4 ) .AND. LocalCompAssigned( HVACCentralRef[5]  ) .AND. IfValidAnd( CentralEquipCount[5]  > 0 ) .AND. IfValidAnd( HVACCentralRef[5]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[5]:ClgSizingFactor  * ValidOr(CentralEquipCount[5], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 6"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 5 ) .AND. LocalCompAssigned( HVACCentralRef[6]  ) .AND. IfValidAnd( CentralEquipCount[6]  > 0 ) .AND. IfValidAnd( HVACCentralRef[6]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[6]:ClgSizingFactor  * ValidOr(CentralEquipCount[6], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 7"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 6 ) .AND. LocalCompAssigned( HVACCentralRef[7]  ) .AND. IfValidAnd( CentralEquipCount[7]  > 0 ) .AND. IfValidAnd( HVACCentralRef[7]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[7]:ClgSizingFactor  * ValidOr(CentralEquipCount[7], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 8"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 7 ) .AND. LocalCompAssigned( HVACCentralRef[8]  ) .AND. IfValidAnd( CentralEquipCount[8]  > 0 ) .AND. IfValidAnd( HVACCentralRef[8]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[8]:ClgSizingFactor  * ValidOr(CentralEquipCount[8], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 9"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 8 ) .AND. LocalCompAssigned( HVACCentralRef[9]  ) .AND. IfValidAnd( CentralEquipCount[9]  > 0 ) .AND. IfValidAnd( HVACCentralRef[9]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[9]:ClgSizingFactor  * ValidOr(CentralEquipCount[9], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 10"	  ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 9 ) .AND. LocalCompAssigned( HVACCentralRef[10] ) .AND. IfValidAnd( CentralEquipCount[10] > 0 ) .AND. IfValidAnd( HVACCentralRef[10]:ClgSizingFactor > 0 )) then  ClSysSizingFactor + (HVACCentralRef[10]:ClgSizingFactor * ValidOr(CentralEquipCount[10], 1))  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 1"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 0 ) .AND. LocalCompAssigned( HVACCentralRef[1]  ) .AND. IfValidAnd( CentralEquipCount[1]  > 0 ) .AND. IfValidAnd( HVACCentralRef[1]:ClgSizingFactor  > 0 )) then                      (HVACCentralRef[1]:ClgSizingFactor  * CentralEquipCount[1] )  else      0      endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 2"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 1 ) .AND. LocalCompAssigned( HVACCentralRef[2]  ) .AND. IfValidAnd( CentralEquipCount[2]  > 0 ) .AND. IfValidAnd( HVACCentralRef[2]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[2]:ClgSizingFactor  * CentralEquipCount[2] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 3"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 2 ) .AND. LocalCompAssigned( HVACCentralRef[3]  ) .AND. IfValidAnd( CentralEquipCount[3]  > 0 ) .AND. IfValidAnd( HVACCentralRef[3]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[3]:ClgSizingFactor  * CentralEquipCount[3] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 4"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 3 ) .AND. LocalCompAssigned( HVACCentralRef[4]  ) .AND. IfValidAnd( CentralEquipCount[4]  > 0 ) .AND. IfValidAnd( HVACCentralRef[4]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[4]:ClgSizingFactor  * CentralEquipCount[4] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 5"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 4 ) .AND. LocalCompAssigned( HVACCentralRef[5]  ) .AND. IfValidAnd( CentralEquipCount[5]  > 0 ) .AND. IfValidAnd( HVACCentralRef[5]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[5]:ClgSizingFactor  * CentralEquipCount[5] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 6"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 5 ) .AND. LocalCompAssigned( HVACCentralRef[6]  ) .AND. IfValidAnd( CentralEquipCount[6]  > 0 ) .AND. IfValidAnd( HVACCentralRef[6]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[6]:ClgSizingFactor  * CentralEquipCount[6] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 7"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 6 ) .AND. LocalCompAssigned( HVACCentralRef[7]  ) .AND. IfValidAnd( CentralEquipCount[7]  > 0 ) .AND. IfValidAnd( HVACCentralRef[7]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[7]:ClgSizingFactor  * CentralEquipCount[7] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 8"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 7 ) .AND. LocalCompAssigned( HVACCentralRef[8]  ) .AND. IfValidAnd( CentralEquipCount[8]  > 0 ) .AND. IfValidAnd( HVACCentralRef[8]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[8]:ClgSizingFactor  * CentralEquipCount[8] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 9"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 8 ) .AND. LocalCompAssigned( HVACCentralRef[9]  ) .AND. IfValidAnd( CentralEquipCount[9]  > 0 ) .AND. IfValidAnd( HVACCentralRef[9]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[9]:ClgSizingFactor  * CentralEquipCount[9] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 10"	ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 9 ) .AND. LocalCompAssigned( HVACCentralRef[10] ) .AND. IfValidAnd( CentralEquipCount[10] > 0 ) .AND. IfValidAnd( HVACCentralRef[10]:ClgSizingFactor > 0 )) then  ClSysSizingFactor + (HVACCentralRef[10]:ClgSizingFactor * CentralEquipCount[10])  else  UNCHANGED  endif  }
 	"Set ResHVACSys:ClSysSizingFactor - XX"	ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEqpUnits > 0.5 )) then  ClSysSizingFactor / NumCentralEqpUnits  else  UNCHANGED  endif  }   ; fix similar to prev one for VRF below - SAC 08/05/22
 
 	"Set ResHVACSys:ClSysCapacity - 1"		ResHVACSys:ClSysCapacity	= {	0  }
@@ -3625,28 +3594,28 @@ RULELIST "SetupHVACSys_Round2_CentralHtgClg_VRF" 0 0 0 0
 
 	"Set ResHVACSys:HPSysCap17 - 1"	ResHVACSys:HPSysCap17	= {	0  }
 
-	"Set ResHVACSys:CentralSysHtgCap - 1"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 0 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[1]:HtgCapTotNetRtd > 0  )) then                     (HVACCentralRef[1]:HtgCapTotNetRtd  * ValidOr(CentralEquipCount[1], 1 ))  else      0      endif  }
-	"Set ResHVACSys:CentralSysHtgCap - 2"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 1 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[2]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[2]:HtgCapTotNetRtd  * ValidOr(CentralEquipCount[2], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysHtgCap - 3"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 2 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[3]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[3]:HtgCapTotNetRtd  * ValidOr(CentralEquipCount[3], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysHtgCap - 4"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 3 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[4]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[4]:HtgCapTotNetRtd  * ValidOr(CentralEquipCount[4], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysHtgCap - 5"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 4 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[5]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[5]:HtgCapTotNetRtd  * ValidOr(CentralEquipCount[5], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysHtgCap - 6"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 5 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[6]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[6]:HtgCapTotNetRtd  * ValidOr(CentralEquipCount[6], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysHtgCap - 7"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 6 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[7]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[7]:HtgCapTotNetRtd  * ValidOr(CentralEquipCount[7], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysHtgCap - 8"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 7 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[8]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[8]:HtgCapTotNetRtd  * ValidOr(CentralEquipCount[8], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysHtgCap - 9"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 8 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[9]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[9]:HtgCapTotNetRtd  * ValidOr(CentralEquipCount[9], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysHtgCap - 10" ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 9 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[10]:HtgCapTotNetRtd > 0 )) then  CentralSysHtgCap + (HVACCentralRef[10]:HtgCapTotNetRtd * ValidOr(CentralEquipCount[10], 1))  else  UNCHANGED  endif  }	
+	"Set ResHVACSys:CentralSysHtgCap - 1"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 0 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[1]:HtgCapTotNetRtd > 0  )) then                     (HVACCentralRef[1]:HtgCapTotNetRtd  * CentralEquipCount[1] )  else      0      endif  }
+	"Set ResHVACSys:CentralSysHtgCap - 2"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 1 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[2]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[2]:HtgCapTotNetRtd  * CentralEquipCount[2] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysHtgCap - 3"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 2 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[3]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[3]:HtgCapTotNetRtd  * CentralEquipCount[3] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysHtgCap - 4"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 3 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[4]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[4]:HtgCapTotNetRtd  * CentralEquipCount[4] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysHtgCap - 5"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 4 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[5]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[5]:HtgCapTotNetRtd  * CentralEquipCount[5] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysHtgCap - 6"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 5 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[6]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[6]:HtgCapTotNetRtd  * CentralEquipCount[6] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysHtgCap - 7"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 6 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[7]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[7]:HtgCapTotNetRtd  * CentralEquipCount[7] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysHtgCap - 8"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 7 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[8]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[8]:HtgCapTotNetRtd  * CentralEquipCount[8] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysHtgCap - 9"  ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 8 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[9]:HtgCapTotNetRtd > 0  )) then  CentralSysHtgCap + (HVACCentralRef[9]:HtgCapTotNetRtd  * CentralEquipCount[9] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysHtgCap - 10" ResHVACSys:CentralSysHtgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 9 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[10]:HtgCapTotNetRtd > 0 )) then  CentralSysHtgCap + (HVACCentralRef[10]:HtgCapTotNetRtd * CentralEquipCount[10])  else  UNCHANGED  endif  }	
 	
 
-	"Set ResHVACSys:CentralSysClgCap - 1"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 0 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[1]:ClgCapTotNetRtd > 0  )) then                     (HVACCentralRef[1]:ClgCapTotNetRtd  * ValidOr(CentralEquipCount[1], 1 ))  else      0      endif  }
-	"Set ResHVACSys:CentralSysClgCap - 2"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 1 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[2]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[2]:ClgCapTotNetRtd  * ValidOr(CentralEquipCount[2], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysClgCap - 3"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 2 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[3]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[3]:ClgCapTotNetRtd  * ValidOr(CentralEquipCount[3], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysClgCap - 4"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 3 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[4]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[4]:ClgCapTotNetRtd  * ValidOr(CentralEquipCount[4], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysClgCap - 5"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 4 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[5]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[5]:ClgCapTotNetRtd  * ValidOr(CentralEquipCount[5], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysClgCap - 6"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 5 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[6]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[6]:ClgCapTotNetRtd  * ValidOr(CentralEquipCount[6], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysClgCap - 7"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 6 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[7]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[7]:ClgCapTotNetRtd  * ValidOr(CentralEquipCount[7], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysClgCap - 8"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 7 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[8]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[8]:ClgCapTotNetRtd  * ValidOr(CentralEquipCount[8], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysClgCap - 9"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 8 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[9]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[9]:ClgCapTotNetRtd  * ValidOr(CentralEquipCount[9], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:CentralSysClgCap - 10" ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 9 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[10]:ClgCapTotNetRtd > 0 )) then  CentralSysClgCap + (HVACCentralRef[10]:ClgCapTotNetRtd * ValidOr(CentralEquipCount[10], 1))  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysClgCap - 1"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 0 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[1]:ClgCapTotNetRtd > 0  )) then                     (HVACCentralRef[1]:ClgCapTotNetRtd  * CentralEquipCount[1] )  else      0      endif  }
+	"Set ResHVACSys:CentralSysClgCap - 2"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 1 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[2]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[2]:ClgCapTotNetRtd  * CentralEquipCount[2] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysClgCap - 3"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 2 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[3]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[3]:ClgCapTotNetRtd  * CentralEquipCount[3] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysClgCap - 4"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 3 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[4]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[4]:ClgCapTotNetRtd  * CentralEquipCount[4] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysClgCap - 5"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 4 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[5]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[5]:ClgCapTotNetRtd  * CentralEquipCount[5] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysClgCap - 6"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 5 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[6]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[6]:ClgCapTotNetRtd  * CentralEquipCount[6] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysClgCap - 7"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 6 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[7]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[7]:ClgCapTotNetRtd  * CentralEquipCount[7] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysClgCap - 8"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 7 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[8]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[8]:ClgCapTotNetRtd  * CentralEquipCount[8] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysClgCap - 9"  ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 8 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[9]:ClgCapTotNetRtd > 0  )) then  CentralSysClgCap + (HVACCentralRef[9]:ClgCapTotNetRtd  * CentralEquipCount[9] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:CentralSysClgCap - 10" ResHVACSys:CentralSysClgCap	= {	if (IfValidAnd( NumCentralEquipTypes > 9 ) .AND. HPSysAutoSize = 0 .AND. IfValidAnd( HVACCentralRef[10]:ClgCapTotNetRtd > 0 )) then  CentralSysClgCap + (HVACCentralRef[10]:ClgCapTotNetRtd * CentralEquipCount[10])  else  UNCHANGED  endif  }
 
 	"Set ResHVACSys:HPSysCOP35"	ResHVACSys:HPSysCOP35	= {	0  }
 
@@ -3683,16 +3652,16 @@ RULELIST "SetupHVACSys_Round2_CentralHtgClg_VRF" 0 0 0 0
 
 ; RULES TO SUMMARIZE ADDIITONAL COOLING PERFORMANCE PARAMETERS PASSED INTO CSE FOR SIMULATION
 
-	"Set ResHVACSys:ClSysSizingFactor - 1"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 0 ) .AND. LocalCompAssigned( HVACCentralRef[1]  ) .AND. IfValidAnd( CentralEquipCount[1]  > 0 ) .AND. IfValidAnd( HVACCentralRef[1]:ClgSizingFactor  > 0 )) then                      (HVACCentralRef[1]:ClgSizingFactor  * ValidOr(CentralEquipCount[1], 1 ))  else      0      endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 2"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 1 ) .AND. LocalCompAssigned( HVACCentralRef[2]  ) .AND. IfValidAnd( CentralEquipCount[2]  > 0 ) .AND. IfValidAnd( HVACCentralRef[2]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[2]:ClgSizingFactor  * ValidOr(CentralEquipCount[2], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 3"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 2 ) .AND. LocalCompAssigned( HVACCentralRef[3]  ) .AND. IfValidAnd( CentralEquipCount[3]  > 0 ) .AND. IfValidAnd( HVACCentralRef[3]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[3]:ClgSizingFactor  * ValidOr(CentralEquipCount[3], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 4"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 3 ) .AND. LocalCompAssigned( HVACCentralRef[4]  ) .AND. IfValidAnd( CentralEquipCount[4]  > 0 ) .AND. IfValidAnd( HVACCentralRef[4]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[4]:ClgSizingFactor  * ValidOr(CentralEquipCount[4], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 5"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 4 ) .AND. LocalCompAssigned( HVACCentralRef[5]  ) .AND. IfValidAnd( CentralEquipCount[5]  > 0 ) .AND. IfValidAnd( HVACCentralRef[5]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[5]:ClgSizingFactor  * ValidOr(CentralEquipCount[5], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 6"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 5 ) .AND. LocalCompAssigned( HVACCentralRef[6]  ) .AND. IfValidAnd( CentralEquipCount[6]  > 0 ) .AND. IfValidAnd( HVACCentralRef[6]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[6]:ClgSizingFactor  * ValidOr(CentralEquipCount[6], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 7"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 6 ) .AND. LocalCompAssigned( HVACCentralRef[7]  ) .AND. IfValidAnd( CentralEquipCount[7]  > 0 ) .AND. IfValidAnd( HVACCentralRef[7]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[7]:ClgSizingFactor  * ValidOr(CentralEquipCount[7], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 8"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 7 ) .AND. LocalCompAssigned( HVACCentralRef[8]  ) .AND. IfValidAnd( CentralEquipCount[8]  > 0 ) .AND. IfValidAnd( HVACCentralRef[8]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[8]:ClgSizingFactor  * ValidOr(CentralEquipCount[8], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 9"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 8 ) .AND. LocalCompAssigned( HVACCentralRef[9]  ) .AND. IfValidAnd( CentralEquipCount[9]  > 0 ) .AND. IfValidAnd( HVACCentralRef[9]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[9]:ClgSizingFactor  * ValidOr(CentralEquipCount[9], 1 ))  else  UNCHANGED  endif  }
-	"Set ResHVACSys:ClSysSizingFactor - 10"	  ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 9 ) .AND. LocalCompAssigned( HVACCentralRef[10] ) .AND. IfValidAnd( CentralEquipCount[10] > 0 ) .AND. IfValidAnd( HVACCentralRef[10]:ClgSizingFactor > 0 )) then  ClSysSizingFactor + (HVACCentralRef[10]:ClgSizingFactor * ValidOr(CentralEquipCount[10], 1))  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 1"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 0 ) .AND. LocalCompAssigned( HVACCentralRef[1]  ) .AND. IfValidAnd( CentralEquipCount[1]  > 0 ) .AND. IfValidAnd( HVACCentralRef[1]:ClgSizingFactor  > 0 )) then                      (HVACCentralRef[1]:ClgSizingFactor  * CentralEquipCount[1] )  else      0      endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 2"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 1 ) .AND. LocalCompAssigned( HVACCentralRef[2]  ) .AND. IfValidAnd( CentralEquipCount[2]  > 0 ) .AND. IfValidAnd( HVACCentralRef[2]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[2]:ClgSizingFactor  * CentralEquipCount[2] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 3"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 2 ) .AND. LocalCompAssigned( HVACCentralRef[3]  ) .AND. IfValidAnd( CentralEquipCount[3]  > 0 ) .AND. IfValidAnd( HVACCentralRef[3]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[3]:ClgSizingFactor  * CentralEquipCount[3] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 4"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 3 ) .AND. LocalCompAssigned( HVACCentralRef[4]  ) .AND. IfValidAnd( CentralEquipCount[4]  > 0 ) .AND. IfValidAnd( HVACCentralRef[4]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[4]:ClgSizingFactor  * CentralEquipCount[4] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 5"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 4 ) .AND. LocalCompAssigned( HVACCentralRef[5]  ) .AND. IfValidAnd( CentralEquipCount[5]  > 0 ) .AND. IfValidAnd( HVACCentralRef[5]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[5]:ClgSizingFactor  * CentralEquipCount[5] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 6"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 5 ) .AND. LocalCompAssigned( HVACCentralRef[6]  ) .AND. IfValidAnd( CentralEquipCount[6]  > 0 ) .AND. IfValidAnd( HVACCentralRef[6]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[6]:ClgSizingFactor  * CentralEquipCount[6] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 7"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 6 ) .AND. LocalCompAssigned( HVACCentralRef[7]  ) .AND. IfValidAnd( CentralEquipCount[7]  > 0 ) .AND. IfValidAnd( HVACCentralRef[7]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[7]:ClgSizingFactor  * CentralEquipCount[7] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 8"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 7 ) .AND. LocalCompAssigned( HVACCentralRef[8]  ) .AND. IfValidAnd( CentralEquipCount[8]  > 0 ) .AND. IfValidAnd( HVACCentralRef[8]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[8]:ClgSizingFactor  * CentralEquipCount[8] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 9"		ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 8 ) .AND. LocalCompAssigned( HVACCentralRef[9]  ) .AND. IfValidAnd( CentralEquipCount[9]  > 0 ) .AND. IfValidAnd( HVACCentralRef[9]:ClgSizingFactor  > 0 )) then  ClSysSizingFactor + (HVACCentralRef[9]:ClgSizingFactor  * CentralEquipCount[9] )  else  UNCHANGED  endif  }
+	"Set ResHVACSys:ClSysSizingFactor - 10"	ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEquipTypes > 9 ) .AND. LocalCompAssigned( HVACCentralRef[10] ) .AND. IfValidAnd( CentralEquipCount[10] > 0 ) .AND. IfValidAnd( HVACCentralRef[10]:ClgSizingFactor > 0 )) then  ClSysSizingFactor + (HVACCentralRef[10]:ClgSizingFactor * CentralEquipCount[10])  else  UNCHANGED  endif  }
 	"Set ResHVACSys:ClSysSizingFactor - XX"	ResHVACSys:ClSysSizingFactor	= {	if (IfValidAnd( NumCentralEqpUnits > 0.5 )) then  ClSysSizingFactor / NumCentralEqpUnits  else  UNCHANGED  endif  }   ; SAC 07/22/22
 
 	"Set ResHVACSys:HtPumpEquipIssue"		ResHVACSys:HtPumpEquipIssue		=           ; added checks to ensure consistency in AutoSize flags - SAC 03/11/21
@@ -4989,10 +4958,7 @@ RULELIST "Default_HVACDist_OtherThanType" 0 0 0 0
 ; mjb 1/29/15 - mods to lookup Std Duct Leakage from T24RClimateZoneCodeBase table
 ; mjb 1/29/15 - I think DuctLeakageVal default actually only used for LowLkgAH default, which is why it is set to 6 not 8
 ;	"Default ResDistSys:DuctLeakageVal"		ResDistSys:DuctLeakageVal 	= {	6  }	
-	"Default ResDistSys:DuctLeakageVal"		ResDistSys:DuctLeakageVal 	=   ; fix for Github issue #77 - was:  {	T24RClimateZoneCodeBase:DuctLkg( "ClimateZone", Proj:CliZnNum, "CodeBase", Proj:StdDesignBase, "BldgType", Proj:BldgTypeTblStr ) - 2  }	
-      {  if (Proj:IsComRuleset .AND. IfValidAnd( Proj:AnalysisVersion >= 220302 ))
-         then  T24RClimateZoneCodeBase:DuctLkg( "ClimateZone", Proj:CliZnNum, "CodeBase", Proj:StdDesignBase, "BldgType", Proj:BldgTypeTblStr )- 1
-         else  T24RClimateZoneCodeBase:DuctLkg( "ClimateZone", Proj:CliZnNum, "CodeBase", Proj:StdDesignBase, "BldgType", Proj:BldgTypeTblStr )- 2  endif  }
+	"Default ResDistSys:DuctLeakageVal"		ResDistSys:DuctLeakageVal 	= {	T24RClimateZoneCodeBase:DuctLkg( "ClimateZone", Proj:CliZnNum, "CodeBase", Proj:StdDesignBase, "BldgType", Proj:BldgTypeTblStr ) - 2  }	
 
    ; SAC 10/30/19 - ensure buried duct inputs that were previously user inputs are defaulted for 2019+ code vintages (tic #1128)
    "Redefault AreBuried & AreDeeplyBuried flags if user-defined in 2019+ code vintages"   ResDistSys:Action  =
@@ -6332,21 +6298,21 @@ RULELIST "Default_SCSysReportObject_HtPump" 0 0 0 0
 	"Default ResSCSysRpt:HtPumpCap17"				ResSCSysRpt:HtPumpCap17			= {	if ( LocalStatus(HtPumpSystem:Cap17) < 1 ) then UNDEFINED else HtPumpSystem:Cap17 endif  }
 	"Default ResSCSysRpt:HtPumpCap47"				ResSCSysRpt:HtPumpCap47			= {	if ( LocalStatus(HtPumpSystem:Cap47) < 1 ) then UNDEFINED else HtPumpSystem:Cap47 endif  }
 	"Default ResSCSysRpt:MinCoolCFMperTon"			ResSCSysRpt:MinCoolCFMperTon	= {	if ( LocalStatus(HtPumpSystem:CFMperTon) < 1 ) then UNDEFINED else HtPumpSystem:CFMperTon endif  }
-	"Assign HERSAHUAirFlow"							ResSCSysRpt:HERSAHUAirFlow 	= {	HtPumpSystem:HERSHtPumpRef:AHUAirFlow	}        ; HERSCheck -> HERSHtPumpRef - SAC 04/18/23 (LMCC tic #133)
+	"Assign HERSAHUAirFlow"							ResSCSysRpt:HERSAHUAirFlow 	= {	HtPumpSystem:HERSCheck:AHUAirFlow	}
 	"Assign HERSAirFlowRptMsg"						ResSCSysRpt:HERSAirFlowRptMsg = {	if (IfValidAnd( HERSAHUAirFlow > 0.5 )) then 
-																										HtPumpSystem:HERSHtPumpRef:AirFlowRptMsg
+																										HtPumpSystem:HERSCheck:AirFlowRptMsg
 																										else "none" endif	}
-	"Assign HERSSEER"									ResSCSysRpt:HERSSEER 			= {	HtPumpSystem:HERSHtPumpRef:SEER	}              ; HERSCheck -> HERSHtPumpRef - SAC 04/18/23 (LMCC tic #133)
+	"Assign HERSSEER"									ResSCSysRpt:HERSSEER 			= {	HtPumpSystem:HERSCheck:SEER	}
 	"Assign HERSSEERRptMsg"							ResSCSysRpt:HERSSEERRptMsg 	= {	if (IfValidAnd( HERSSEER > 0.5 )) then
-																										HtPumpSystem:HERSHtPumpRef:SEERRptMsg
+																										HtPumpSystem:HERSCheck:SEERRptMsg
 																										else "none" endif	}
-	"Assign HERSEER"									ResSCSysRpt:HERSEER 				= {	HtPumpSystem:HERSHtPumpRef:EER	}              ; HERSCheck -> HERSHtPumpRef - SAC 04/18/23 (LMCC tic #133)
+	"Assign HERSEER"									ResSCSysRpt:HERSEER 				= {	HtPumpSystem:HERSCheck:EER	}
 	"Assign HERSEERRptMsg"							ResSCSysRpt:HERSEERRptMsg 		= {	if (IfValidAnd( HERSEER > 0.5 )) then
-																										HtPumpSystem:HERSHtPumpRef:EERRptMsg
+																										HtPumpSystem:HERSCheck:EERRptMsg
 																										else "none" endif	}
-	"Assign HERSACCharg"								ResSCSysRpt:HERSACCharg 		= {	HtPumpSystem:HERSHtPumpRef:ACCharg	}           ; HERSCheck -> HERSHtPumpRef - SAC 04/18/23 (LMCC tic #133)
+	"Assign HERSACCharg"								ResSCSysRpt:HERSACCharg 		= {	HtPumpSystem:HERSCheck:ACCharg	}
 	"Assign HERSACChargRptMsg"						ResSCSysRpt:HERSACChargRptMsg = {	if (IfValidAnd( HERSACCharg > 0.5 )) then
-																										EnumString( HtPumpSystem:HERSHtPumpRef:ACChargRptMsg ) 
+																										EnumString( HtPumpSystem:HERSCheck:ACChargRptMsg ) 
 																										else "none" endif	}
 END
 
@@ -8107,12 +8073,7 @@ RULELIST "Default_HtPump_VariableCapHeatPump2" 0 0 0 1
    "Default ResHtPumpSys:VCHPFanPwrHC[2]-c"    ResHtPumpSys:VCHPFanPwrHC[2] = {   0.1  }
    "Default ResHtPumpSys:HtgSizingFactor"      ResHtPumpSys:HtgSizingFactor = {   1.2  }      ; updated from 1.2 to 1.1 - SAC 02/11/22 (VCHP2)  ; roll BACK to 1.2 - SAC 02/25/22 (VCHP2)
    "Default ResHtPumpSys:HtgAuxSizingFactor"   ResHtPumpSys:HtgAuxSizingFactor = {   1.2  }      ; SAC 03/03/22 (VCHP2)
-   ; set to undef for 2022+ analysis crankcase htrs (rsParElec) (to force use of new default) - SAC 03/06/23
-   "Default ResHtPumpSys:ParElecExprs"         ResHtPumpSys:ParElecExprs    =     ; added AnalysisVersion dependence to rollback for 22.2.1 SP1 release - SAC 05/08/23
-      {  if (IfValidAnd( ResProj:StdsVersionYr >= 2022 ) .AND. IfValidAnd( Proj:AnalysisVersion >= 220202 ))
-         then  UNDEFINED
-         else  "($tdboHrAv < 50) * 40"
-         endif  }
+   "Default ResHtPumpSys:ParElecExprs"         ResHtPumpSys:ParElecExprs    = {   "($tdboHrAv < 50) * 40"  }
 
    "Override ResHtPumpSys:TempLabels[1]"     ResHtPumpSys:TempLabels[1] = {  "@   47°F:"  }    ; SAC 07/24/21
    "Override ResHtPumpSys:TempLabels[2]"     ResHtPumpSys:TempLabels[2] = {  "@   17°F:"  }
@@ -8819,23 +8780,22 @@ RULELIST "PostProposedInput_HVAC" 1 0 0 1
 ;	"store BEMProc details"		ResHVACSys:Action = {  StoreBEMProc( "b4 Dist-Fan for Prop-Std sys", 0 )  }
   ; SAC 5/6/14 - START by creating HVACDist and/or HVACFan if they are required to model the proposed (like standard) system (GC #312)
   ; SAC 8/7/14 - added logic to create & assign HVACDist if Dist required but currently assigned ResDistSys:Type = 8 (NoDucts) - GC #352
-  ; prevent following setup mods for Existing systems - SAC 06/28/23 (tic #3479)
 	"Create ResHVACSys:DistribSystem when required to model standard-like heating system"
-			ResHVACSys:DistribSystem	= {	if (Status < 2 .OR. Type == 2 .OR. (LocalCompAssigned( DistribSystem ) > 0.5 .AND. IfValidAnd( DistribSystem:Type != 8 )) .OR. FloorAreaServed[1] < 0.1 .OR.
+			ResHVACSys:DistribSystem	= {	if (Type == 2 .OR. (LocalCompAssigned( DistribSystem ) > 0.5 .AND. IfValidAnd( DistribSystem:Type != 8 )) .OR. FloorAreaServed[1] < 0.1 .OR.
 															LocalStatus( HeatSysTypeAbbrev ) < 1 .OR. LocalStatus( StdHeatingType ) < 1) then  UNCHANGED
 													else if (T24RHeatingEquipment:PropEqStd( "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", HeatSysTypeAbbrev ) < 0.5) then  UNCHANGED
 													else if (T24RHeatingEquipment:DuctFlag(  "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", EnumString( StdHeatingType ) ) > 0.5)
 													then	CreateComp( HVACDist, Local( Name ) + "-dist", "Setup_HVACDist" )
 													else  UNCHANGED  endif endif endif  }
 	"Create ResHVACSys:DistribSystem when required to model standard-like cooling system"
-			ResHVACSys:DistribSystem	= {	if (Status < 2 .OR. Type == 2 .OR. (LocalCompAssigned( DistribSystem ) > 0.5 .AND. IfValidAnd( DistribSystem:Type != 8 )) .OR. FloorAreaServed[1] < 0.1 .OR.
+			ResHVACSys:DistribSystem	= {	if (Type == 2 .OR. (LocalCompAssigned( DistribSystem ) > 0.5 .AND. IfValidAnd( DistribSystem:Type != 8 )) .OR. FloorAreaServed[1] < 0.1 .OR.
 															LocalStatus( CoolSysTypeAbbrev ) < 1 .OR. LocalStatus( StdCoolingType ) < 1) then  UNCHANGED
 													else if (T24RCoolingEquipment:PropEqStd( "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", CoolSysTypeAbbrev ) < 0.5) then  UNCHANGED
 													else if (T24RCoolingEquipment:DuctFlag(  "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", EnumString( StdCoolingType ) ) > 0.5)
 													then	CreateComp( HVACDist, Local( Name ) + "-dist", "Setup_HVACDist" )
 													else  UNCHANGED  endif endif endif  }
 	"Create ResHVACSys:DistribSystem when required to model standard-like heat pump system"
-			ResHVACSys:DistribSystem	= {	if (Status < 2 .OR. Type != 2 .OR. (LocalCompAssigned( DistribSystem ) > 0.5 .AND. IfValidAnd( DistribSystem:Type != 8 )) .OR. FloorAreaServed[1] < 0.1 .OR.
+			ResHVACSys:DistribSystem	= {	if (Type != 2 .OR. (LocalCompAssigned( DistribSystem ) > 0.5 .AND. IfValidAnd( DistribSystem:Type != 8 )) .OR. FloorAreaServed[1] < 0.1 .OR.
 															LocalStatus( HtPumpSysTypeAbbrev ) < 1 .OR. LocalStatus( StdCoolingType ) < 1 .OR. LocalStatus( StdHeatingType ) < 1) then  UNCHANGED
 													else if (T24RHeatingEquipment:PropEqStd( "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", HtPumpSysTypeAbbrev ) > 0.5 .AND.
 																T24RHeatingEquipment:DuctFlag(  "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", EnumString( StdHeatingType ) ) > 0.5)
@@ -8846,21 +8806,21 @@ RULELIST "PostProposedInput_HVAC" 1 0 0 1
 													else  UNCHANGED  endif endif endif  }
 
 	"Create ResHVACSys:Fan when required to model standard-like heating system"
-			ResHVACSys:Fan	= {	if (Status < 2 .OR. Type == 2 .OR. LocalCompAssigned( Fan ) > 0.5 .OR. FloorAreaServed[1] < 0.1 .OR.
+			ResHVACSys:Fan	= {	if (Type == 2 .OR. LocalCompAssigned( Fan ) > 0.5 .OR. FloorAreaServed[1] < 0.1 .OR.
 											LocalStatus( HeatSysTypeAbbrev ) < 1 .OR. LocalStatus( StdHeatingType ) < 1) then  UNCHANGED
 									else if (T24RHeatingEquipment:PropEqStd( "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", HeatSysTypeAbbrev ) < 0.5) then  UNCHANGED
 									else if (T24RHeatingEquipment:DuctFlag(  "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", EnumString( StdHeatingType ) ) > 0.5)
 									then	CreateComp( HVACFan, Local( Name ) + "-fan", "Setup_HVACDistFan" )
 									else  UNCHANGED  endif endif endif  }
 	"Create ResHVACSys:Fan when required to model standard-like cooling system"
-			ResHVACSys:Fan	= {	if (Status < 2 .OR. Type == 2 .OR. LocalCompAssigned( Fan ) > 0.5 .OR. FloorAreaServed[1] < 0.1 .OR.
+			ResHVACSys:Fan	= {	if (Type == 2 .OR. LocalCompAssigned( Fan ) > 0.5 .OR. FloorAreaServed[1] < 0.1 .OR.
 											LocalStatus( CoolSysTypeAbbrev ) < 1 .OR. LocalStatus( StdCoolingType ) < 1) then  UNCHANGED
 									else if (T24RCoolingEquipment:PropEqStd( "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", CoolSysTypeAbbrev ) < 0.5) then  UNCHANGED
 									else if (T24RCoolingEquipment:DuctFlag(  "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", EnumString( StdCoolingType ) ) > 0.5)
 									then	CreateComp( HVACFan, Local( Name ) + "-fan", "Setup_HVACDistFan" )
 									else  UNCHANGED  endif endif endif  }
 	"Create ResHVACSys:Fan when required to model standard-like heat pump system"
-			ResHVACSys:Fan	= {	if (Status < 2 .OR. Type != 2 .OR. LocalCompAssigned( Fan ) > 0.5 .OR. FloorAreaServed[1] < 0.1 .OR.
+			ResHVACSys:Fan	= {	if (Type != 2 .OR. LocalCompAssigned( Fan ) > 0.5 .OR. FloorAreaServed[1] < 0.1 .OR.
 											LocalStatus( HtPumpSysTypeAbbrev ) < 1 .OR. LocalStatus( StdCoolingType ) < 1 .OR. LocalStatus( StdHeatingType ) < 1) then  UNCHANGED
 									else if (T24RHeatingEquipment:PropEqStd( "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", HtPumpSysTypeAbbrev ) > 0.5 .AND.
 												T24RHeatingEquipment:DuctFlag(  "CodeBase", Proj:StdDesignBase, "StdVer", ResProj:StdsVersionYr, "SysType", EnumString( StdHeatingType ) ) > 0.5)
@@ -8968,7 +8928,7 @@ RULELIST "PostProposedInput_HVAC" 1 0 0 1
    "Assign SimDHWSys"          ResDHWSys:SimDHWSys  =       ; SAC 10/2/19 - revised to handle central laundry (MFamProto)
       {  if ( FloorAreaServed > 0 ) then  1
          else if (Proj:IsComRuleset .AND.
-                  SumRevRef( ResOtherZn:ActiveDHWSystem, ResOtherZn:WasherDwellUnits ) > 0) then  1
+                  SumRevRef( ResOtherZn:ozDHWSys, ResOtherZn:WasherDwellUnits ) > 0) then  1
          else  0  endif endif  }
 
 
@@ -9007,30 +8967,19 @@ RULELIST "MultiFamilyAnalysisPrep" 1 0 0 0
 	;"Blast all HVACSys objects"														ResProj:Action	= {	DeleteAllComps( HVACSys )  }
 	; SAC 9/23/19 - replaced above w/ following to prevent deletion of HVACSys objects that are refefenced by OtherZone objects (MFamProto)
    "Blast all HVACSys objects (not assigned by OtherZones)"	   ResHVACSys:Action	=
-      {  if (SumRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:CondFloorArea ) > 0) then   UNCHANGED
+      {  if (SumRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:CondFloorArea ) > 0) then   UNCHANGED
          else  DeleteComp()  endif  }
-
-
-   ; store original user input ResHVACSys ref for each ResOtherZn BEFORE creating new ResHVACSys for each ResOtherZn - SAC 04/29/24
-   "Set ResOtherZn:StoreUserResHVACSysRef"   ResOtherZn:StoreUserResHVACSysRef =
-      {  if (LocalCompAssigned( ActiveHVACSystem ) == ComponentType( "ResHVACSys" ))
-         then  ActiveHVACSystem
-         else  UNDEFINED  endif  }
 
    ; rules to ensure 1-to-1 ResOtherZn/ResHVACSys assignments (VRF-related) - SAC 06/04/22
    "Set ResOtherZn:CompIdx"   ResOtherZn:CompIdx = {  ComponentIndex()  } 
    "Set ResHVACSys:MinResOtherZnCompIdx"     ResHVACSys:MinResOtherZnCompIdx =
-      {  if (SumRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:CondFloorArea ) > 0)
-         then  MinRevRef( ResOtherZn:ActiveHVACSystem, ResOtherZn:CompIdx )
+      {  if (SumRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:CondFloorArea ) > 0)
+         then  MinRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:CompIdx )
          else  -1  endif  }
-   ; revised logic to NOT copy Existing HVAC systems - SAC 06/28/23
    "Create copy of ResHVACSys if not first ResOtherZn assigned"   ResotherZn:Action =
-      {  if (LocalCompAssigned( ActiveHVACSystem ) == ComponentType( "ResHVACSys" ) .AND.
-             (Proj:ResCompOpt < 2 .OR. HVACSysStatus > 1))
-         then  if (IfValidAnd( CompIdx > ActiveHVACSystem:MinResOtherZnCompIdx ))
-               then  if (HVACSysStatus == 3)
-                     then  EvalRulelist( "CreateUnique_ResOtherZn_ResHVACSys_New", 1 )
-                     else  EvalRulelist( "CreateUnique_ResOtherZn_ResHVACSys_Alt", 1 )  endif
+      {  if (LocalCompAssigned( ozHVACSystem ) == ComponentType( "ResHVACSys" ))
+         then  if (IfValidAnd( CompIdx > ozHVACSystem:MinResOtherZnCompIdx ))
+               then  EvalRulelist( "CreateUnique_ResOtherZn_ResHVACSys", 1 )
                else  UNCHANGED  endif
          else  UNCHANGED  endif  }
 
@@ -9039,15 +8988,6 @@ RULELIST "MultiFamilyAnalysisPrep" 1 0 0 0
    ; set flag indicating ResZn HVAC creation for Dwellings is complete - SAC 10/16/22
    "Set Proj:ResZnHVACSysCreated to 1"    Proj:ResZnHVACSysCreated = { 1 }
 
-   ; SAC 05/05/23 (LMCC github issues #133 / #60)
-   "Delete all HERSCool   objects which, if left in place, may cause reporting issues"   Proj:Action = { DeleteAllComps( HERSCool   ) }
-   "Delete all HERSHeat   objects which, if left in place, may cause reporting issues"   Proj:Action = { DeleteAllComps( HERSHeat   ) }
-   "Delete all HERSHtPump objects which, if left in place, may cause reporting issues"   Proj:Action = { DeleteAllComps( HERSHtPump ) }
-   "Delete all HERSDist   objects which, if left in place, may cause reporting issues"   Proj:Action = { DeleteAllComps( HERSDist   ) }
-   "Delete all HERSFan    objects which, if left in place, may cause reporting issues"   Proj:Action = { DeleteAllComps( HERSFan    ) }
-   "Delete all HERSDHWSys objects which, if left in place, may cause reporting issues"   Proj:Action = { DeleteAllComps( HERSDHWSys ) }
-   "Delete all HERSOther  objects which, if left in place, may cause reporting issues"   Proj:Action = { DeleteAllComps( HERSOther  ) }
-
 ;"store BEMProc details"		ResProj:Action = {  StoreBEMProc( "After HVAC re-gen", 0 )  }
 ;"debug"		ResProj:Action	= {	MessageBox( "Multifamily HVACSys RE-generation complete" )  }
 	
@@ -9055,24 +8995,16 @@ END
 ;*************************************************************************
 
 ;************************************************************************* SAC 06/04/22
-RULELIST "CreateUnique_ResOtherZn_ResHVACSys_New" 1 0 1 0
+RULELIST "CreateUnique_ResOtherZn_ResHVACSys" 1 0 1 0
+;*************************************************************************
    "Create copy of currently assigned ResHVACSys - ResotherZn:ozHVACSystem"   ResotherZn:ozHVACSystem =
       {  CreateComp( ResHVACSys, Format( "%s hvac", Name ), "none", 1, ozHVACSystem:Name )  }
    "Default ResOtherZn:ActiveHVACSystem via rulelist"  ResOtherZn:Action =
-      {  EvalRulelist( "Default_ResOtherZn_ActiveHVACSys_New", 1 )  }
+      {  EvalRulelist( "Default_ResOtherZn_ActiveHVACSys", 1 )  }
 END
-RULELIST "Default_ResOtherZn_ActiveHVACSys_New" 1 0 0 0
+;*************************************************************************
+RULELIST "Default_ResOtherZn_ActiveHVACSys" 1 0 0 0
    "Default ResOtherZn:ActiveHVACSystem"  ResOtherZn:ActiveHVACSystem = {  ozHVACSystem  }
-END
-;************************************************************************* SAC 06/28/23
-RULELIST "CreateUnique_ResOtherZn_ResHVACSys_Alt" 1 0 1 0
-   "Create copy of currently assigned ResHVACSys - ResotherZn:AltHVACSystem"   ResotherZn:AltHVACSystem =
-      {  CreateComp( ResHVACSys, Format( "%s hvac", Name ), "none", 1, AltHVACSystem:Name )  }
-   "Default ResOtherZn:ActiveHVACSystem via rulelist"  ResOtherZn:Action =
-      {  EvalRulelist( "Default_ResOtherZn_ActiveHVACSys_Alt", 1 )  }
-END
-RULELIST "Default_ResOtherZn_ActiveHVACSys_Alt" 1 0 0 0
-   "Default ResOtherZn:ActiveHVACSystem"  ResOtherZn:ActiveHVACSystem = {  AltHVACSystem  }
 END
 ;*************************************************************************
 
@@ -9098,12 +9030,12 @@ RULELIST "OneTimeAnalysisPrep" 1 0 0 0
    "Set ResProj:CO2FuelUnitLabel - text label for CO2 emissions by fuel type"
        ResProj:CO2FuelUnitLabel   = {  "kg"  }
    "Set ResProj:CO2FuelUnitMult - conversion factor from EnergyUse units (tonne/ft2-yr) to CO2FuelUnitLabel"
-       ResProj:CO2FuelUnitMult    = {  CondFloorAreaWithMult * 1000  }
+       ResProj:CO2FuelUnitMult    = {  CondFloorArea * 1000  }
    "Set ResProj:CO2TotalUnitLabel - text label for total (summary) CO2 emissions"
        ResProj:CO2TotalUnitLabel  = {  "kg"  }
 ;       ResProj:CO2TotalUnitLabel  = {  "g/ft2-yr"  }
    "Set ResProj:CO2TotalUnitMult - conversion factor from EnergyUse units (tonne/ft2-yr) units to CO2TotalUnitLabel"
-       ResProj:CO2TotalUnitMult   = {  CondFloorAreaWithMult * 1000  }
+       ResProj:CO2TotalUnitMult   = {  CondFloorArea * 1000  }
 ;       ResProj:CO2TotalUnitMult   = {  1000000  }
 
   ; LDH 07/28/2016 - Rules to Blast Dwelling Units for Single Family
@@ -9139,7 +9071,7 @@ RULELIST "OneTimeAnalysisPrep" 1 0 0 0
 
 ; SAC 12/23/15 - MOVED from PostProposedInput to get it done BEFORE it is used to set final people heat gains
   ; SAC 8/20/14 - rule to force reset of ResProj:NumBedrooms for MFam models (GC #354 note#1)
-	"Set ResProj:NumBedrooms"		ResProj:NumBedrooms		= {	if (IfValidAnd( IsMultiFamily > 0.5 )) then  SumAll( DwellUnit:TotalNumBedroomsWithMult )
+	"Set ResProj:NumBedrooms"		ResProj:NumBedrooms		= {	if (IfValidAnd( IsMultiFamily > 0.5 )) then  SumAll( DwellUnit:TotalNumBedrooms )
 																			else  UNCHANGED  endif  }
 	"Set ResProj:NumAddBedrooms"	ResProj:NumAddBedrooms	= {	if (IfValidAnd( IsMultiFamily > 0.5 )) then  0		; SAC 12/28/15 - added - will need updates to properly handle MFam Addition Alone
 																			else  UNCHANGED  endif  }
@@ -11306,7 +11238,7 @@ END
 ;************************************************************************* SAC 04/08/21
 RULELIST "SetupDwellUnitType_AreaServed" 1 0 0 1
    "Set DwellUnitType:DUFloorAreaServed"     DwellUnitType:DUFloorAreaServed =
-      {  SumRevRef( DwellUnit:DwellUnitTypeRef, DwellUnit:TotalCondFlrAreaWithMult )  }
+      {  SumRevRef( DwellUnit:DwellUnitTypeRef, DwellUnit:TotalCondFlrArea )  }
    "Set DwellUnitType:DUClFlrAreaServed iff this DUT has valid HVACCool assignments"            DwellUnitType:DUClFlrAreaServed =
       {  if (HVACSysType == 1 .AND. IfValidAnd( NumCoolEquipTypes > 0 ) .AND.
              IfValidAnd( HVACCoolRef[1]:Type > 1 ) .AND. IfValidAnd( CoolEquipCount[1] > 0 ))
@@ -11329,8 +11261,6 @@ RULELIST "SetupDwellUnitType_AreaServed" 1 0 0 1
       {  if (HVACSysType == 4 .AND. IfValidAnd( NumCentralEquipTypes > 0 ) .AND.
              IfValidAnd( HVACCentralRef[1]:Type > 0 ) .AND. IfValidAnd( CentralEquipCount[1] > 0 ))
          then  DUFloorAreaServed  else  0  endif  }
-   "Set DwellUnitType:DUNewOrAltHVACFlrAreaServed"    DwellUnitType:DUNewOrAltHVACFlrAreaServed =     ; SAC 06/29/23 (tic #3479)
-      {  SumRevRef( DwellUnit:DwellUnitTypeRef, DwellUnit:NewOrAltHVACFlrAreaWithMult )  }
 END
 ;*************************************************************************
 

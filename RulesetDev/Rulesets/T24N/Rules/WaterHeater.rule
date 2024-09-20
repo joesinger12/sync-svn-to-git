@@ -1264,12 +1264,7 @@ RULE WtrHtr:IsUEFRtd
   REFERENCE 
     ACM-5.9.1 Water Heating
   DEFAULT
-    if ( IfValidAnd( WtrHtr:Status = "Existing" ) )
-    then UNCHANGED
-    else if ( IfValidAnd(ThrmlEffReq > 0 ) )
-    then 0
-    else 1
-    endif endif
+    0
   SIZING_PROPOSED
     if( FluidSysSHW = 1 )  
     then
@@ -6016,8 +6011,8 @@ RULE WtrHtr:CodeMinEF
     10
   REPORTPRECISION
     3
-  DEFAULT : T24N_2016 T24N_2019
-    if( FluidSys:Type = "ServiceHotWater" 
+  DEFAULT
+    if( FluidSys:Type = "ServiceHotWater" .AND.
         LocalStatus( StorCap ) > 0 )
     then
       if( Type <> "Conventional" )
@@ -6064,8 +6059,6 @@ RULE WtrHtr:CodeMinEF
       endif endif endif endif endif
     else UNDEFINED
     endif
-  DEFAULT : T24N
-    0
   SIZING
     UNDEFINED
   ANNUAL
@@ -6248,30 +6241,6 @@ RULE NEW WtrHtr:EFReq
       endif
     else 0
     endif
-ENDRULE
-
-RULE NEW WtrHtr:EffMetricChk
-  LONGFORM
-    EfficiencyMetricCheck
-  DATATYPE
-    Integer
-  INPUTCLASS
-    NotInput
-  DEFAULT
-    1
- CHECKCODE
-  if( Proj:ExcludeWtrHtg = 1 .OR. IfValidAnd( UEFRtdVal = 50 ))
-  then
-    UNCHANGED
-  else   
-    if( IfValidAnd( EFReq > 0 ) .AND. WtrHtr:Status = "New" .AND. IfValidAnd(StorCap >= 20) )
-    then 
-      PostError("Energy Factor rating is no longer allowed for new water heater '%s'. 
-                 Please select the UEF rated check box or revise inputs to have a 
-                 non-EF rating input for new water heater.", Name)
-    else UNCHANGED
-    endif
-  endif
 ENDRULE
 
 // -------------- Water Heater Energy Factor --------------------
@@ -10387,19 +10356,19 @@ RULE WtrHtr:WtrHtrSetPtTemp
   DEFAULT
     if( IfValidAnd( Type <> "Conventional" ) )
     then
-      ValidOr(DsgnSupWtrTemp,135)
+      135
     else UNDEFINED
     endif
   SIZING_PROPOSED
     if( IfValidAnd( Type <> "Conventional" ) .AND. Proj:SHWBothBaseline )
     then
-       ValidOr(DsgnSupWtrTemp,135)
+      135
     else UNCHANGED
     endif
   SIZING_BASELINE
     if( IfValidAnd( Type <> "Conventional" ) )
     then
-       ValidOr(DsgnSupWtrTemp,135)
+      135
     else UNDEFINED
     endif
   ANNUAL_BASELINE

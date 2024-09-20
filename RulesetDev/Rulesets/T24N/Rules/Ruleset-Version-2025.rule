@@ -38,7 +38,7 @@ RULE Proj:CompManagerVersion
   DESCRIPTION
     "Version of Compliance Manager software"
   DEFAULT 
-    Format( "BEMCmpMgr 2025.0.4 (%g)", RuleRepoRev )
+    Format( "BEMCmpMgr 2025.0.3 (%g)", RuleRepoRev )
   SIZING
     u:CompManagerVersion
   ANNUAL
@@ -62,7 +62,7 @@ RULE Proj:AnalysisVersion
   DESCRIPTION
     "Version ID of analysis, enabling rule logic to be sensitive to analysis version"
   DEFAULT 
-    250004
+    250003
 ENDRULE
 ;    220200
 
@@ -328,32 +328,4 @@ RULE NEW Proj:BypassCompRptMsg
     if (EnumValue( StdDesignBase ) == 2025)
     then  "Compliance report generation not yet available for 2025 analysis"
     else  UNDEFINED  endif
-ENDRULE
-
-RULE NEW Proj:UtilRateDownloadURL
-  DESCRIPTION
-    "URL of the web server app used to download utility rate files"
-  INPUTCLASS
-    Prescribed
-  DEFAULT 
-    "https://utilityrates-dev.azurewebsites.net/api/rates/download"
-  SIZING
-    u:UtilRateDownloadURL
-  ANNUAL
-    u:UtilRateDownloadURL
-ENDRULE
-; was:     "https://t24docs.com/UtilityRates22-30SP2/api/ratedetails"
-;    "https://utilityrates.azurewebsites.net/api/rates/download"
-
-RULE NEW Proj:UtilRateDownloadContainer
-  DESCRIPTION
-    "Container identifying storage location of web server utility rate files"
-  INPUTCLASS
-    Prescribed
-  DEFAULT 
-    "30sp2"
-  SIZING
-    u:UtilRateDownloadContainer
-  ANNUAL
-    u:UtilRateDownloadContainer
 ENDRULE
