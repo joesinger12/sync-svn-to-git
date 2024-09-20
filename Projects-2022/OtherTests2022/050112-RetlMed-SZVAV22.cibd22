@@ -3,8 +3,8 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "050112-RetlMed-SZVAV"  
    BldgEngyModelVersion = 17
    CreateDate = 1448129223
-   ModDate = 1714769882
-   RunDate = 1714769883
+   ModDate = 1705886194
+   RunDate = 1705886195
    ZipCode = 95814
    ExcptCondNoClgSys = "No"
    ExcptCondRtdCap = "No"
@@ -16,7 +16,7 @@ Proj   "050112-RetlMed-SZVAV"
    DefaultDayltgCtrls = 1
    AnalysisType = "Title24Compliance"
    AirBarrier = "Air barrier - not verified"
-   SoftwareVersion = "CBECC 2022.3.1 RC (1343)"
+   SoftwareVersion = "CBECC 2022.3.0 SP2 (1335)"
    CompReportPDF = 1
    ..
 
@@ -968,7 +968,6 @@ Spc   "Back_Space"
    Vol = 81782
    SpcFuncDefaultsRef = "Retail Back_Space"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 1"  
@@ -1136,7 +1135,6 @@ Spc   "Core_Retail"
    SpcFuncDefaultsRef = "Retail Sales"
    Skylit100PctControlled = 1
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 8"  
@@ -2164,7 +2162,6 @@ Spc   "Front_Entry"
    PriSide100PctControlled = 1
    SecSide100PctControlled = 0
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 38"  
@@ -2334,7 +2331,6 @@ Spc   "Front_Retail"
    PriSide100PctControlled = 1
    SecSide100PctControlled = 0
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 45"  
@@ -2479,7 +2475,6 @@ Spc   "Point_Of_Sale"
    PriSide100PctControlled = 1
    SecSide100PctControlled = 0
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 51"  
@@ -3286,8 +3281,8 @@ clg: 0  htg: 0  'Point_Of_Sale Thermal Zone'" )
    StdPV_Total = 95985.6
    StdPV_Export = 1878.71
    StdPV_PctExport = 1.95728
-   NRCCPRFPayldTransID = "a7135ba9-d3f9-43c6-ab83-0d15f532a5d7"
-   NRCCPRFPayldProcDate = "2024-05-03T13:57:52"
+   NRCCPRFPayldTransID = "b315d5b8-09fe-47ef-817b-c86596771119"
+   NRCCPRFPayldProcDate = "2024-01-21T17:16:23"
    ..
 
 

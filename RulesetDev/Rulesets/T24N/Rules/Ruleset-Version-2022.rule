@@ -128,7 +128,7 @@ RULE Proj:RptGenUIVer
   INPUTCLASS
     Prescribed
   DEFAULT 
-    "31"
+    "1"
   SIZING
     u:RptGenUIVer
   ANNUAL
@@ -188,7 +188,7 @@ RULE NEW Proj:NRCC_RptGenServer
   INPUTCLASS
     Prescribed
   DEFAULT 
-    "t24docs.com"
+    "cf6r.com"
   SIZING
     u:NRCC_RptGenServer
   ANNUAL
@@ -201,7 +201,7 @@ RULE NEW Proj:NRCC_RptGenApp
   INPUTCLASS
     Prescribed
   DEFAULT 
-    "ReportGeneratorCom2022.3.1"
+    "ReportGeneratorCom2022_SVN"
   SIZING
     u:NRCC_RptGenApp
   ANNUAL
@@ -322,24 +322,9 @@ RULE NEW Proj:UtilRateDownloadURL
   INPUTCLASS
     Prescribed
   DEFAULT 
-    "https://utilityrates-dev.azurewebsites.net/api/rates/download"
+    "https://t24docs.com/UtilityRates22-30SP2/api/ratedetails"
   SIZING
     u:UtilRateDownloadURL
   ANNUAL
     u:UtilRateDownloadURL
-ENDRULE
-; was:     "https://t24docs.com/UtilityRates22-30SP2/api/ratedetails"
-;    "https://utilityrates.azurewebsites.net/api/rates/download"
-
-RULE NEW Proj:UtilRateDownloadContainer
-  DESCRIPTION
-    "Container identifying storage location of web server utility rate files"
-  INPUTCLASS
-    Prescribed
-  DEFAULT 
-    "30sp2"
-  SIZING
-    u:UtilRateDownloadContainer
-  ANNUAL
-    u:UtilRateDownloadContainer
 ENDRULE

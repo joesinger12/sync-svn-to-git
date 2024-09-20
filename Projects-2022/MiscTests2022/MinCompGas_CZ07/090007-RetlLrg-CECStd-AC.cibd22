@@ -3,7 +3,7 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "090012-RetlLrg-CECStd22"  
    BldgEngyModelVersion = 17
    CreateDate = 1672887330
-   ModDate = 1714761139
+   ModDate = 1672888302
    RunDate = 1672888303
    CliZn = "ClimateZone7"
    ZipCode = 92101
@@ -161,7 +161,6 @@ Spc   "Aisle_1"
    Vol = 281250
    SpcFuncDefaultsRef = "Retail_SpcFunc Def"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 1"  
@@ -540,7 +539,6 @@ Spc   "Aisle_2"
    Vol = 281250
    SpcFuncDefaultsRef = "Retail_SpcFunc Def"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 17"  
@@ -870,7 +868,6 @@ Spc   "Aisle_3"
    Vol = 281250
    SpcFuncDefaultsRef = "Retail_SpcFunc Def"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 31"  
@@ -1292,7 +1289,6 @@ Spc   "Aisle_4"
    Vol = 281250
    SpcFuncDefaultsRef = "Retail_SpcFunc Def"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 49"  
@@ -1646,7 +1642,6 @@ Spc   "Back_Office"
    Vol = 75000
    SpcFuncDefaultsRef = "Office_SpcFunc Def"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 64"  
@@ -1814,7 +1809,6 @@ Spc   "Back_Shelving/Refrig"
    Vol = 1.175e+06
    SpcFuncDefaultsRef = "Retail_SpcFunc Def"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 71"  
@@ -3066,7 +3060,6 @@ Spc   "Back_Storage_1"
    ThrmlZnRef = "Back_Storage Zone"
    Vol = 330000
    SpcFuncDefaultsRef = "Storage_SpcFunc Def"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 125"  
@@ -3532,7 +3525,6 @@ Spc   "Back_Storage_2"
    ThrmlZnRef = "Back_Storage Zone"
    Vol = 375000
    SpcFuncDefaultsRef = "Storage_SpcFunc Def"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 145"  
@@ -3998,7 +3990,6 @@ Spc   "Main_Entry"
    SpcFuncDefaultsRef = "Main Entry/Entries_SpcFunc Def"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 165"  
@@ -4305,7 +4296,6 @@ Spc   "Registers"
    Vol = 337500
    SpcFuncDefaultsRef = "Retail_SpcFunc Def"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 173"  
@@ -4890,7 +4880,6 @@ Spc   "Restroom_1"
    ThrmlZnRef = "Restroom_1 Zone"
    Vol = 84375
    SpcFuncDefaultsRef = "Restrooms_SpcFunc Def"
-   OccSensorCtrl = 1
    ExhNumFixtures = 10
    ..
 
@@ -5011,7 +5000,6 @@ Spc   "Restroom_2"
    CondgType = "IndirectlyConditioned"
    ThrmlZnRef = "Restroom_2 Zone"
    SpcFuncDefaultsRef = "Restrooms_SpcFunc Def"
-   OccSensorCtrl = 1
    ExhNumFixtures = 10
    ..
 
@@ -5135,7 +5123,6 @@ Spc   "Side_Entry_1"
    SecSide100PctControlled = 1
    SkyltReqExcpt = "FutureWalls"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 208"  
@@ -5441,7 +5428,6 @@ Spc   "Side_Entry_2"
    SpcFuncDefaultsRef = "Main Entry/Entries_SpcFunc Def"
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 216"  
@@ -5723,7 +5709,6 @@ Spc   "Side_Shelving_1"
    Vol = 365625
    SpcFuncDefaultsRef = "Retail_SpcFunc Def"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 224"  
@@ -6213,7 +6198,6 @@ Spc   "Side_Shelving_2"
    Vol = 365625
    SpcFuncDefaultsRef = "Retail_SpcFunc Def"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 245"  
@@ -6655,7 +6639,6 @@ Spc   "Side_Shelving_3"
    Vol = 365625
    SpcFuncDefaultsRef = "Retail_SpcFunc Def"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 264"  
@@ -7076,7 +7059,6 @@ Spc   "Side_Shelving_4"
    Vol = 365625
    SpcFuncDefaultsRef = "Retail_SpcFunc Def"
    SHWFluidSegRef = "SHWSupplyElec"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 282"  
@@ -7448,7 +7430,6 @@ Spc   "Side_Storage_1"
    ThrmlZnRef = "Side_Storage_1 Zone"
    Vol = 320000
    SpcFuncDefaultsRef = "Storage_SpcFunc Def"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 298"  
@@ -7958,7 +7939,6 @@ Spc   "Side_Storage_2"
    ThrmlZnRef = "Side_Storage_2 Zone"
    Vol = 125000
    SpcFuncDefaultsRef = "Storage_SpcFunc Def"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 320"  

@@ -3,8 +3,8 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "OffSml-MiniSplit"  
    BldgEngyModelVersion = 17
    CreateDate = 1484955589
-   ModDate = 1718656933
-   RunDate = 1714772010
+   ModDate = 1705887805
+   RunDate = 1705887806
    ZipCode = 95814
    ExcptCondNoClgSys = "No"
    ExcptCondRtdCap = "No"
@@ -15,7 +15,7 @@ Proj   "OffSml-MiniSplit"
    DefaultDayltgCtrls = 1
    CompOptLtg = 1
    AirBarrier = "Air barrier - not verified"
-   SoftwareVersion = "CBECC 2022.3.1 (1344)"
+   SoftwareVersion = "CBECC 2022.3.0 SP2 (1335)"
    CompReportPDF = 1
    ResultsCurrentMessage = "(not current)"
    ..
@@ -517,7 +517,6 @@ Spc   "Perimeter_ZN_1"
    PriSide100PctControlled = 1
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 25"  
@@ -804,7 +803,6 @@ Spc   "Perimeter_ZN_2"
    PriSide100PctControlled = 1
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 51"  
@@ -973,7 +971,6 @@ Spc   "Perimeter_ZN_3"
    PriSide100PctControlled = 1
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 37"  
@@ -1236,7 +1233,6 @@ Spc   "Perimeter_ZN_4"
    PriSide100PctControlled = 1
    SecSide100PctControlled = 1
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 1"  
@@ -1476,7 +1472,6 @@ Spc   "Core_ZN"
    SpcFuncDefaultsRef = "Office Defaults"
    SpcFunc = "Office Area (>250 square feet)"
    SHWFluidSegRef = "SHWSupply1"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 48"  
@@ -1551,7 +1546,6 @@ Spc   "Attic"
    ThrmlZnRef = "Attic Thermal Zone"
    Vol = 28195.7
    SpcFunc = "Unoccupied-Exclude from Gross Floor Area"
-   OccSensorCtrl = 1
    ..
 
 PolyLp   "PolyLoop 11"  
@@ -1949,11 +1943,11 @@ TrmlUnit   "Perim4 DOAS TrmlUnit"
    ZnServedRef = "Perimeter_ZN_4 Thermal Zone"
    ..
 
-AirSeg   "DOAS ExhAirSeg"  
-   Type = "Exhaust"
+AirSeg   "DOAS RetAirSeg"  
+   Type = "Return"
    ..
 
-Fan   "DOAS Exhaust Fan"  
+Fan   "DOAS Return Fan"  
    ModelingMthd = "StaticPressure"
    TotStaticPress = 1.75
    ..
@@ -2463,8 +2457,8 @@ clg: 0  htg: 0  'Attic Thermal Zone'" )
    StdPV_Total = 26931.4
    StdPV_Export = 4124.86
    StdPV_PctExport = 15.3162
-   NRCCPRFPayldTransID = "ff1bca30-8b7a-4b90-b48a-c773030d0c67"
-   NRCCPRFPayldProcDate = "2024-05-03T14:33:18"
+   NRCCPRFPayldTransID = "241b0558-10c7-4954-a1c0-18113c962873"
+   NRCCPRFPayldProcDate = "2024-01-21T17:43:13"
    ..
 
 
