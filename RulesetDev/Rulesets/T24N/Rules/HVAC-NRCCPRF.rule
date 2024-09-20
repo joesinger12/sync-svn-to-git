@@ -703,31 +703,68 @@ RULE nrcctblRowHvacdwell:Hvacdwell02_HvacEquipmentName[2]
     endif
 ENDRULE
 
+; RJH 3/10/2023 Added per GH Issue #42
+RULE nrcctblRowHvacdwell:Hvacdwell03_ResidentialSpaceConditioningSystemType
+  ANNUAL_PROPOSED
+    if (LocalCompAssigned(noXMLoutput_ResSCSysRptRef)) 
+    then switch( noXMLoutput_ResSCSysRptRef:ParentHVACSysTypeRpt )
+            case "Other Heating and Cooling System"     : "HeatingCoolingSystemOther"
+            case "Heat Pump Heating and Cooling System" : "HeatPumpHeatingCooling"
+            case "Central Heating and Cooling System"   : "VariableOA_VentilationCentralHeatingCooling"
+            default  :  UNDEFINED
+         endswitch
+    else UNDEFINED
+    endif
+ENDRULE
 RULE nrcctblRowHvacdwell:Hvacdwell03_NotApplicableMessage
   ANNUAL_PROPOSED
-    if (LocalStatus( Hvacdwell03_AirSystemType ) > 0 .OR. LocalStatus( Hvacdwell03_ZoneSystemType ) > 0)
+    if (LocalStatus( Hvacdwell03_ResidentialSpaceConditioningSystemType ) > 0)
     then  UNDEFINED  else  "NotApplicable"  endif
 ENDRULE
 
+; RJH 3/10/2023 Modified per GH Issue #41
 RULE nrcctblRowHvacdwell:Hvacdwell03b_ResidentialHeatingSystemType
   ANNUAL_PROPOSED
     if (LocalCompAssigned(noXMLoutput_ResSCSysRptRef)) 
-    then if (noXMLoutput_ResSCSysRptRef:ParentHVACSysTypeRpt == "Heat Pump Heating and Cooling System")
-         then noXMLoutput_ResSCSysRptRef:HeatingType
-         else if (noXMLoutput_ResSCSysRptRef:ParentHVACSysTypeRpt == "Other Heating and Cooling System")
-              then noXMLoutput_ResSCSysRptRef:HeatingType
-              else if (noXMLoutput_ResSCSysRptRef:ParentHVACSysTypeRpt == "Central Heating and Cooling System")
-                   then if (noXMLoutput_ResSCSysRptRef:ParentCentralEqpTypeRpt == "Variable refrigerant flow")
-                        then noXMLoutput_ResSCSysRptRef:HeatSystem
-                        else if (noXMLoutput_ResSCSysRptRef:ParentCentralEqpTypeRpt == "Water source heat pump")
-                             then noXMLoutput_ResSCSysRptRef:HeatingType
-                             else UNDEFINED
-                             endif
-                        endif
-                   else UNDEFINED
-                   endif
-              endif
-         endif
+    then switch( noXMLoutput_ResSCSysRptRef:HeatingType )
+            case "CntrlFurnace"       : "CentralGasFurnace"
+            case "WallFurnaceFan"     : "GasWallFurnace"
+            case "Boiler"             : "Boiler"
+            case "Electric"           : "Electric"
+            case "CombHydro"          : "CombinedHydronic"
+            case "WallFurnaceGravity" : "GasWallFurnace"
+            case "FloorFurnace"       : "FloorFurnace"
+            case "RoomHeater"         : "GasSpaceHeater"
+            case "WoodHeat"           : "WoodHeat"
+            case "PkgGasFurnace"      : "GasPackagedFurnace"
+            case "ElecCombHydro"      : "ElectricCombinedHydronic"
+            case "Four-pipe fan coil"        : "FourPipeFanCoil"
+            case "Water source heat pump"    : "WaterSourceHeatPump"
+            case "Variable refrigerant flow" : "VRF"
+            case "SplitHeatPump"             : "CentralSplitHP"
+            case "PkgTermHeatPump"           : "PTHP"
+            case "SglPkgVertHeatPump"        : "SPVHP"
+            case "SDHVSplitHeatPump"         : "SmallDuctHighVelocityHP"
+            case "DuctlessMiniSplitHeatPump"         : "DuctlessMiniSplitHP"
+            case "DuctlessMultiSplitHeatPump"        : "DuctlessMultiSplitHP"
+            case "DuctlessVRFHeatPump"               : "DuctlessVRF_HP"
+            case "DuctedMiniSplitHeatPump"           : "DuctedMiniSplitHP"
+            case "DuctedMultiSplitHeatPump"          : "DuctedMultiSplitHP"
+            case "Ducted+DuctlessMultiSplitHeatPump" : "DuctedDuctlessMultiSplitHP"
+            case "PkgHeatPump"          : "PTHP"
+            case "LrgPkgHeatPump"       : "CentralLargePackagedHP"
+            case "RoomHeatPump"         : "RoomHP"
+            case "AirToWaterHeatPump"   : "AirToWaterHeatPump"
+            case "GroundSourceHeatPump" : "GroundSourceHeatPump"
+			case "VCHP"                 : ( switch( EnumString( noXMLoutput_ResSCSysRptRef:HtPumpSystem:VCHPDucts ) )                       
+											   case "Unducted"          : "VCHP_IndoorUnitDuctless"
+											   case "Ducted"            : "VCHP_IndoorUnitDucted"
+											   case "Partially Ducted"  : "VCHP_IndoorUnitDuctedAndDuctless"
+											   default                  : "VCHP"
+										    endswitch  )
+            case "VCHP2"                : "VCHP2"
+            default  :  UNDEFINED
+         endswitch
     else UNDEFINED
     endif
 ENDRULE
@@ -740,7 +777,53 @@ RULE nrcctblRowHvacdwell:Hvacdwell03c_ResidentialCoolingSystemType
   ANNUAL_PROPOSED
     if (LocalCompAssigned(noXMLoutput_ResSCSysRptRef)) 
     then if (noXMLoutput_ResSCSysRptRef:ParentHVACSysTypeRpt == "Other Heating and Cooling System")
-         then noXMLoutput_ResSCSysRptRef:CoolingType
+         then switch( noXMLoutput_ResSCSysRptRef:CoolingType )
+                case "NoCooling"         : "NoCooling"
+                case "SplitAirCond"      : "CentralSplitAC"
+                case "Boiler"            : "Boiler"
+                case "PkgTermAirCond"    : "PTAC"
+                case "SglPkgVertAirCond" : "SPVAC"
+                case "PkgAirCond"        : "CentralPackagedAC"
+                case "LrgPkgAirCond"     : "CentralLargePackagedAC"
+                case "SDHVSplitAirCond"  : "SmallDuctHighVelocityAC"
+                case "DuctlessMiniSplitAirCond"  : "DuctlessSplitAC"
+                case "DuctlessMultiSplitAirCond" : "DuctlessMultiSplitAC"
+                case "DuctlessVRFAirCond"        : "DuctlessVRF_AC"
+                case "DuctedMiniSplitAirCond"    : "DuctedMiniSplitAC"
+                case "DuctedMultiSplitAirCond"   : "DuctedMultiSplitAC"
+                case "Ducted+DuctlessMultiSplitAirCond" : "DuctedDuctlessMultiSplitAC"
+                case "RoomAirCond"        : "RoomAC"
+                case "EvapCondenser"      : "EvaporativelyCooledCondenser"
+                case "EvapDirect"         : "EvaporativeDirect"
+                case "EvapIndirDirect"    : "EvaporativeIndirectDirect"
+                case "EvapIndirect"       : "EvaporativeIndirect"
+                case "Four-pipe fan coil"        : "FourPipeFanCoil"
+                case "Water source heat pump"    : "WaterSourceHeatPump"
+                case "Variable refrigerant flow" : "VRF"
+                case "SplitHeatPump"             : "CentralSplitHP"
+                case "PkgTermHeatPump"           : "PTHP"
+                case "SglPkgVertHeatPump"        : "SPVHP"
+                case "SDHVSplitHeatPump"         : "SmallDuctHighVelocityHP"
+                case "DuctlessMiniSplitHeatPump"         : "DuctlessMiniSplitHP"
+                case "DuctlessMultiSplitHeatPump"        : "DuctlessMultiSplitHP"
+                case "DuctlessVRFHeatPump"               : "DuctlessVRF_HP"
+                case "DuctedMiniSplitHeatPump"           : "DuctedMiniSplitHP"
+                case "DuctedMultiSplitHeatPump"          : "DuctedMultiSplitHP"
+                case "Ducted+DuctlessMultiSplitHeatPump" : "DuctedDuctlessMultiSplitHP"
+                case "PkgHeatPump"          : "PTHP"
+                case "LrgPkgHeatPump"       : "CentralLargePackagedHP"
+                case "RoomHeatPump"         : "RoomHP"
+                case "AirToWaterHeatPump"   : "AirToWaterHeatPump"
+                case "GroundSourceHeatPump" : "GroundSourceHeatPump"
+			    case "VCHP"                 : ( switch( EnumString( noXMLoutput_ResSCSysRptRef:HtPumpSystem:VCHPDucts ) )                       
+											       case "Unducted"          : "VCHP_IndoorUnitDuctless"
+											       case "Ducted"            : "VCHP_IndoorUnitDucted"
+											       case "Partially Ducted"  : "VCHP_IndoorUnitDuctedAndDuctless"
+											       default                  : "VCHP"
+										        endswitch  )
+                case "VCHP2"                : "VCHP2"
+                default  :  UNDEFINED
+             endswitch
          else UNDEFINED
          endif
     else UNDEFINED
@@ -757,9 +840,12 @@ RULE nrcctblRowHvacdwell:Hvacdwell04_HvacEquipmentCount
     else UNDEFINED
     endif
 ENDRULE
+; prevent outputting ResSCSysRptRef:HVACDistRef for VCHP systems - SAC 06/20/23 (gh issue #49)
 RULE nrcctblRowHvacdwell:Hvacdwell05_SpaceConditioningDistributionSystemName
   ANNUAL_PROPOSED
-    if (LocalCompAssigned(noXMLoutput_ResSCSysRptRef)) then noXMLoutput_ResSCSysRptRef:HVACDistRef
+    if (LocalCompAssigned(noXMLoutput_ResSCSysRptRef) .AND.
+        IfValidAnd( noXMLoutput_ResSCSysRptRef:HeatingType = "VCHP" )==0)
+    then noXMLoutput_ResSCSysRptRef:HVACDistRef
     else UNDEFINED
     endif
 ENDRULE
@@ -768,9 +854,12 @@ RULE nrcctblRowHvacdwell:Hvacdwell05_NotApplicableMessage
     if (LocalStatus( Hvacdwell05_SpaceConditioningDistributionSystemName ) > 0)
     then  UNDEFINED  else  "NotApplicable"  endif
 ENDRULE
+; prevent outputting ResSCSysRptRef:HVACFanRef for VCHP systems - SAC 06/20/23 (gh issue #49)
 RULE nrcctblRowHvacdwell:Hvacdwell06_FanSystemName
   ANNUAL_PROPOSED
-    if (LocalCompAssigned(noXMLoutput_ResSCSysRptRef)) then noXMLoutput_ResSCSysRptRef:HVACFanRef
+    if (LocalCompAssigned(noXMLoutput_ResSCSysRptRef) .AND.
+        IfValidAnd( noXMLoutput_ResSCSysRptRef:HeatingType = "VCHP" )==0)
+    then noXMLoutput_ResSCSysRptRef:HVACFanRef
     else UNDEFINED
     endif
 ENDRULE
@@ -1548,13 +1637,53 @@ RULE nrcctblRowDFHP:Dfhp01_HvacSystemName
     else UNDEFINED
     endif
 ENDRULE
+
+; RJH 3/10/2023 Modified per GH Issue #41
 RULE nrcctblRowDFHP:Dfhp02a_ResidentialHeatingSystemType
   ANNUAL_PROPOSED
-    if (LocalCompAssigned(noXMLoutput_ResSCSysRptRef)) then noXMLoutput_ResSCSysRptRef:HeatingType
+    if (LocalCompAssigned(noXMLoutput_ResSCSysRptRef)) 
+    then switch( noXMLoutput_ResSCSysRptRef:HeatingType )
+            case "CntrlFurnace"       : "CentralGasFurnace"
+            case "WallFurnaceFan"     : "GasWallFurnace"
+            case "Boiler"             : "Boiler"
+            case "Electric"           : "Electric"
+            case "CombHydro"          : "CombinedHydronic"
+            case "WallFurnaceGravity" : "GasWallFurnace"
+            case "FloorFurnace"       : "FloorFurnace"
+            case "RoomHeater"         : "GasSpaceHeater"
+            case "WoodHeat"           : "WoodHeat"
+            case "PkgGasFurnace"      : "GasPackagedFurnace"
+            case "ElecCombHydro"      : "ElectricCombinedHydronic"
+            case "Four-pipe fan coil"        : "FourPipeFanCoil"
+            case "Water source heat pump"    : "WaterSourceHeatPump"
+            case "Variable refrigerant flow" : "VRF"
+            case "SplitHeatPump"             : "CentralSplitHP"
+            case "PkgTermHeatPump"           : "PTHP"
+            case "SglPkgVertHeatPump"        : "SPVHP"
+            case "SDHVSplitHeatPump"         : "SmallDuctHighVelocityHP"
+            case "DuctlessMiniSplitHeatPump"         : "DuctlessMiniSplitHP"
+            case "DuctlessMultiSplitHeatPump"        : "DuctlessMultiSplitHP"
+            case "DuctlessVRFHeatPump"               : "DuctlessVRF_HP"
+            case "DuctedMiniSplitHeatPump"           : "DuctedMiniSplitHP"
+            case "DuctedMultiSplitHeatPump"          : "DuctedMultiSplitHP"
+            case "Ducted+DuctlessMultiSplitHeatPump" : "DuctedDuctlessMultiSplitHP"
+            case "PkgHeatPump"          : "PTHP"
+            case "LrgPkgHeatPump"       : "CentralLargePackagedHP"
+            case "RoomHeatPump"         : "RoomHP"
+            case "AirToWaterHeatPump"   : "AirToWaterHeatPump"
+            case "GroundSourceHeatPump" : "GroundSourceHeatPump"
+			case "VCHP"                 : ( switch( EnumString( noXMLoutput_ResSCSysRptRef:HtPumpSystem:VCHPDucts ) )                       
+											   case "Unducted"          : "VCHP_IndoorUnitDuctless"
+											   case "Ducted"            : "VCHP_IndoorUnitDucted"
+											   case "Partially Ducted"  : "VCHP_IndoorUnitDuctedAndDuctless"
+											   default                  : "VCHP"
+										    endswitch  )
+            case "VCHP2"                : "VCHP2"
+            default  :  UNDEFINED
+         endswitch
     else UNDEFINED
     endif
 ENDRULE
-
 ;0, ResHtPumpSys:TypeAbbrev,  4
 ;0, ResHtPumpSys:StdType,  4
 ;2,              0,    "type unknown"

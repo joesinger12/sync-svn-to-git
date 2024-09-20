@@ -640,7 +640,8 @@ RULE CoilHtg:HtPumpHSPF2
     else UNDEFINED
     endif endif
   ANNUAL
-    if( BaseSysNum > 0 .AND. Type = "HeatPump" )
+    if( ( BaseSysNum > 0 .OR. IsBaseHlthCare > 0 ) .AND.
+        Type = "HeatPump" )
     then // Is baseline system
       if( IfValidAnd( CodeMinHSPF2 > 0 ) )
       then CodeMinHSPF2
@@ -741,7 +742,8 @@ RULE CoilHtg:HtPumpHSPF
     else UNCHANGED
     endif
   ANNUAL
-    if( BaseSysNum > 0 .AND. Type = "HeatPump" )
+    if( ( BaseSysNum > 0 .OR. IsBaseHlthCare > 0 ) .AND.
+        Type = "HeatPump" )
     then // Is baseline system
       if( IfValidAnd( CodeMinHSPF2 > 0 ) .AND. IfValidAnd( HSPFToHSPF2Rat > 0 ) )
       then // Baseline uses SEER2
@@ -913,7 +915,8 @@ RULE CoilHtg:HtPumpCOP
     else UNCHANGED
     endif
   ANNUAL
-    if( BaseSysNum > 0 .AND. Type = "HeatPump" .AND. IfValidAnd( SysClgCap > 0 ) )
+    if( ( BaseSysNum > 0 .OR. IsBaseHlthCare > 0 ) .AND.
+        Type = "HeatPump" .AND. IfValidAnd( SysClgCap > 0 ) )
     then // Is baseline system
       if( IfValidAnd( CodeMinHSPF > 0 ) .OR. IfValidAnd( CodeMinHSPF2 > 0 ) )
       then // Use HSPF -> COP equation
@@ -992,7 +995,8 @@ RULE CoilHtg:HtPumpCOPAdj
     else 0
     endif endif
   ANNUAL
-    if( BaseSysNum > 0 .AND. Type = "HeatPump" )
+    if( ( BaseSysNum > 0 .OR. IsBaseHlthCare > 0 ) .AND.
+        Type = "HeatPump" )
     then 
       if( IfValidAnd( CapTotGrossRtd > 0 ) .AND.
           IfValidAnd( HtPumpCOPRnd > 0 ) .AND.
@@ -1678,30 +1682,14 @@ RULE CoilHtg:HtPumpCrankcaseHtrCap
     "The capacity of the electric resistance crankcase heater."
   HELP
     "Only applicable if Type = 'HeatPump' and CondenserType = 'Air'."
-  REFERENCE 
-    NACM Section 5.7.6.5
   INPUTCLASS 
     Optional
   UNITS 
     Btu/h
-  DEFAULT
-    if( Type = "HeatPump" )
-    then 
-      if( LocalCompAssigned( CoilClgRef ) )
-      then // Synchronize w/ DX coil
-        CoilClgRef:DXCrankcaseHtrCap
-      else UNCHANGED
-      endif
-    else 0
-    endif
   ANNUAL
-    if( Type = "HeatPump" )
-    then 
-      if( LocalCompAssigned( CoilClgRef ) )
-      then // Synchronize w/ DX coil
-        CoilClgRef:DXCrankcaseHtrCap
-      else UNCHANGED
-      endif
+  // Ignore user inputs and set to 10 W/ton (tic #3407)
+    if( Type = "HeatPump" .AND. IfValidAnd( CndsrType = "Air" ) .AND. IfValidAnd( SysClgCap > 0 ) )
+    then 10 * 3.412 * ValidOr( SysClgCap, 0 ) / 12000 // 10 W/ton (tic #3407)
     else 0
     endif
 ENDRULE
@@ -1729,8 +1717,6 @@ RULE CoilHtg:HtPumpCrankcaseCtrlTemp
      not permitted to operate."
   HELP
     "Only applicable if Type = 'HeatPump' and CondenserType = 'Air'."
-  REFERENCE 
-    NACM Section 5.7.6.5
   INPUTCLASS 
     Default
   COMMONMINIMUM
@@ -1741,28 +1727,12 @@ RULE CoilHtg:HtPumpCrankcaseCtrlTemp
     °F
   REPORTPRECISION
     0
-  DEFAULT
-    if( Type = "HeatPump" .AND. 
-        IfValidAnd( CndsrType = "Air" ) .AND.
-        IfValidAnd( HtPumpCrankcaseHtrCap > 0 ) )
-    then
-      if( LocalCompAssigned( CoilClgRef ) )
-      then // Synchronize w/ DX coil
-        CoilClgRef:DXCrankcaseCtrlTemp
-      else 50
-      endif
-    else UNDEFINED
-    endif
   ANNUAL
+  // Ignore user inputs and set to 50F (tic #3407)
     if( Type = "HeatPump" .AND.
         IfValidAnd( CndsrType = "Air" ) .AND.
         IfValidAnd( HtPumpCrankcaseHtrCap > 0 ) )
-    then
-      if( LocalCompAssigned( CoilClgRef ) )
-      then // Synchronize w/ DX coil
-        CoilClgRef:DXCrankcaseCtrlTemp
-      else UNCHANGED
-      endif
+    then 50
     else UNDEFINED
     endif
 ENDRULE

@@ -376,7 +376,6 @@ RULE NEW Spc:VentPerAreaFlowSim
     endif endif
 ENDRULE
 
-// TO DO: Is this still needed?
 RULE NEW Spc:CodeVentPerPersonFlowSim
   DATATYPE
     Float
@@ -870,6 +869,29 @@ RULE ThrmlZn:VentFlow
 ;   endif
 ENDRULE
 
+RULE NEW ThrmlZn:VentFlowSim
+  DESCRIPTION
+    "The quantity of design ventilation air provided to the ThermalZone, in cfm,
+     based on user inputs defined at the Space )for reference only)."
+  DATATYPE
+    Float
+  LONGFORM 
+    VentilationFlowSimulated
+  INPUTCLASS 
+    NotInput
+  UNITS
+    cfm
+  ANNUAL
+    if( VentSpecMthdSim = "Maximum" )
+    then max( ValidOr( VentPerPersonSim, 0 ) * OccNumSim,
+              ValidOr( VentPerAreaSim, 0 ) * FlrArea )
+    else if( VentSpecMthdSim = "Sum" )
+    then ValidOr( VentPerPersonSim, 0 ) * OccNumSim +
+         ValidOr( VentPerAreaSim, 0 ) * FlrArea
+    else 0
+    endif endif
+ENDRULE
+
 RULE NEW ThrmlZn:VentFlowWithMult
   DATATYPE
     Float
@@ -897,11 +919,9 @@ RULE NEW ResOtherZn:VentFlowWithMult
   UNITS
     cfm
   DEFAULT
-    0
-  SIZING
-    0
-  ANNUAL
-    0
+    TotalIAQCFM * Mult
+  SIZING_BASELINE
+    zp:TotalIAQCFM * ResZnGrp:CodeVentMult * ResZnGrp:ExhVentMult * Mult
 ENDRULE
 
 // For Reporting

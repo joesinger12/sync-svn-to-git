@@ -104,7 +104,10 @@ RULE nrcctblRowWater:Water02_WaterHeaterFuelSource
     then
         switch (noXMLoutput_ResWtrHtrRef:HeaterElementType)
             case "Electric Resistance" : "Electricity"
-            case "Gas"                 : "GasWaterHeater"
+            case "Gas"                 : if (IfValidAnd(Proj:GasType == "NaturalGas"))
+                                         then "NaturalGas"
+                                         else "PropaneGas"
+                                         endif
             case "Heat Pump"           : "WaterHeatingHP"
             default :  UNDEFINED
         endswitch
@@ -113,7 +116,10 @@ RULE nrcctblRowWater:Water02_WaterHeaterFuelSource
         switch (noXMLoutput_WtrHtrRef:FuelSrc)
             case "Electricity" : "Electricity"
             case "FuelOil#1"   : "Oil"
-            case "Gas"         : "NaturalGas"
+            case "Gas"         : if (IfValidAnd(Proj:GasType == "NaturalGas"))
+                                 then "NaturalGas"
+                                 else "PropaneGas"
+                                 endif
             case "PropaneGas"  : "PropaneGas"
             default :  UNDEFINED
         endswitch
@@ -165,20 +171,29 @@ RULE nrcctblRowWater:Water05_NotApplicableMessage
     then  UNDEFINED  else  "NotApplicable"  endif
 ENDRULE
 ; NRCC Res DHW
+; RJH 4/10/23 do not report ResWtrHtr "Residential (NEEA rated) Product" values
+; RJH 5/03/23 Issue #47 add HeaterElementType == "Heat Pump" condition
 RULE nrcctblRowWater:Water06_WaterHeaterElectricFiredRatedInput
   ANNUAL_PROPOSED
-    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) then if (noXMLoutput_ResWtrHtrRef:HeaterElementType == "Gas") then UNDEFINED else atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:InputRating / 1000 ) ) endif
+    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) then if (noXMLoutput_ResWtrHtrRef:HPWHCategory == "Residential (NEEA rated) Product" .AND. noXMLoutput_ResWtrHtrRef:HeaterElementType == "Heat Pump")
+                                                          then UNDEFINED
+                                                          else if (noXMLoutput_ResWtrHtrRef:HeaterElementType == "Gas") then UNDEFINED else atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:InputRating / 1000 ) ) endif
+                                                          endif
     else if (LocalCompAssigned(noXMLoutput_WtrHtrRef)) then if (noXMLoutput_WtrHtrRef:FuelSrc == "Gas") then UNDEFINED else atof( Format( "%.2f", noXMLoutput_WtrHtrRef:InputPower ) ) endif
     else UNDEFINED
     endif endif
 ENDRULE
-; fixed undefined numerator bug in following rule - SAC 10/11/22
+; fixed undefined numerator bug in following rule - SAC 10/11/22   ; revised to leave undefined if InputRating hidden in UI - SAC 03/21/23
 RULE nrcctblRowWater:Water06_WaterHeaterGasRatedInput
   ANNUAL_PROPOSED
     if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef))
-    then   if (noXMLoutput_ResWtrHtrRef:HeaterElementType == "Gas" .AND. LocalStatus( noXMLoutput_ResWtrHtrRef:InputRating ) > 0)
-           then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:InputRating / 1000 ) )
-           else UNDEFINED endif
+    then if (noXMLoutput_ResWtrHtrRef:HPWHCategory == "Residential (NEEA rated) Product" .AND. noXMLoutput_ResWtrHtrRef:HeaterElementType == "Heat Pump")
+         then UNDEFINED
+         else if (noXMLoutput_ResWtrHtrRef:HeaterElementType == "Gas" .AND. LocalStatus( noXMLoutput_ResWtrHtrRef:InputRating ) > 0 .AND.
+                  IfValidAnd( noXMLoutput_ResWtrHtrRef:ShowInputRating > 0 ))
+              then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:InputRating / 1000 ) )
+              else UNDEFINED endif
+         endif
     else if (LocalCompAssigned(noXMLoutput_WtrHtrRef)) 
     then   if (noXMLoutput_WtrHtrRef:FuelSrc == "Gas" .AND. LocalStatus( noXMLoutput_WtrHtrRef:CapRtd ) > 0)
            then atof( Format( "%.2f", noXMLoutput_WtrHtrRef:CapRtd / 1000 ) )
@@ -191,18 +206,40 @@ RULE nrcctblRowWater:Water06_NotApplicableMessage
     if (LocalStatus( Water06_WaterHeaterElectricFiredRatedInput ) > 0 .OR. LocalStatus( Water06_WaterHeaterGasRatedInput ) > 0)
     then  UNDEFINED  else  "NotApplicable"  endif
 ENDRULE
+; RJH 4/10/23 do not report ResWtrHtr "Heat Pump" "Residential (NEEA rated) Product" values
+; RJH 5/03/23 Issue #47 add HeaterElementType == "Heat Pump" condition
 RULE nrcctblRowWater:Water07_WaterHeaterRatedInputUnits
   ANNUAL_PROPOSED
-    if (LocalStatus( Water06_WaterHeaterElectricFiredRatedInput ) > 0) then "kW"
-    else if (LocalStatus( Water06_WaterHeaterGasRatedInput ) > 0) then "kBtuHr" 
-    else UNDEFINED
-    endif endif
+    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef))
+    then if (noXMLoutput_ResWtrHtrRef:HPWHCategory == "Residential (NEEA rated) Product" .AND. noXMLoutput_ResWtrHtrRef:HeaterElementType == "Heat Pump")
+         then UNDEFINED
+         else if (LocalStatus( Water06_WaterHeaterElectricFiredRatedInput ) > 0) 
+              then "kW"
+              else if (LocalStatus( Water06_WaterHeaterGasRatedInput ) > 0) 
+                   then "kBtuHr" 
+                   else UNDEFINED
+                   endif 
+              endif
+         endif
+    else if (LocalCompAssigned(noXMLoutput_WtrHtrRef))
+         then if (LocalStatus( Water06_WaterHeaterElectricFiredRatedInput ) > 0) 
+              then "kW"
+              else if (LocalStatus( Water06_WaterHeaterGasRatedInput ) > 0) 
+                   then "kBtuHr" 
+                   else UNDEFINED
+                   endif 
+              endif
+         else UNDEFINED
+         endif
+    endif
 ENDRULE
 RULE nrcctblRowWater:Water07_NotApplicableMessage
   ANNUAL_PROPOSED
     if (LocalStatus( Water07_WaterHeaterRatedInputUnits ) > 0)
     then  UNDEFINED  else  "NotApplicable"  endif
 ENDRULE
+; RJH 4/10/23 do not report ResWtrHtr "Heat Pump" "Residential (NEEA rated) Product" values
+; RJH 5/03/23 Issue #47 add HeaterElementType == "Heat Pump" condition
 RULE nrcctblRowWater:Water08_EfficiencyCOP
   ANNUAL_PROPOSED
     if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) then UNDEFINED
@@ -213,16 +250,36 @@ ENDRULE
 ; NRCC Res DHW
 RULE nrcctblRowWater:Water08_ThermalEfficiency
   ANNUAL_PROPOSED
-    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef) .AND. LocalStatus( noXMLoutput_ResWtrHtrRef:EfficiencyUnits ) > 0) 
-         then if (noXMLoutput_ResWtrHtrRef:EfficiencyUnits == "TE") then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:EnergyFactor ) ) else UNDEFINED endif
+    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) 
+    then if (noXMLoutput_ResWtrHtrRef:HPWHCategory == "Residential (NEEA rated) Product" .AND. noXMLoutput_ResWtrHtrRef:HeaterElementType == "Heat Pump")
+         then UNDEFINED
+         else if (LocalStatus( noXMLoutput_ResWtrHtrRef:EfficiencyUnits ) > 0)
+              then if (noXMLoutput_ResWtrHtrRef:EfficiencyUnits == "TE") 
+                   then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:EnergyFactor ) ) 
+                   else UNDEFINED 
+                   endif
+              else UNDEFINED
+              endif
+         endif
     else if (LocalCompAssigned(noXMLoutput_WtrHtrRef) .AND. LocalStatus( noXMLoutput_WtrHtrRef:EffRpt ) > 0) 
-         then if (substr( noXMLoutput_WtrHtrRef:EffRpt, 0, 5 ) == "Thrml") then atof( Format( "%.2f", noXMLoutput_WtrHtrRef:ThrmlEff ) ) else UNDEFINED endif
-    else UNDEFINED endif endif
+         then if (substr( noXMLoutput_WtrHtrRef:EffRpt, 0, 5 ) == "Thrml") 
+              then atof( Format( "%.2f", noXMLoutput_WtrHtrRef:ThrmlEff ) ) 
+              else UNDEFINED 
+              endif
+         else UNDEFINED 
+         endif 
+    endif
 ENDRULE
 RULE nrcctblRowWater:Water08_EnergyFactor
   ANNUAL_PROPOSED
-    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef) .AND. LocalStatus( noXMLoutput_ResWtrHtrRef:EfficiencyUnits ) > 0) 
-         then if (noXMLoutput_ResWtrHtrRef:EfficiencyUnits == "EF") then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:EnergyFactor ) ) else UNDEFINED endif
+    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef) .AND. LocalStatus( noXMLoutput_ResWtrHtrRef:EfficiencyUnits ) > 0)
+    then if (noXMLoutput_ResWtrHtrRef:HPWHCategory == "Residential (NEEA rated) Product" .AND. noXMLoutput_ResWtrHtrRef:HeaterElementType == "Heat Pump") 
+         then UNDEFINED
+         else if (noXMLoutput_ResWtrHtrRef:EfficiencyUnits == "EF") 
+              then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:EnergyFactor ) ) 
+              else UNDEFINED 
+              endif
+         endif
     else if (LocalCompAssigned(noXMLoutput_WtrHtrRef) .AND. LocalStatus( noXMLoutput_WtrHtrRef:EffRpt ) > 0) 
          then if (substr( noXMLoutput_WtrHtrRef:EffRpt, 0, 2 ) == "EF") then atof( Format( "%.2f", noXMLoutput_WtrHtrRef:EF ) ) else UNDEFINED endif
     else UNDEFINED endif endif
@@ -230,7 +287,13 @@ ENDRULE
 RULE nrcctblRowWater:Water08_UniformEnergyFactor
   ANNUAL_PROPOSED
     if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef) .AND. LocalStatus( noXMLoutput_ResWtrHtrRef:EfficiencyUnits ) > 0) 
-         then if (noXMLoutput_ResWtrHtrRef:EfficiencyUnits == "UEF") then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:EnergyFactor ) ) else UNDEFINED endif
+    then if (noXMLoutput_ResWtrHtrRef:HPWHCategory == "Residential (NEEA rated) Product" .AND. noXMLoutput_ResWtrHtrRef:HeaterElementType == "Heat Pump") 
+         then UNDEFINED
+         else if (noXMLoutput_ResWtrHtrRef:EfficiencyUnits == "UEF") 
+              then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:EnergyFactor ) ) 
+              else UNDEFINED 
+              endif
+         endif
     else if (LocalCompAssigned(noXMLoutput_WtrHtrRef) .AND. LocalStatus( noXMLoutput_WtrHtrRef:EffRpt ) > 0) 
          then if (substr( noXMLoutput_WtrHtrRef:EffRpt, 0, 3 ) == "UEF") then atof( Format( "%.2f", noXMLoutput_WtrHtrRef:UEF ) ) else UNDEFINED endif
     else UNDEFINED endif endif
@@ -242,34 +305,72 @@ RULE nrcctblRowWater:Water08_NotApplicableMessage
     else "NotApplicable"
     endif
 ENDRULE
+; RJH 4/10/23 do not report ResWtrHtr "Residential (NEEA rated) Product" values
+; RJH 5/03/23 Issue #47 add HeaterElementType == "Heat Pump" condition
 RULE nrcctblRowWater:Water09_EfficiencyType
   ANNUAL_PROPOSED
-    if (LocalStatus( Water08_EfficiencyCOP ) > 0) then "COP"
-    else if (LocalStatus( Water08_ThermalEfficiency ) > 0) then "ThermalEfficiency"
-    else if (LocalStatus( Water08_EnergyFactor ) > 0) then "EnergyFactor"
-    else if (LocalStatus( Water08_UniformEnergyFactor ) > 0) then "UniformEnergyFactor"
-    else  UNDEFINED  
-    endif endif endif endif
+    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef))
+    then if (noXMLoutput_ResWtrHtrRef:HPWHCategory == "Residential (NEEA rated) Product" .AND. noXMLoutput_ResWtrHtrRef:HeaterElementType == "Heat Pump")
+         then UNDEFINED
+         else if (LocalStatus( Water08_EfficiencyCOP ) > 0) 
+              then "COP"
+              else if (LocalStatus( Water08_ThermalEfficiency ) > 0) 
+                   then "ThermalEfficiency"
+                   else if (LocalStatus( Water08_EnergyFactor ) > 0) 
+                        then "EnergyFactor"
+                        else if (LocalStatus( Water08_UniformEnergyFactor ) > 0) 
+                             then "UniformEnergyFactor"
+                             else  UNDEFINED  
+                             endif 
+                        endif 
+                   endif 
+              endif
+         endif
+    else if (LocalCompAssigned(noXMLoutput_WtrHtrRef))
+         then if (LocalStatus( Water08_EfficiencyCOP ) > 0) 
+              then "COP"
+              else if (LocalStatus( Water08_ThermalEfficiency ) > 0) 
+                   then "ThermalEfficiency"
+                   else if (LocalStatus( Water08_EnergyFactor ) > 0) 
+                        then "EnergyFactor"
+                        else if (LocalStatus( Water08_UniformEnergyFactor ) > 0) 
+                             then "UniformEnergyFactor"
+                             else  UNDEFINED  
+                             endif 
+                        endif 
+                   endif 
+              endif
+         else UNDEFINED
+         endif
+    endif
 ENDRULE
 RULE nrcctblRowWater:Water09_NotApplicableMessage
   ANNUAL_PROPOSED
     if (LocalStatus( Water09_EfficiencyType ) > 0)
     then  UNDEFINED  else  "NotApplicable"  endif
 ENDRULE
-; NRCC Res DHW
+; NRCC Res DHW          ; added logic to set int/ext insulation only when displayed in UI - SAC 03/21/23
 RULE nrcctblRowWater:Water10_TankInteriorInsulationRValue
   ANNUAL_PROPOSED
-    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) then if (LocalStatus( noXMLoutput_ResWtrHtrRef:IntInsulRVal ) > 0) then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:IntInsulRVal ) ) else UNDEFINED endif
-    else if (LocalCompAssigned(noXMLoutput_WtrHtrRef)) then UNDEFINED
-    else UNDEFINED
-    endif endif
+    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef))
+    then  if (LocalStatus( noXMLoutput_ResWtrHtrRef:IntInsulRVal ) > 0 .AND.
+              (IfValidAnd( noXMLoutput_ResWtrHtrRef:HeaterType = 7 ) .OR. IfValidAnd( noXMLoutput_ResWtrHtrRef:HeaterType = 1  ) .OR.
+               IfValidAnd( noXMLoutput_ResWtrHtrRef:HeaterType = 0 ) .OR. IfValidAnd( noXMLoutput_ResWtrHtrRef:HeaterType = 16 )))
+          then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:IntInsulRVal ) ) else UNDEFINED endif
+          else if (LocalCompAssigned(noXMLoutput_WtrHtrRef)) then UNDEFINED
+          else UNDEFINED
+          endif endif
 ENDRULE
 RULE nrcctblRowWater:Water10_TankExteriorInsulationRValue
   ANNUAL_PROPOSED
-    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) then if (LocalStatus( noXMLoutput_ResWtrHtrRef:ExtInsulRVal ) > 0) then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:ExtInsulRVal ) ) else UNDEFINED endif
-    else if (LocalCompAssigned(noXMLoutput_WtrHtrRef)) then UNDEFINED
-    else UNDEFINED
-    endif endif
+    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef))
+    then  if (LocalStatus( noXMLoutput_ResWtrHtrRef:ExtInsulRVal ) > 0 .AND.
+              (IfValidAnd( noXMLoutput_ResWtrHtrRef:HeaterType = 7 ) .OR. IfValidAnd( noXMLoutput_ResWtrHtrRef:HeaterType = 1  ) .OR.
+               IfValidAnd( noXMLoutput_ResWtrHtrRef:HeaterType = 0 ) .OR. IfValidAnd( noXMLoutput_ResWtrHtrRef:HeaterType = 16 )))
+          then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:ExtInsulRVal ) ) else UNDEFINED endif
+          else if (LocalCompAssigned(noXMLoutput_WtrHtrRef)) then UNDEFINED
+          else UNDEFINED
+          endif endif
 ENDRULE
 RULE nrcctblRowWater:Water10_NotApplicableMessage
   ANNUAL_PROPOSED
@@ -279,9 +380,14 @@ RULE nrcctblRowWater:Water10_NotApplicableMessage
     endif
 ENDRULE
 ; NRCC Res DHW
+   ; added logic to apply same Display logic from ResScreens determining when to provide access to StandbyLossFrac before reporting it - SAC 05/11/23 (gh LMCC issue #11)
 RULE nrcctblRowWater:Water11_WaterHeaterStandbyLossFraction
   ANNUAL_PROPOSED
-    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) then if (LocalStatus( noXMLoutput_ResWtrHtrRef:StandbyLossFrac ) > 0) then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:StandbyLossFrac ) ) else UNDEFINED endif
+    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef))
+    then  if ( ( IfValidAnd( noXMLoutput_ResWtrHtrRef:HeaterType =  3 ) .OR.
+                 IfValidAnd( noXMLoutput_ResWtrHtrRef:HeaterType = 13 ) ) .AND.
+                LocalStatus( noXMLoutput_ResWtrHtrRef:StandbyLossFrac ) > 0 )
+          then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:StandbyLossFrac ) ) else UNDEFINED endif
     else if (LocalCompAssigned(noXMLoutput_WtrHtrRef)) then if (LocalStatus( noXMLoutput_WtrHtrRef:StdbyLossFrac ) > 0) then atof( Format( "%.2f", noXMLoutput_WtrHtrRef:StdbyLossFrac ) ) else UNDEFINED endif
     else UNDEFINED
     endif endif
@@ -292,17 +398,18 @@ RULE nrcctblRowWater:Water11_NotApplicableMessage
     then  UNDEFINED  else  "NotApplicable"  endif
 ENDRULE
 ; NRCC Res DHW
+; RJH 05/11/23 (2022-CBECC-NonRes-PRF-Schema Issue #66) - Modified conditions for output of Water12_* elements for both ResWtrHtr and WtrHtr   ; added IfValidAnd() for when UEFRtdVal invalid - SAC 05/12/23
 RULE nrcctblRowWater:Water12_WaterHeaterFirstHourRating
   ANNUAL_PROPOSED
-    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) then if (LocalStatus( noXMLoutput_ResWtrHtrRef:FirstHourRating ) > 0 .AND. noXMLoutput_ResWtrHtrRef:IsUEF = 1 .AND. noXMLoutput_ResWtrHtrRef:TankType = "Storage") then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:FirstHourRating ) ) else UNDEFINED endif
-    else if (LocalCompAssigned(noXMLoutput_WtrHtrRef)) then if (LocalStatus( noXMLoutput_WtrHtrRef:FirstHrRating ) > 0 .AND. noXMLoutput_WtrHtrRef:IsUEFRtd = 1 .AND. noXMLoutput_WtrHtrRef:SubType = "Storage") then atof( Format( "%.2f", noXMLoutput_WtrHtrRef:FirstHrRating ) ) else UNDEFINED endif
+    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) then if (LocalStatus( noXMLoutput_ResWtrHtrRef:FirstHourRating ) > 0 .AND. noXMLoutput_ResWtrHtrRef:IsUEF = 1 .AND. (noXMLoutput_ResWtrHtrRef:TankType = "Consumer Storage (UEF)" .OR. noXMLoutput_ResWtrHtrRef:TankType = "Residential-Duty Commercial Storage (UEF)")) then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:FirstHourRating ) ) else UNDEFINED endif
+    else if (LocalCompAssigned(noXMLoutput_WtrHtrRef)) then if (LocalStatus( noXMLoutput_WtrHtrRef:FirstHrRating ) > 0 .AND. IfValidAnd( noXMLoutput_WtrHtrRef:UEFRtdVal >= 10 ) .AND. noXMLoutput_WtrHtrRef:SubType = "Storage") then atof( Format( "%.2f", noXMLoutput_WtrHtrRef:FirstHrRating ) ) else UNDEFINED endif
     else UNDEFINED
     endif endif
 ENDRULE
 RULE nrcctblRowWater:Water12_WaterHeaterFlowRate
   ANNUAL_PROPOSED
-    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) then if (LocalStatus( noXMLoutput_ResWtrHtrRef:RatedFlow ) > 0 .AND. noXMLoutput_ResWtrHtrRef:IsUEF = 1 .AND. noXMLoutput_ResWtrHtrRef:TankType = "Instantaneous") then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:RatedFlow ) ) else UNDEFINED endif
-    else if (LocalCompAssigned(noXMLoutput_WtrHtrRef)) then if (LocalStatus( noXMLoutput_WtrHtrRef:FlowRate ) > 0 .AND. noXMLoutput_WtrHtrRef:IsUEFRtd = 1 .AND. noXMLoutput_WtrHtrRef:SubType = "Instantaneous") then atof( Format( "%.2f", noXMLoutput_WtrHtrRef:FlowRate ) ) else UNDEFINED endif
+    if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) then if (LocalStatus( noXMLoutput_ResWtrHtrRef:RatedFlow ) > 0 .AND. noXMLoutput_ResWtrHtrRef:IsUEF = 1 .AND. (noXMLoutput_ResWtrHtrRef:TankType = "Consumer Instantaneous (UEF)" .OR. noXMLoutput_ResWtrHtrRef:TankType = "Residential-Duty Commercial Instantaneous (UEF)")) then atof( Format( "%.2f", noXMLoutput_ResWtrHtrRef:RatedFlow ) ) else UNDEFINED endif
+    else if (LocalCompAssigned(noXMLoutput_WtrHtrRef)) then if (LocalStatus( noXMLoutput_WtrHtrRef:FlowRate ) > 0 .AND. IfValidAnd( noXMLoutput_WtrHtrRef:UEFRtdVal >= 10 ) .AND. noXMLoutput_WtrHtrRef:SubType = "Instantaneous") then atof( Format( "%.2f", noXMLoutput_WtrHtrRef:FlowRate ) ) else UNDEFINED endif
     else UNDEFINED
     endif endif
 ENDRULE
@@ -347,11 +454,12 @@ RULE nrcctblRowWater:Water13_NotApplicableMessage
     endif
 ENDRULE
 
-; NRCC Res DHW
+; NRCC Res DHW    ; revised to leave undefined if tank location hidden in UI - SAC 03/21/23
 RULE nrcctblRowWater:Water14_TankLocation
   ANNUAL_PROPOSED
     if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) 
-    then if (noXMLoutput_ResWtrHtrRef:TankOutside)
+    then if (noXMLoutput_ResWtrHtrRef:TankOutside .AND.
+             IfValidAnd( noXMLoutput_ResWtrHtrRef:ShowTankLocation > 0 ))
          then "Outside"
          else UNDEFINED
          endif
@@ -361,7 +469,8 @@ ENDRULE
 RULE nrcctblRowWater:Water14_TankLocationString
   ANNUAL_PROPOSED
     if (LocalCompAssigned(noXMLoutput_ResWtrHtrRef)) 
-    then if (noXMLoutput_ResWtrHtrRef:TankOutside)
+    then if (noXMLoutput_ResWtrHtrRef:TankOutside .OR.
+             IfValidAnd( noXMLoutput_ResWtrHtrRef:ShowTankLocation > 0 )==0)
          then UNDEFINED
          else noXMLoutput_ResWtrHtrRef:TankZone
          endif
@@ -1070,12 +1179,12 @@ RULE nrccWaterCHPWH02:WaterCHPWH02_CentralHPWHCompressorType
                 case	"generic  (26kW cap @ 40F)"	:	"Generic26kW"
                 case	"generic  (40kW cap @ 40F)"	:	"Generic40kW"
                 case	"generic  (45kW cap @ 40F)"	:	"Generic45kW"
-                case	"Colmac CxV-5 (MP, 14kW cap @ 40F)"	:	"ColmacCxV5"      ; RJH 10/2/22 new multi pass options
-                case	"Colmac CxA-10 (MP, 21kW cap @ 40F)"	:	"ColmacCxA10MP"
-                case	"Colmac CxA-15 (MP, 29kW cap @ 40F)"	:	"ColmacCxA15MP"
-                case	"Colmac CxA-20 (MP, 41kW cap @ 40F)"	:	"ColmacCxA20MP"
-                case	"Colmac CxA-25 (MP, 49kW cap @ 40F)"	:	"ColmacCxA25MP"
-                case	"Colmac CxA-30 (MP, 57kW cap @ 40F)"	:	"ColmacCxA30MP"
+                case	"Colmac CxV-5  (MP, 14kW cap @ 40F)"	:	"ColmacCxV5MP"      ; RJH 10/2/22 new multi pass options
+                case	"Colmac CxA-10  (MP, 21kW cap @ 40F)"	:	"ColmacCxA10MP"
+                case	"Colmac CxA-15  (MP, 29kW cap @ 40F)"	:	"ColmacCxA15MP"
+                case	"Colmac CxA-20  (MP, 41kW cap @ 40F)"	:	"ColmacCxA20MP"
+                case	"Colmac CxA-25  (MP, 49kW cap @ 40F)"	:	"ColmacCxA25MP"
+                case	"Colmac CxA-30  (MP, 57kW cap @ 40F)"	:	"ColmacCxA30MP"
                 case	"Rheem HPHD-60HNU (horiz MP, 12kW cap @ 45F)"	  :	"RheemHPHD60HNUMP"
                 case	"Rheem HPHD-60VNU (vertical MP, 12kW cap @ 45F)"  :	"RheemHPHD60VNUMP"
                 case	"Rheem HPHD-135HNU (horiz MP, 30kW cap @ 45F)"	  :	"RheemHPHD135HNUMP"
@@ -1268,6 +1377,12 @@ RULE nrcctblRowCHPWH:afterchildren_WaterCHPWH02a_HeatPumpWaterHeaterSimulationGr
     endif
 ENDRULE
 
+; RJH 3/24/23 Added as NOT REPORTED IN PDF
+RULE nrcctblRowCHPWH:afterchildren_WaterCHPWH02b_WaterHeaterFuelSource
+  ANNUAL_PROPOSED
+    "WaterHeatingHP"
+ENDRULE
+
 ; NRCC Res DHW
 RULE nrcctblRowCHPWH:afterchildren_WaterCHPWH03_CompressorCountCHPWH
   ANNUAL_PROPOSED
@@ -1417,6 +1532,12 @@ RULE nrcctblRowLpTank:LpTank01a_LoopTankConfig
     endswitch
 ENDRULE
 
+; RJH 2/3/23 Add CHPWH Name reference for HERS providers
+RULE nrcctblRowLpTank:LpTank01b_WaterHeatingSystemName
+  ANNUAL_PROPOSED
+    noXMLoutput_ResDHWSysRef:Name
+ENDRULE
+
 ;; RJH - 10/4/22 If Single Pass Primary OR Multi Pass Primary then ONLY populate LpTank02_CentralHPWHCompressorType (See SVN Documentation/T24/T24R_CentralHPWHCompressors.xlsx)
 RULE nrccLpTank02:LpTank02_CentralHPWHCompressorType
   ANNUAL_PROPOSED
@@ -1480,12 +1601,12 @@ RULE nrccLpTank02:LpTank02_CentralHPWHCompressorType
                 case	"generic  (26kW cap @ 40F)"	:	"Generic26kW"
                 case	"generic  (40kW cap @ 40F)"	:	"Generic40kW"
                 case	"generic  (45kW cap @ 40F)"	:	"Generic45kW"
-                case	"Colmac CxV-5 (MP, 14kW cap @ 40F)"	:	"ColmacCxV5"      ; RJH 10/2/22 new multi pass options
-                case	"Colmac CxA-10 (MP, 21kW cap @ 40F)"	:	"ColmacCxA10MP"
-                case	"Colmac CxA-15 (MP, 29kW cap @ 40F)"	:	"ColmacCxA15MP"
-                case	"Colmac CxA-20 (MP, 41kW cap @ 40F)"	:	"ColmacCxA20MP"
-                case	"Colmac CxA-25 (MP, 49kW cap @ 40F)"	:	"ColmacCxA25MP"
-                case	"Colmac CxA-30 (MP, 57kW cap @ 40F)"	:	"ColmacCxA30MP"
+                case	"Colmac CxV-5  (MP, 14kW cap @ 40F)"	:	"ColmacCxV5MP"      ; RJH 10/2/22 new multi pass options
+                case	"Colmac CxA-10  (MP, 21kW cap @ 40F)"	:	"ColmacCxA10MP"
+                case	"Colmac CxA-15  (MP, 29kW cap @ 40F)"	:	"ColmacCxA15MP"
+                case	"Colmac CxA-20  (MP, 41kW cap @ 40F)"	:	"ColmacCxA20MP"
+                case	"Colmac CxA-25  (MP, 49kW cap @ 40F)"	:	"ColmacCxA25MP"
+                case	"Colmac CxA-30  (MP, 57kW cap @ 40F)"	:	"ColmacCxA30MP"
                 case	"Rheem HPHD-60HNU (horiz MP, 12kW cap @ 45F)"	  :	"RheemHPHD60HNUMP"
                 case	"Rheem HPHD-60VNU (vertical MP, 12kW cap @ 45F)"  :	"RheemHPHD60VNUMP"
                 case	"Rheem HPHD-135HNU (horiz MP, 30kW cap @ 45F)"	  :	"RheemHPHD135HNUMP"

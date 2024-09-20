@@ -39,6 +39,48 @@
 //     Proj / Project
 //
 
+// -----------------------------------------------------------------------------
+//   misc properties needed for MFam rules/checks
+
+; added for MFam model surface checks - SAC 04/19/23 (tic #3497)
+RULE NEW Ceiling:SurfaceCount
+  DATATYPE
+    Integer
+  INPUTCLASS
+    NotInput
+  DEFAULT
+    1
+ENDRULE
+RULE NEW IntFlr:SurfaceCount
+  DATATYPE
+    Integer
+  INPUTCLASS
+    NotInput
+  DEFAULT
+    1
+ENDRULE
+RULE NEW IntWall:SurfaceCount
+  DATATYPE
+    Integer
+  INPUTCLASS
+    NotInput
+  DEFAULT
+    1
+ENDRULE
+
+; added to support MFam floor multipliers (via ResZnGrp), for now, only if mult > 1 specified - SAC 04/19/23 (tic #3392)
+RULE NEW Proj:SubMtrResZnGrps
+  DATATYPE
+    Integer
+  INPUTCLASS
+    NotInput
+  DEFAULT
+    if (MaxAll( ResZnGrp:Mult ) > 1) then  1
+    else  0  endif
+ENDRULE
+
+
+// -----------------------------------------------------------------------------
 
 RULE Proj:Action
   DEFAULT
@@ -87,8 +129,8 @@ RULE NEW ResProj:TreeDescrip
     if (ErrorCode > 0)
     then  ErrorMsg
     else if (IfValidAnd( UnitTotCondFlrArea != CondFloorArea ))
-    then  Format( "res only: %s cond ft2 / %s dwelling ft2 / %s dwelling units / %s bedrooms", FltToStr( CondFloorArea ), FltToStr( UnitTotCondFlrArea ), FltToStr( NumDwellingUnits ), FltToStr( NumBedrooms ) )
-    else  Format( "res only: %s cond ft2 / %s dwelling units / %s bedrooms", FltToStr( CondFloorArea ), FltToStr( NumDwellingUnits ), FltToStr( NumBedrooms ) )
+    then  Format( "res only: %s cond ft2 / %s dwelling ft2 / %s dwelling units / %s bedrooms", FltToStr( CondFloorAreaWithMult ), FltToStr( UnitTotCondFlrArea ), FltToStr( NumDwellingUnits ), FltToStr( NumBedrooms ) )
+    else  Format( "res only: %s cond ft2 / %s dwelling units / %s bedrooms", FltToStr( CondFloorAreaWithMult ), FltToStr( NumDwellingUnits ), FltToStr( NumBedrooms ) )
     endif endif
 ENDRULE
 
@@ -184,6 +226,81 @@ RULE NEW Proj:AvgFlrHgt
     endif
 ENDRULE
 
+// ----------------------------------------------------------------------------- JP 3/1/23
+RULE NEW Proj:ExhVentMultLimMFCom
+  DATATYPE
+    Float
+  LONGFORM
+    ExhaustVentilationMultiplierLimitMultifamilyCommon
+  DESCRIPTION
+    "The limit on the multiplier used to increase the baseline ventilation air
+     flow rate when the proposed design includes additional ventilation air to 
+     make-up for exhaust air flow. Applies to multifamily common spaces only."
+  INPUTCLASS 
+    NotInput
+  DEFAULT
+    1.2
+ENDRULE
+
+RULE NEW Proj:VentTolMaxLimMFCom
+  DATATYPE
+    Float
+  LONGFORM
+    VentilationToleranceMaximumLimitMultifamilyCommon
+  DESCRIPTION
+    "The upper tolerance limit for how close the proposed design ventilation 
+     air flow must be with respect to the code minimum. 
+     Applies to multifamily common spaces only."
+  INPUTCLASS 
+    NotInput
+  DEFAULT
+    0.10    
+ENDRULE
+
+RULE NEW Proj:VentTolMinLimMFCom
+  DATATYPE
+    Float
+  LONGFORM
+    VentilationToleranceMinimumLimitMultifamilyCommon
+  DESCRIPTION
+    "The lower tolerance limit for how close the proposed design ventilation 
+     air flow must be with respect to the code minimum. 
+     Applies to multifamily common spaces only."
+  INPUTCLASS 
+    NotInput
+  DEFAULT
+    0.05    
+ENDRULE
+
+RULE NEW Proj:ExhTolMaxLimMFCom
+  DATATYPE
+    Float
+  LONGFORM
+    ExhaustToleranceMaximumLimitMultifamilyCommon
+  DESCRIPTION
+    "The upper tolerance limit for how close the proposed design exhaust 
+     air flow must be with respect to the code minimum.
+     Applies to multifamily common spaces only."
+  INPUTCLASS 
+    NotInput
+  DEFAULT
+    0.10 
+ENDRULE
+
+RULE NEW Proj:ExhTolMinLimMFCom
+  DATATYPE
+    Float
+  LONGFORM
+    ExhaustToleranceMinimumLimitMultifamilyCommon
+  DESCRIPTION
+    "The lower tolerance limit for how close the proposed design exhaust 
+     air flow must be with respect to the code minimum.
+     Applies to multifamily common spaces only."
+  INPUTCLASS 
+    NotInput
+  DEFAULT
+    0.05
+ENDRULE
 
 // ----------------------------------------------------------------------------- SAC 03-01-22
 RULE NEW cseDHWSYS:SourceSpc
@@ -236,6 +353,55 @@ RULE NEW ResMat:MatchingMatRef
     "Mat that matches the characteristics of this ResMat"
   INPUTCLASS
     NotInput
+ENDRULE
+
+
+// ----------------------------------------------------------------------------- SAC 05/01/23 (tic #3489)
+RULE DHWSolSys:ErrID
+  CHECKCODE
+    if (IfValidAnd( DHWSysAssigned < 1 ) .OR. IfValidAnd( Proj:EnableResearchMode > 0 ) .OR.
+        IfValidAnd( ErrID > 0 )==0) then  UNCHANGED
+    else  PostError( "DHW solar system '%s' error: %s.", Name, ErrMsg )  endif
+ENDRULE
+
+
+RULE NEW Spc:NoCompDHWArea
+  LONGFORM
+    NoComplianceDHWArea
+  DATATYPE
+    Float
+  HELP
+    "Spc area served by ResDHWSys that is to be excluded from compliance analysis"
+  DEFAULT
+    if (IfValidAnd( Proj:CompOptDHW = 0 ) .AND.
+        IfValidAnd( HotelMotelGuestRmCntWithMult > 0 ) .AND.
+        LocalCompAssigned( ResDHWSysRef ) > 0)
+    then  DwellingUnitSpcTotAreaWithMult
+    else  0  endif
+ENDRULE
+
+RULE NEW ResDHWSys:NoCompDHWAreaServed
+  LONGFORM
+    NoComplianceDHWAreaServed
+  DATATYPE
+    Float
+  HELP
+    "area this system serves that is to be excluded from compliance analysis"
+  CHECKCODE
+    if (IfValidAnd( NoCompDHWAreaServed > 0 ) .AND.
+        IfValidAnd( NoCompDHWAreaServed < FloorAreaServed[1] ))
+    then  PostError( "ResDHWSys '%s' is assigned to both Hotel/Motel guestrooms (w/ DHW exlcuded from compliance analysis) and residential dwellings that do include DHW compliance, but it can serve only one of these area types.", Name )
+    else  UNCHANGED  endif
+  DEFAULT
+    SumRevRef( Spc:ResDHWSysRef, Spc:NoCompDHWArea )
+ENDRULE
+
+RULE ResDHWSys:StdEqProp[1]
+  HELP
+    "flag indicating Proposed DHW should be left in place for Standard design"
+  DEFAULT
+    if (IfValidAnd( NoCompDHWAreaServed > 0))
+    then  1  else  0  endif
 ENDRULE
 
 

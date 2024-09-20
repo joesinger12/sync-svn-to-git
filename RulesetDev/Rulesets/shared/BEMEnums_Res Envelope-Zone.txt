@@ -173,13 +173,21 @@
 2,        6,       "Minimum Supply IAQ Fan"
 1,    Proj:Ruleset,          -999,  2   ; Current selections
 1,    Proj:IsComRuleset,        1,  2
+1,    ResOtherZn:ServedByAirSys,0,  2
 2,        2,       "Individual IAQ Fans"
 2,        11,      "Central Supply / Central Exhaust"
 2,        12,      "Central Supply / Individual Exhaust"
 2,        13,      "Central Exhaust / Individual Supply"
 2,        14,      "Central Supply"
 2,        15,      "Central Exhaust"
+1,    Proj:Ruleset,          -999,  16   ; Current selections
+1,    Proj:IsComRuleset,        1,  16
+1,    ResOtherZn:ServedByAirSys,1,  16
 2,        16,      "Air System"
+
+0, ResOtherZn:MakeupExhSrc, 1
+2,        1,       "DirectOutsideAir"
+2,        2,       "TransferFromAdjacentZones" 
 
 0, ResZn:AirFlowMeter,  0      ; SAC 10/01/20 (tic #1247)  - SAC 11/12/20
 0, ResOtherZn:AirFlowMeter,  0 
@@ -1696,6 +1704,11 @@
 0, ResOtherZn:Type,  1
 2,              1,    "Conditioned"
 2,             10,    "Unconditioned"
+
+; JP 2/21/23 - added for indirectly conditioned zone - tic #3455
+0, ResOtherZn:CondType,  1
+2,              1,    "Directly"
+2,              2,    "Indirectly"
 
 0, ResOtherZn:SpcFunc,  0
 1,    Proj:Ruleset,  -1001, 0  ; Backward compatibility

@@ -49,9 +49,7 @@ RULE ResCentralHtgClgSys:Type
 //  Hydronic heating only (not yet supported
 //  Variable refrigerant flow
   CHECKSIM
-    if( Type = "Four-pipe fan coil" .OR. 
-        Type = "Hydronic heating only" ) ; .OR.
-;        Type = "Variable refrigerant flow" )
+    if( Type = "Hydronic heating only" )
     then PostError("ResCentralHtgClgSys '%s' is Type = '%s'.
                      This option not currently supported.", Name, Type)
     else UNCHANGED
@@ -256,6 +254,8 @@ ENDRULE
 // ---------- DwellUnitType ----------
 
 RULE DwellUnitType:NumCentralEquipTypes
+  MINIMUM   0
+  MAXIMUM   10
   DEFAULT
     1
   CHECKSIM
@@ -508,6 +508,8 @@ ENDRULE
 // ---------- ResHVACSys ----------
 
 RULE ResHVACSys:NumCentralEquipTypes
+  MINIMUM   0
+  MAXIMUM   10
   DEFAULT
     1
   CHECKSIM
@@ -952,18 +954,19 @@ RULE NEW ResZn:ChildDwellUnitRef
     MaxChildComp( DwellUnit:CondFlrArea )
 ENDRULE
 
+; wrap equality checks in IfValidAnd() to prevent rule eval error when DUT not assigned to DU - SAC 02/23/23
 RULE NEW ResZn:CentralEqpType
   DATATYPE
     String
   INPUTCLASS
     NotInput
   DEFAULT
-    if( ChildDwellUnitRef:DwellUnitTypeRef:HVACSysType = "Central Heating and Cooling System" )
+    if( IfValidAnd( ChildDwellUnitRef:DwellUnitTypeRef:HVACSysType = "Central Heating and Cooling System" ) )
     then ChildDwellUnitRef:DwellUnitTypeRef:CentralEqpType
     else UNDEFINED
     endif
   CHECKSIM
-    if( ChildDwellUnitRef:DwellUnitTypeRef:HVACSysType = "Central Heating and Cooling System" .AND.
+    if( IfValidAnd( ChildDwellUnitRef:DwellUnitTypeRef:HVACSysType = "Central Heating and Cooling System" ) .AND.
                   NumUniqueChildVals( DwellUnit:DwellUnitTypeRef:CentralEqpType, 1 ) > 1 )
     then PostError( "The dwellUnits in ResZn '%s' are served by more than one type of central heating and cooling system which is not supported.", Name)
     else UNCHANGED
@@ -1202,6 +1205,19 @@ RULE ResHVACSys:NumCentralEqpUnits
                                            + CentralEquipCount[6] + CentralEquipCount[7] + CentralEquipCount[8] + CentralEquipCount[9] + CentralEquipCount[10]
     else 0
     endif endif endif endif endif endif endif endif endif endif
+ENDRULE
+
+; facilitate ResZnGrp:Mult (floor multipliers) - SAC 05/26/23 (tic #3392)
+RULE NEW ResHVACSys:MaxResZnGrpMult
+  DESCRIPTION
+    "The highest ResZnGrp:Mult across any zone served by this system"
+  DATATYPE
+    Integer
+  INPUTCLASS
+    NotInput
+  DEFAULT
+    max( MaxRevRef( ResZn:ActiveHVACSystem, ResZn:Mult ),
+         MaxRevRef( ResOtherZn:ozHVACSystem, ResOtherZn:Mult ) )
 ENDRULE
 
 RULE ResHVACSys:HeatEquipSummary
@@ -2220,6 +2236,11 @@ RULE ResOtherZn:IAQOption
     then "Air System"
     else UNCHANGED
     endif
+  SIZING_BASELINE
+    if( Type = "Conditioned" .AND. CondType = "Directly" )
+    then "Air System"
+    else UNCHANGED
+    endif
 ENDRULE
 
 RULE ResOtherZn:Action
@@ -2258,7 +2279,10 @@ RULE ResOtherZn:CentralVentSysRef
     else UNCHANGED
     endif endif endif
   SIZING_BASELINE
-    UNDEFINED ; ventilation provided by single-zone system
+    if( Type = "Conditioned" .AND. CondType = "Directly" )
+    then UNDEFINED ; ventilation provided by single-zone system
+    else UNCHANGED
+    endif
 ENDRULE
 
 RULE DwellUnitType:CentralVentSysRef
@@ -2319,7 +2343,10 @@ RULE ResOtherZn:SupplyIAQCFM
     else 0
     endif
   SIZING_BASELINE
-    0
+    if( Type = "Conditioned" .AND. CondType = "Directly" )
+    then 0 ; ventilation provided by single-zone system
+    else SupplyIAQCFM * ResZnGrp:CodeVentMult * ResZnGrp:ExhVentMult
+    endif
 ENDRULE
 
 RULE DwellUnitType:SupplyIAQCFM
@@ -2341,7 +2368,10 @@ RULE ResOtherZn:ExhaustIAQCFM
     else 0
     endif
   SIZING_BASELINE
-    0
+    if( Type = "Conditioned" .AND. CondType = "Directly" )
+    then 0 ; ventilation provided by single-zone system
+    else ExhaustIAQCFM * ResZnGrp:CodeVentMult * ResZnGrp:ExhVentMult
+    endif
 ENDRULE
 
 RULE DwellUnitType:ExhaustIAQCFM
@@ -2366,7 +2396,15 @@ RULE ResOtherZn:CentralSupplyCFM
     else 0
     endif endif
   SIZING_BASELINE
-    0
+    if( Type = "Conditioned" .AND. CondType = "Directly" )
+    then 0 ; ventilation provided by single-zone system
+    else if( IAQOption = "Central Supply / Central Exhaust" .OR. 
+             IAQOption = "Central Supply / Individual Exhaust" .OR.
+             IAQOption = "Central Exhaust / Individual Supply" .OR. 
+             IAQOption = "Central Supply" )
+    then CentralSupplyCFM * ResZnGrp:CodeVentMult * ResZnGrp:ExhVentMult
+    else 0
+    endif endif
 ENDRULE
 
 RULE DwellUnitType:CentralSupplyCFM
@@ -2394,7 +2432,15 @@ RULE ResOtherZn:CentralExhaustCFM
     else 0
     endif endif
   SIZING_BASELINE
-    0
+    if( Type = "Conditioned" .AND. CondType = "Directly" )
+    then 0 ; ventilation provided by single-zone system
+    else if( IAQOption = "Central Supply / Central Exhaust" .OR.
+             IAQOption = "Central Supply / Individual Exhaust" .OR.
+             IAQOption = "Central Exhaust / Individual Supply" .OR.
+             IAQOption = "Central Exhaust" )
+    then CentralExhaustCFM * ResZnGrp:CodeVentMult * ResZnGrp:ExhVentMult
+    else 0
+    endif endif
 ENDRULE
 
 RULE DwellUnitType:CentralExhaustCFM
@@ -2501,7 +2547,8 @@ RULE ResCentralVentSys:SupFanCap
     SumRevRef( ResZn:CentralVentSysRef, ResZn:CentralSupplyCFM ) +
     SumRevRef( ResOtherZn:CentralVentSysRef, ResOtherZn:CentralSupplyCFM )
   SIZING_BASELINE
-    SumRevRef( ResZn:CentralVentSysRef, ResZn:CentralSupplyCFM )
+    SumRevRef( ResZn:CentralVentSysRef, ResZn:CentralSupplyCFM ) +
+    SumRevRef( ResOtherZn:CentralVentSysRef, ResOtherZn:CentralSupplyCFM )
 ENDRULE
 
 RULE ResCentralVentSys:ExhFanCap
@@ -2509,7 +2556,36 @@ RULE ResCentralVentSys:ExhFanCap
     SumRevRef( ResZn:CentralVentSysRef, ResZn:CentralExhaustCFM ) +
     SumRevRef( ResOtherZn:CentralVentSysRef, ResOtherZn:CentralExhaustCFM )
   SIZING_BASELINE
-    SumRevRef( ResZn:CentralVentSysRef, ResZn:CentralExhaustCFM )
+    SumRevRef( ResZn:CentralVentSysRef, ResZn:CentralExhaustCFM ) +
+    SumRevRef( ResOtherZn:CentralVentSysRef, ResOtherZn:CentralExhaustCFM )
+ENDRULE
+
+RULE NEW ResCentralVentSys:SupDURat
+  DATATYPE
+    Float
+  INPUTCLASS
+    NotInput
+  DESCRIPTION
+    "Supply to dwelling units ratio"
+  SIZING_BASELINE
+    if( SupFanCap > 0 )
+    then SumRevRef( ResZn:CentralVentSysRef, ResZn:CentralSupplyCFM ) / SupFanCap
+    else 0
+    endif
+ENDRULE
+
+RULE NEW ResCentralVentSys:ExhDURat
+  DATATYPE
+    Float
+  INPUTCLASS
+    NotInput
+  DESCRIPTION
+    "Exhaust from dwelling units ratio"
+  SIZING_BASELINE
+    if( ExhFanCap > 0 )
+    then SumRevRef( ResZn:CentralVentSysRef, ResZn:CentralExhaustCFM ) / ExhFanCap
+    else 0
+    endif
 ENDRULE
 
 // ---------- Fan power ----------
@@ -2523,7 +2599,10 @@ RULE NEW ResOtherZn:SupplyFanPwr
         LocalCompAssigned( SupplyIAQFanRef ) )
     then SupplyIAQFanRef:WPerCFMIAQ * SupplyIAQCFM else 0 endif
   SIZING_BASELINE
-    0
+    if( Type = "Conditioned" .AND. CondType = "Directly" )
+    then 0 ; ventilation provided by single-zone system
+    else UNCHANGED
+    endif
 ENDRULE
 
 RULE NEW DwellUnitType:SupplyFanPwr
@@ -2557,7 +2636,10 @@ RULE NEW ResOtherZn:ExhaustFanPwr
         LocalCompAssigned( ExhaustIAQFanRef ) )
     then ExhaustIAQFanRef:WPerCFMIAQ * ExhaustIAQCFM else 0 endif
   SIZING_BASELINE
-    0
+    if( Type = "Conditioned" .AND. CondType = "Directly" )
+    then 0 ; ventilation provided by single-zone system
+    else UNCHANGED
+    endif
 ENDRULE
 
 RULE NEW DwellUnitType:ExhaustFanPwr
@@ -2668,9 +2750,9 @@ RULE ResCentralVentSys:SupFanPwrIdx
     endif
   SIZING_BASELINE
     if( IfValidAnd( HXType != "None" ) )
-    then 0.441 + 0.190 ; for Central w/ Heat Recovery
+    then SupDURat * ( 0.441 + 0.190 ) + ( 1 - SupDURat ) * SupFanPwrIdx ; for Central w/ Heat Recovery
     else if( Type = "Balanced" .OR. Type = "Supply" )
-    then 0.441 ; for Central Supply / Central Exhaust OR Central Supply / Individual Exhaust
+    then SupDURat * ( 0.441 ) + ( 1 - SupDURat ) * SupFanPwrIdx ; for Central Supply / Central Exhaust OR Central Supply / Individual Exhaust
     else if( SupFanCap > 0 ) 
     then TotIndividualSupFanPwr/SupFanCap ; for Central Exhaust / Individual Supply
     else 0 ; for Central Exhaust only
@@ -2689,9 +2771,9 @@ RULE ResCentralVentSys:ExhFanPwrIdx
     endif endif endif
   SIZING_BASELINE
     if( IfValidAnd( HXType != "None" ) )
-    then 0.302 + 0.165 ; for Central w/ Heat Recovery
+    then ExhDURat * ( 0.302 + 0.165 ) + ( 1 - ExhDURat ) * ExhFanPwrIdx ; for Central w/ Heat Recovery
     else if( Type = "Balanced" .OR. Type = "Exhaust" )
-    then 0.302 ; for Central Supply / Central Exhaust OR Central Exhaust / Individual Supply
+    then ExhDURat * ( 0.302 ) + ( 1 - ExhDURat ) * ExhFanPwrIdx ; for Central Supply / Central Exhaust OR Central Exhaust / Individual Supply
     else if( ExhFanCap > 0 )
     then TotIndividualExhFanPwr/ExhFanCap ; for Central Supply / Individual Exhaust
     else 0 ; for Central Supply only

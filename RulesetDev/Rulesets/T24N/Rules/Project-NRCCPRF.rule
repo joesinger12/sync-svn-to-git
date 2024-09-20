@@ -74,6 +74,15 @@ RULE nrccSection_Info:Info07_ComplianceSoftwareVersion
   ANNUAL_PROPOSED
     Proj:SoftwareVersion
 ENDRULE
+; SAC 06/20/23 (gh LMCC #24)
+RULE nrccSection_Info:Info07a_Vendor
+  ANNUAL_PROPOSED
+    Proj:SoftwareVendor
+ENDRULE
+RULE nrccSection_Info:Info07c_Build
+  ANNUAL_PROPOSED
+    Proj:RuleRepoRev
+ENDRULE
 ;RULE nrccSection_Info:Info07b_ComplianceSoftwareVersionDetail
 ;  ANNUAL_PROPOSED
 ;    Proj:ResProj:SoftwareVersionDetail
@@ -86,6 +95,7 @@ RULE nrccSection_Info:Info09_Azimuth
   ANNUAL_PROPOSED
     atof( Format( "%.2f", Bldg:BldgAz ) )
 ENDRULE
+; RJH 5/26/23 Added Healthcare and LowRiseResidential enumerations per GitHub 2022-CBECC-NonRes-PRF-Schema Issue #71 
 RULE nrccSection_Info:Info10_TopLevelOccupancy
   ANNUAL_PROPOSED
     switch (Bldg:BldgType)
@@ -94,6 +104,8 @@ RULE nrccSection_Info:Info10_TopLevelOccupancy
         case "High-Rise Residential"              : "HighRiseResidential"
         case "Nonresidential"                     : "Nonresidential"
         case "Mixed Occupancy"                    : "MixedOccupancy"
+        case "Healthcare"                         : "Healthcare"
+        case "Low-Rise Residential"               : "LowRiseResidential"
         default :  UNDEFINED
     endswitch
 ENDRULE
@@ -103,9 +115,15 @@ RULE nrccSection_Info:Info11_WeatherFile
 ENDRULE
 RULE nrccSection_Info:Info12_ProjectScopeNR
   ANNUAL_PROPOSED
-    if ( EnumString(Proj:CompType) != "NA" )
-    then EnumString(Proj:CompType)
-    else UNDEFINED
+    if (Proj:ResDwellUnits > 0)
+    then if (EnumString(Proj:ResCompType) != "NA")
+         then EnumString(Proj:ResCompType)
+         else UNDEFINED
+         endif
+    else if ( EnumString(Proj:CompType) != "NA" )
+         then EnumString(Proj:CompType)
+         else UNDEFINED
+         endif
     endif
 ENDRULE
 RULE nrccSection_Info:Info13_DwellingUnitsCount
@@ -357,6 +375,19 @@ RULE nrccSection_C22Result1:C22Result1_PassFailSource
     if (GlobalStatus( Proj:EUseSummaryRef[1]:MetricPassFail[3] ) > 0)
     then  Proj:EUseSummaryRef[1]:MetricPassFail[3]
     else  UNDEFINED  endif
+ENDRULE
+
+; PerfComplies / PerfFails / PerfInvalid - SAC 05/06/23 (gh issue #51)
+RULE nrccSection_C22Result1:C22Result1_PerformanceComplianceValidity
+  NRCCPRF
+    if (IfValidAnd( Proj:EUseSummaryRef[1]:AnalysisValid = 0 ))
+    then  "PerfInvalid"
+    else if (IfValidAnd( Proj:EUseSummaryRef[1]:PassFail = "PASS" ))
+    then  "PerfComplies"
+    else if (IfValidAnd( Proj:EUseSummaryRef[1]:PassFail = "FAIL" ))
+    then  "PerfFails"
+    else  UNDEFINED
+    endif endif endif
 ENDRULE
 
 ; nrccSection_C22Result2 
@@ -4771,7 +4802,7 @@ ENDRULE
 RULE nrccSection_Except:Except01_ExceptionalConditionMessageCCPRFE[19]
   ANNUAL_PROPOSED
     if (GlobalStatus( Proj:ExcptCondVentStdOther ) > 0)
-    then if (Proj:ExcptCondVentStdOther == "Yes") then "VentStdOther" else UNDEFINED endif
+    then if (Proj:ExcptCondVentStdOther == "Yes") then "ExcptCondVentStdOther" else UNDEFINED endif
     else  UNDEFINED  endif
 ENDRULE
 RULE nrccSection_Except:Except01_ExceptionalConditionMessageCCPRFE[20]
@@ -4800,8 +4831,8 @@ RULE nrccSection_Except:Except01_ExceptionalConditionMessageCCPRFE[23]
 ENDRULE
 RULE nrccSection_Except:Except01_ExceptionalConditionMessageCCPRFE[24]
   ANNUAL_PROPOSED
-    if (GlobalStatus( Proj:ExcptCondFxdSeat ) > 0)
-    then if (Proj:ExcptCondFxdSeat == "Yes") then "FixedSeatingUsedForCalculatingVentilation" else UNDEFINED endif
+    if (GlobalStatus( Proj:ExcptCondDsgnOcc ) > 0)
+    then if (Proj:ExcptCondDsgnOcc == "Yes") then "DesignedOccupancyUsedForCalculatingVentilation" else UNDEFINED endif
     else  UNDEFINED  endif
 ENDRULE
 RULE nrccSection_Except:Except01_ExceptionalConditionMessageCCPRFE[25]

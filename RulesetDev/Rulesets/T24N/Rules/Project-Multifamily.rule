@@ -100,7 +100,7 @@ RULE NEW ResZn:CUACRef
     else  UNDEFINED  endif
 ENDRULE
 
-// flags indicating assignment of central laundry zone - SAC 12/20/22 (CUAC)
+// flags indicating assignment of central laundry zone - SAC 12/20/22 (CUAC)   - revise to prevent counting units where assigned DUT:WasherOption != Central - SAC 02/28/23 (tic #3418)
 RULE NEW DwellingUnit:CentralLaundryAssigned
   DATATYPE
     Integer
@@ -109,8 +109,9 @@ RULE NEW DwellingUnit:CentralLaundryAssigned
   INPUTCLASS
     NotInput
   DEFAULT
-    if ( (IfValidAnd( HaveWasher > 0 ) .AND. LocalCompAssigned( WasherZoneRef ) > 0 .AND. IfValidAnd( WasherZoneRef:Name != ResZn:Name )) .OR.
-         (IfValidAnd( HaveWasher > 0 ) .AND. LocalCompAssigned( DryerZoneRef  ) > 0 .AND. IfValidAnd(  DryerZoneRef:Name != ResZn:Name )) )
+    if ( IfValidAnd( DwellUnitTypeRef:WasherOption = "Central" ) .AND.
+         ( (IfValidAnd( HaveWasher > 0 ) .AND. LocalCompAssigned( WasherZoneRef ) > 0 .AND. IfValidAnd( WasherZoneRef:Name != ResZn:Name )) .OR.
+           (IfValidAnd( HaveWasher > 0 ) .AND. LocalCompAssigned( DryerZoneRef  ) > 0 .AND. IfValidAnd(  DryerZoneRef:Name != ResZn:Name )) ) )
     then  1
     else  UNDEFINED  endif
 ENDRULE
@@ -243,27 +244,28 @@ RULE CUAC:UnitType
 ENDRULE
 
 
-RULE CUAC:OwnerName
-ENDRULE
-
-RULE CUAC:OwnerAddress
-ENDRULE
-
-RULE CUAC:OwnerCity
-ENDRULE
-
-RULE CUAC:OwnerZIPCode
-ENDRULE
-
-
-RULE CUAC:ContactName
-ENDRULE
-
-RULE CUAC:ContactPhone
-ENDRULE
-
-RULE CUAC:ContactEMail
-ENDRULE
+; remove totally empty rules - SAC 04/24/23
+; RULE CUAC:OwnerName
+; ENDRULE
+; 
+; RULE CUAC:OwnerAddress
+; ENDRULE
+; 
+; RULE CUAC:OwnerCity
+; ENDRULE
+; 
+; RULE CUAC:OwnerZIPCode
+; ENDRULE
+; 
+; 
+; RULE CUAC:ContactName
+; ENDRULE
+; 
+; RULE CUAC:ContactPhone
+; ENDRULE
+; 
+; RULE CUAC:ContactEMail
+; ENDRULE
 
 
 ; removed CUAC-specific site address stuff - SAC 12/07/22
@@ -369,15 +371,6 @@ ENDRULE
 ;  DEFAULT
 ;    0  
 ;ENDRULE
-
-RULE ResProj:IsAddAlone
-  DESCRIPTION
-    "flag set if this project is New Construction, Addition Alone"
-  INPUTCLASS 
-    NotInput
-  DEFAULT
-    0  
-ENDRULE
 
 RULE ResProj:ZonalControl
   DESCRIPTION
@@ -536,7 +529,7 @@ RULE ResProj:StdICQEnclCavInsMult
   INPUTCLASS 
     NotInput
   DEFAULT
-    if (IfValidAnd( Bldg:TotStoryCnt > 3 ))
+    if (IfValidAnd( Bldg:AboveGrdStoryCnt > 3 ))
     then  1
     else if (EnumValue( ClimateZone ) > 0)
     then  T24RClimateZoneCodeBase:StdICQEnclCavInsMult( "ClimateZone", EnumValue( ClimateZone ), "CodeBase", EnumValue( StdDesignBase ), "BldgType", BldgTypeTblStr )
@@ -550,7 +543,7 @@ RULE ResProj:ICQEnclCavInsMult
   INPUTCLASS 
     NotInput
   DEFAULT
-    if (IfValidAnd( Bldg:TotStoryCnt > 3 ))
+    if (IfValidAnd( Bldg:AboveGrdStoryCnt > 3 ))
     then  1
     else  switch ( InsulConsQuality )		; Mulitplier used to adjust conduction of cavity insulation layer
              case "Yes" :  1.0	                  ; Yes/Improved
@@ -558,7 +551,7 @@ RULE ResProj:ICQEnclCavInsMult
           endswitch
     endif
   SIZING
-    if (IfValidAnd( Bldg:TotStoryCnt > 3 ))
+    if (IfValidAnd( Bldg:AboveGrdStoryCnt > 3 ))
     then  1
     else  switch ( InsulConsQuality )		; Mulitplier used to adjust conduction of cavity insulation layer
              case "Yes" :  1.0	                  ; Yes/Improved
@@ -566,7 +559,7 @@ RULE ResProj:ICQEnclCavInsMult
           endswitch
     endif
   ANNUAL
-    if (IfValidAnd( Bldg:TotStoryCnt > 3 ))
+    if (IfValidAnd( Bldg:AboveGrdStoryCnt > 3 ))
     then  1
     else  switch ( InsulConsQuality )		; Mulitplier used to adjust conduction of cavity insulation layer
              case "Yes" :  1.0	                  ; Yes/Improved
@@ -793,23 +786,43 @@ ENDRULE
 ;   "ICQAtticBypassUAMult",       BEMP_Flt,  1,  NInp,  "",       "ICQAtticBypassUAMult",     ""  ; "ICQ-dependent multiplier for bypass UA (attic bypass diode)",  ""    
 
 
-; for MFam Res compatibility - SAC 03/02/22
-RULE Proj:RunScope
-  DESCRIPTION
-    "scope of compliance analysis"
-  OPTION
-    Newly Constructed
-    Addition and/or Alteration
-  DEFAULT
-     if (IfValidAnd( CompOptExist > 0 ))
-     then  "Addition and/or Alteration"
-     else  "Newly Constructed"  endif
-ENDRULE
+; ; for MFam Res compatibility - SAC 03/02/22
+; RULE Proj:RunScope
+;   DESCRIPTION
+;     "scope of compliance analysis"
+;   OPTION
+;     Newly Constructed
+;     Addition and/or Alteration
+;   DEFAULT
+;      "Newly Constructed"
+; ENDRULE
+; ; above was:         - modified Proj:RunScope to hardwire to New Cons until MFam EAA is implemented in CBECC - SAC 02/14/23
+; ;     if (IfValidAnd( CompOptExist > 0 ))
+; ;     then  "Addition and/or Alteration"
+; ;     else  "Newly Constructed"  endif
+; removed above & revised below - SAC 05/19/23 (tic #3479)
 RULE ResProj:RunScope
   DESCRIPTION
     "scope of compliance analysis"
+  INPUTCLASS 
+    NotInput IgnoreUserInput "Removed during implementation of MFam EAA work"
   DEFAULT
-     Proj:RunScope
+    if (Proj:ResCompOpt == "Addition and/or Alteration")
+    then  "Addition and/or Alteration"
+    else  "Newly Constructed"
+    endif
+ENDRULE
+
+RULE ResProj:IsAddAlone
+  DESCRIPTION
+    "flag set if this project is New Construction, Addition Alone"
+  INPUTCLASS 
+    NotInput
+  DEFAULT
+    if (Proj:ResCompOpt == "New - Addition Alone")
+    then  1
+    else  0
+    endif
 ENDRULE
 
 RULE ResProj:IsMultiFamily
@@ -908,6 +921,18 @@ RULE NEW ResZn:CondVolWithMult
     else  ValidOr( Volume, 0 ) * ValidOr( ResZnGrp:Mult, 1 )
     endif
 ENDRULE
+RULE NEW ResZn:FlrAreaWithMult
+  DATATYPE
+    Float
+  LONGFORM
+    FloorAreaWithMultiplier
+  INPUTCLASS
+    NotInput
+  UNITS
+    ft2
+  DEFAULT
+    ValidOr( FloorArea, 0 ) * ValidOr( ResZnGrp:Mult, 1 )
+ENDRULE
 
 RULE ResZn:NumDwellingUnits
   DEFAULT
@@ -925,8 +950,6 @@ RULE NEW ResZn:NumDwellingUnitsWithMult
     NumberDwellingUnitsWithMultiplier
   INPUTCLASS
     NotInput
-  UNITS
-    ft3
   DEFAULT
     ValidOr( NumDwellingUnits, 0 ) * ValidOr( ResZnGrp:Mult, 1 )
 ENDRULE
@@ -937,6 +960,32 @@ RULE ResProj:NumDwellingUnits
     then  1
     else  SumAll( ResZn:NumDwellingUnitsWithMult )
     endif
+ENDRULE
+
+// for toggling on/off rules checking for missing floor or ceiling surfaces - SAC 04/26/23 (tic #3392)
+RULE NEW ResZn:BelowMultipliedFlr
+  DATATYPE
+    Integer
+  LONGFORM
+    BelowMultipliedFloor
+  INPUTCLASS
+    NotInput
+  DEFAULT
+    if (max( MaxAcrossIf( ResZn:Bottom,      ResZn:Mult      > 1.1 ),
+             MaxAcrossIf( ResOtherZn:Bottom, ResOtherZn:Mult > 1.1 ) ) > (ValidOr( Bottom, 0 ) + 5))
+    then  1  else  0  endif
+ENDRULE
+RULE NEW ResZn:AboveMultipliedFlr
+  DATATYPE
+    Integer
+  LONGFORM
+    AboveMultipliedFloor
+  INPUTCLASS
+    NotInput
+  DEFAULT
+    if (min( MinAcrossIf( ResZn:Bottom,      ResZn:Mult      > 1.1 ),
+             MinAcrossIf( ResOtherZn:Bottom, ResOtherZn:Mult > 1.1 ) ) < (ValidOr( Bottom, 0 ) - 5))
+    then  1  else  0  endif
 ENDRULE
 
 ; properties added to ResOtherZn for consistency w/ ThrmlZn for HVAC sizing purposes
@@ -1090,6 +1139,32 @@ RULE NEW ResOtherZn:CondVolWithMult
     if (EnumValue( Type ) >= 10) then  0
     else  ValidOr( Volume, 0 ) * ValidOr( Mult, 1 )
     endif
+ENDRULE
+
+// for toggling on/off rules checking for missing floor or ceiling surfaces - SAC 04/26/23 (tic #3392)
+RULE NEW ResOtherZn:BelowMultipliedFlr
+  DATATYPE
+    Integer
+  LONGFORM
+    BelowMultipliedFloor
+  INPUTCLASS
+    NotInput
+  DEFAULT
+    if (max( MaxAcrossIf( ResZn:Bottom,      ResZn:Mult      > 1.1 ),
+             MaxAcrossIf( ResOtherZn:Bottom, ResOtherZn:Mult > 1.1 ) ) > (ValidOr( Bottom, 0 ) + 5))
+    then  1  else  0  endif
+ENDRULE
+RULE NEW ResOtherZn:AboveMultipliedFlr
+  DATATYPE
+    Integer
+  LONGFORM
+    AboveMultipliedFloor
+  INPUTCLASS
+    NotInput
+  DEFAULT
+    if (min( MinAcrossIf( ResZn:Bottom,      ResZn:Mult      > 1.1 ),
+             MinAcrossIf( ResOtherZn:Bottom, ResOtherZn:Mult > 1.1 ) ) < (ValidOr( Bottom, 0 ) - 5))
+    then  1  else  0  endif
 ENDRULE
 
 
@@ -1509,6 +1584,169 @@ RULE ResProj:Action
 ENDRULE
 
 
+; SAC 09/16/21 (MFam)   ; added Max of 20 to establish limit related to submetering of loads - SAC 05/26/23 (tic #3392)
+; moved here from Space-Function.rule to avoid rule eval order issue - SAC 05/27/23 (tic #3392)
+RULE ResZnGrp:Mult
+  DESCRIPTION
+    "ResZnGrp multiplier"  
+  INPUTCLASS
+    Default
+  MINIMUM 
+    1
+  MAXIMUM
+    20
+  REPORTPRECISION
+    0
+  CHECKCODE
+    if ( IfValidAnd( Proj:EnableResearchMode > 0 )==0 .AND.
+         IfValidAnd( Proj:AnalysisVersion >= 220300 )==0 .AND. Mult > 1 )
+    then  PostError( "ResZnGrp '%s' Multiplier (%g) must be set to 1 (or toggle on the EnableResearchMode option to enable this feature)", Name, Mult )
+    else  UNCHANGED  endif
+  DEFAULT 
+    1
+ENDRULE
+RULE ResZnGrp:NumStories
+  DESCRIPTION
+    "ResZnGrp number of stories"  
+  INPUTCLASS
+    Default
+  MINIMUM 
+    1
+  REPORTPRECISION
+    0
+  DEFAULT 
+    1
+ENDRULE
+
+; added rules to ensure defined before referenced - SAC 05/27/23 (tic #3392)
+RULE ResZn:Mult
+  DESCRIPTION
+    "ResZn multiplier"  
+  INPUTCLASS
+    NotInput
+  REPORTPRECISION
+    0
+  DEFAULT 
+    if (IfValidAnd( ResZnGrp:Mult > 0 ))
+    then  ResZnGrp:Mult
+    else  1  endif
+ENDRULE
+RULE ResOtherZn:Mult
+  DESCRIPTION
+    "ResOtherZn multiplier"  
+  INPUTCLASS
+    NotInput
+  REPORTPRECISION
+    0
+  DEFAULT 
+    if (IfValidAnd( ResZnGrp:Mult > 0 ))
+    then  ResZnGrp:Mult
+    else  1  endif
+ENDRULE
+
+   ; to facilitate reporting of ConsAssms assigned to Res surfaces - SAC 03/10/23
+   ; added  * Parent( Mult ) to support res floor mults - SAC 05/27/23 (tic #3392)
+RULE NEW ResExtWall:AreaNew
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   ValidOr( IsNew, 0 ) * Area * Parent( Mult )
+ENDRULE
+RULE NEW ResExtWall:AreaAltered
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   ValidOr( IsAltered, 0 ) * Area * Parent( Mult )
+ENDRULE
+RULE NEW ResExtWall:AreaExisting
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   ValidOr( IsExisting, 0 ) * Area * Parent( Mult )
+ENDRULE
+
+RULE NEW ResCathedralCeiling:AreaNew
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   ValidOr( IsNew, 0 ) * Area * Parent( Mult )
+ENDRULE
+RULE NEW ResCathedralCeiling:AreaAltered
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   ValidOr( IsAltered, 0 ) * Area * Parent( Mult )
+ENDRULE
+RULE NEW ResCathedralCeiling:AreaExisting
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   ValidOr( IsExisting, 0 ) * Area * Parent( Mult )
+ENDRULE
+
+RULE NEW ResExtFlr:AreaNew
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   ValidOr( IsNew, 0 ) * Area * Parent( Mult )
+ENDRULE
+RULE NEW ResExtFlr:AreaAltered
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   ValidOr( IsAltered, 0 ) * Area * Parent( Mult )
+ENDRULE
+RULE NEW ResExtFlr:AreaExisting
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   ValidOr( IsExisting, 0 ) * Area * Parent( Mult )
+ENDRULE
+
+   ; added  RULE NEWs to support reporting of res floor mult constructions - SAC 05/27/23 (tic #3392)
+RULE NEW ResExtWall:AreaWithMult
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   Area * Parent( Mult )
+ENDRULE
+RULE NEW ResIntWall:AreaWithMult
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   Area * Parent( Mult )
+ENDRULE
+RULE NEW UndWall:AreaWithMult
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   Area * Parent( Mult )
+ENDRULE
+RULE NEW Attic:FloorAreaWithMult
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   ValidOr( FloorArea, 0 ) * Parent( Mult )
+ENDRULE
+RULE NEW CathedralCeiling:AreaWithMult
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   Area * Parent( Mult )
+ENDRULE
+RULE NEW CeilingBelowAttic:AreaWithMult
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   Area * Parent( Mult )
+ENDRULE
+RULE NEW InteriorCeiling:AreaWithMult
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   Area * Parent( Mult )
+ENDRULE
+RULE NEW ResIntFlr:AreaWithMult
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   Area * Parent( Mult )
+ENDRULE
+RULE NEW ResExtFlr:AreaWithMult
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   Area * Parent( Mult )
+ENDRULE
+RULE NEW FloorOverCrawl:AreaWithMult
+  DATATYPE  Float
+  UNITS     ft2
+  DEFAULT   Area * Parent( Mult )
+ENDRULE
+
+
 RULE NEW ResProj:SumResIAQOptions_Before
   DATATYPE
     Integer
@@ -1575,6 +1813,537 @@ RULE NEW DwellUnitType:IAQSubjectToAccessOrFIDAdjustment
     then  0
     else  1   endif endif endif
 ENDRULE
+
+; SAC 02/21/23 (tic #3418)   ; revised checks to warnings for Proj:EnableResearchMode - SAC 03/02/23
+RULE ResOtherZn:ozDHWSys
+  CHECKCODE
+    if (LocalCompAssigned( ozDHWSys) < 1 .AND. ShowDHWSysAssignment > 0)
+    then  if ( (EnumValue(SpcFunc) == 231 .OR. EnumValue(SpcFunc) == 342) .AND.      ; 231, "Laundry Area"
+               SumRevRef( DwellUnit:WasherZoneRef, DwellUnit:TotalDHWFlrArea ) > 1 )
+          then  if (IfValidAnd( Proj:EnableResearchMode > 0 ))
+                then  PostWarning( "DHW system assignment missing for ResOtherZn '%s' - required for central laundry zones.", Name )
+                else  PostError(   "DHW system assignment missing for ResOtherZn '%s' - required for central laundry zones.", Name )
+                endif
+          else if (HotWtrHrlyUsePerPers > 0)
+          then  if (IfValidAnd( Proj:EnableResearchMode > 0 ))
+                then  PostWarning( "DHW system assignment missing for ResOtherZn '%s' - required for zones with nonresidential hot water use (based on space function).", Name )
+                else  PostError(   "DHW system assignment missing for ResOtherZn '%s' - required for zones with nonresidential hot water use (based on space function).", Name )
+                endif
+          else  UNCHANGED  endif endif
+    else  UNCHANGED  endif
+ENDRULE
+
+; SAC 02/28/23 (tic #3418)
+; removed remaining error check - now all supported - SAC 03/24/23 (tic #3418) 
+;RULE ResOtherZn:Action
+;  CHECKCODE
+;    if (LocalCompAssigned( ozDHWSys ) > 0 .AND. ShowDHWSysAssignment > 0)
+;    then  if ( (EnumValue(SpcFunc) == 231 .OR. EnumValue(SpcFunc) == 342) .AND.      ; 231, "Laundry Area"
+;               SumRevRef( DwellUnit:WasherZoneRef, DwellUnit:CentralLaundryAssigned ) > 0.5 .AND.
+;               IfValidAnd( ozDHWSys:NResFloorAreaServed > 0.1 ) )
+;          then  if (IfValidAnd( Proj:EnableResearchMode > 0 ))
+;                then  PostWarning( "Residential central laundry zone '%s' references DHW system '%s' that serves both residential & nonresidential uses/zones, which is not supported (systems must be all-res or all-nonres).", Name, ozDHWSys:Name )
+;                else  PostError(   "Residential central laundry zone '%s' references DHW system '%s' that serves both residential & nonresidential uses/zones, which is not supported (systems must be all-res or all-nonres).", Name, ozDHWSys:Name )
+;                endif
+;          else  UNCHANGED  endif
+;    else  UNCHANGED  endif
+;ENDRULE
+; removed error msg preventing assignment of central DHW systems - SAC 03/16/23 (tic #3418)
+;          else if ( IfValidAnd( HotWtrHrlyUsePerPers > 0 ) .AND.
+;                    IfValidAnd( ozDHWSys:CentralRecircType = "Non-Central" )==0 )
+;          then  if (IfValidAnd( Proj:EnableResearchMode > 0 ))
+;                then  PostWarning( "Residential common area '%s' references a central DHW system ('%s'), which is not yet supported.", Name, ozDHWSys:Name )
+;                else  PostError(   "Residential common area '%s' references a central DHW system ('%s'), which is not yet supported.", Name, ozDHWSys:Name )
+;                endif
+; removed error msg preventing assignment of central DHW systems to both Res & NRes uses - SAC 03/24/23 (tic #3418)
+;          else if ( IfValidAnd( HotWtrHrlyUsePerPers > 0 ) .AND.
+;                    IfValidAnd( ozDHWSys:NResFloorAreaServed < (ozDHWSys:FloorAreaServed[1] - 0.1) ) )
+;          then  if (IfValidAnd( Proj:EnableResearchMode > 0 ))
+;                then  PostWarning( "Residential common area '%s' includes a nonresidential water heating load but references a DHW system ('%s') that also provides residential water heating, which is not supported (systems must be all-res or all-nonres).", Name, ozDHWSys:Name )
+;                else  PostError(   "Residential common area '%s' includes a nonresidential water heating load but references a DHW system ('%s') that also provides residential water heating, which is not supported (systems must be all-res or all-nonres).", Name, ozDHWSys:Name )
+;                endif
+
+; porting of range checks from CBECC-Res - SAC 03/01/23
+RULE ResConsAssm:AbvDeckInsulLayerRVal
+  MINIMUM   0
+ENDRULE
+RULE ResConsAssm:SheathInsul2LayerRVal
+  MINIMUM   0
+ENDRULE
+RULE ResConsAssm:FurringInsul2LayerRVal
+  MINIMUM   0
+ENDRULE
+RULE ResConsAssm:FurringInsulLayerRVal
+  MINIMUM   0
+ENDRULE
+RULE ResConsAssm:SheathInsulLayerRVal
+  MINIMUM   0
+ENDRULE
+
+RULE ResWinType:Area
+  MINIMUM   0.01
+ENDRULE
+RULE ResWinType:Height
+  MINIMUM   0.01
+ENDRULE
+RULE ResWinType:Width
+  MINIMUM   0.01
+ENDRULE
+RULE ResWinType:NFRCUfactor
+  MINIMUM   0.01
+ENDRULE
+RULE ResWinType:NFRCSHGC
+  MINIMUM   0.01
+ENDRULE
+RULE ResWinType:NFRCVT
+  MINIMUM   0.01
+ENDRULE
+
+RULE DwellUnitType:NumHeatEquipTypes
+  MINIMUM   0
+  MAXIMUM   5
+ENDRULE
+RULE DwellUnitType:NumCoolEquipTypes
+  MINIMUM   0
+  MAXIMUM   5
+ENDRULE
+RULE DwellUnitType:NumHtPumpEquipTypes
+  MINIMUM   0
+  MAXIMUM   5
+ENDRULE
+RULE DwellUnitType:NumDHWSysTypes
+  MINIMUM   1
+  MAXIMUM   5
+ENDRULE
+RULE DwellUnitType:TotShowersServed
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:TotBathsServed
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:CDNumFloorsServed
+  MINIMUM   0.01
+ENDRULE
+RULE DwellUnitType:CDMBathFixDist
+  MINIMUM   0.01
+ENDRULE
+RULE DwellUnitType:CDKitFixDist
+  MINIMUM   0.01
+ENDRULE
+RULE DwellUnitType:DWHRSysShowers1
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:DWHRSysShowers2
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:DWHRSysShowers3
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:DWHRSysShowers4
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:DWHRSysShowers5
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:DWHRSysShowers6
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:DWHRSysTakeCold1
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:DWHRSysTakeCold2
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:DWHRSysTakeCold3
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:DWHRSysTakeCold4
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:DWHRSysTakeCold5
+  MINIMUM   0
+ENDRULE
+RULE DwellUnitType:DWHRSysTakeCold6
+  MINIMUM   0
+ENDRULE
+
+RULE ResZn:FloorArea
+  MINIMUM   0.01
+ENDRULE
+RULE ResZn:CeilingHeight
+  MINIMUM   0.01
+ENDRULE
+RULE ResZn:NumStories
+  MINIMUM   1
+  MAXIMUM   3
+ENDRULE
+
+RULE ResOtherZn:Area
+  MINIMUM   0.01
+ENDRULE
+RULE ResOtherZn:Perim
+  MINIMUM   0.01
+ENDRULE
+
+RULE ResAttic:RoofRise
+  MINIMUM   0
+  MAXIMUM   20.78
+ENDRULE
+RULE ResAttic:RoofSolReflect
+  MINIMUM   0
+  MAXIMUM   1
+ENDRULE
+RULE ResAttic:RoofEmiss
+  MINIMUM   0
+  MAXIMUM   1
+ENDRULE
+
+RULE ResCrawlSpc:Perimeter
+  MINIMUM   10
+ENDRULE
+RULE ResCrawlSpc:AvgWallHeight
+  MINIMUM   2
+ENDRULE
+
+RULE DwellUnit:Count
+  MINIMUM   1
+ENDRULE
+
+RULE ResExtWall:Area
+  MINIMUM   0.01
+ENDRULE
+RULE ResExtWall:Tilt
+  MINIMUM   60
+  MAXIMUM   179.9
+ENDRULE
+
+RULE ResIntWall:Area
+  MINIMUM   0.01
+ENDRULE
+
+RULE ResUndgrWall:Area
+  MINIMUM   0.01
+ENDRULE
+
+RULE ResCathedralCeiling:Area
+  MINIMUM   0.01
+ENDRULE
+RULE ResCathedralCeiling:RoofRise
+  MINIMUM   0
+  MAXIMUM   20.78
+ENDRULE
+RULE ResCathedralCeiling:RoofSolReflect
+  MINIMUM   0
+  MAXIMUM   1
+ENDRULE
+RULE ResCathedralCeiling:RoofEmiss
+  MINIMUM   0
+  MAXIMUM   1
+ENDRULE
+
+RULE ResCeilingBelowAttic:Area
+  MINIMUM   0.01
+ENDRULE
+
+RULE ResIntCeiling:Area
+  MINIMUM   0.01
+ENDRULE
+
+RULE ResSlabFlr:Area
+  MINIMUM   0.01
+ENDRULE
+
+RULE ResExtFlr:Area
+  MINIMUM   0.01
+ENDRULE
+RULE ResExtFlr:FloorZ
+  MINIMUM   0
+ENDRULE
+
+RULE ResFlrOverCrawlSpc:Area
+  MINIMUM   0.01
+ENDRULE
+RULE ResFlrOverCrawlSpc:FloorZ
+  MINIMUM   0
+ENDRULE
+
+RULE ResIntFlr:Area
+  MINIMUM   0.01
+ENDRULE
+RULE ResIntFlr:FloorZ
+  MINIMUM   0
+ENDRULE
+
+RULE ResUndgrFlr:Area
+  MINIMUM   0.01
+ENDRULE
+
+RULE ResOpening:Width
+  MINIMUM   0.01
+ENDRULE
+RULE ResOpening:Height
+  MINIMUM   0.01
+ENDRULE
+RULE ResOpening:BottomHt
+  MINIMUM   0
+ENDRULE
+
+RULE ResWin:Area
+  MINIMUM   0.01
+ENDRULE
+RULE ResWin:Height
+  MINIMUM   0.01
+ENDRULE
+RULE ResWin:Width
+  MINIMUM   0.01
+ENDRULE
+RULE ResWin:Multiplier
+  MINIMUM   0.01
+ENDRULE
+RULE ResWin:NFRCUfactor
+  MINIMUM   0.01
+ENDRULE
+RULE ResWin:NFRCSHGC
+  MINIMUM   0.01
+ENDRULE
+RULE ResWin:NFRCVT
+  MINIMUM   0.01
+ENDRULE
+
+RULE ResSkylt:Area
+  MINIMUM   0.01
+ENDRULE
+RULE ResSkylt:Multiplier
+  MINIMUM   0.01
+ENDRULE
+RULE ResSkylt:NFRCUfactor
+  MINIMUM   0.01
+ENDRULE
+RULE ResSkylt:NFRCSHGC
+  MINIMUM   0.01
+ENDRULE
+
+RULE ResDr:Area
+  MINIMUM   0.01
+ENDRULE
+RULE ResDr:Ufactor
+  MINIMUM   0.01
+ENDRULE
+
+RULE ResHVACSys:NumHeatSystemTypes
+  MINIMUM   0
+  MAXIMUM   10
+ENDRULE
+RULE ResHVACSys:NumCoolSystemTypes
+  MINIMUM   0
+  MAXIMUM   10
+ENDRULE
+RULE ResHVACSys:NumHtPumpSystemTypes
+  MINIMUM   0
+  MAXIMUM   10
+ENDRULE
+
+RULE ResClgSys:CFMperTon
+  MINIMUM   100
+  MAXIMUM   600
+ENDRULE
+
+RULE ResHtPumpSys:Cap47
+  MINIMUM   0.01
+ENDRULE
+RULE ResHtPumpSys:Cap17
+  MINIMUM   0.01
+ENDRULE
+RULE ResHtPumpSys:COP47
+  MINIMUM   0.01
+ENDRULE
+RULE ResHtPumpSys:COP17
+  MINIMUM   0.01
+ENDRULE
+RULE ResHtPumpSys:SEER
+  MINIMUM   0.01
+ENDRULE
+RULE ResHtPumpSys:SEER2
+  MINIMUM   0.01
+ENDRULE
+RULE ResHtPumpSys:EER
+  MINIMUM   0.01
+ENDRULE
+RULE ResHtPumpSys:EER2
+  MINIMUM   0.01
+ENDRULE
+RULE ResHtPumpSys:CEER
+  MINIMUM   0.01
+ENDRULE
+RULE ResHtPumpSys:CFMperTon
+  MINIMUM   100
+  MAXIMUM   600
+ENDRULE
+
+RULE ResDistSys:DuctLeakageVal
+  MINIMUM   0.1
+  MAXIMUM   89.9
+ENDRULE
+
+RULE ResIAQFan:IAQCFM
+  MINIMUM   0.01
+ENDRULE
+RULE ResIAQFan:SensRecovEff
+  MINIMUM   0
+  MAXIMUM   99.9
+ENDRULE
+RULE ResIAQFan:AdjSensRecovEff
+  MINIMUM   0
+  MAXIMUM   99.9
+ENDRULE
+RULE ResIAQFan:HVIListedInterpCFM
+  MINIMUM   0.01
+ENDRULE
+RULE ResIAQFan:HVIListedInterpSRE
+  MINIMUM   0
+  MAXIMUM   99.9
+ENDRULE
+RULE ResIAQFan:HVIListedInterpASRE
+  MINIMUM   0
+  MAXIMUM   99.9
+ENDRULE
+
+RULE ResDHWSys:CDMBathFixDist
+  MINIMUM   0.01
+ENDRULE
+RULE ResDHWSys:CDKitFixDist
+  MINIMUM   0.01
+ENDRULE
+RULE ResDHWSys:HeaterMult
+  MINIMUM   0
+ENDRULE
+RULE ResDHWSys:TotShowersServed
+  MINIMUM   0
+ENDRULE
+RULE ResDHWSys:TotBathsServed
+  MINIMUM   0
+ENDRULE
+;RULE ResDHWSys:DWHRSysShowers
+;  MINIMUM   0
+;ENDRULE
+;RULE ResDHWSys:DWHRSysTakeCold
+;  MINIMUM   ResDHWSys:DWHRSysShowers
+;ENDRULE
+
+RULE ResDWHRSys:CSARatedEff
+  MINIMUM   0.01
+  MAXIMUM   99.9
+ENDRULE
+
+RULE ResWtrHtr:TankVolume
+  MINIMUM   0
+ENDRULE
+RULE ResWtrHtr:RecovEff
+  MINIMUM   0.01
+ENDRULE
+RULE ResWtrHtr:FirstHourRating
+  MINIMUM   0
+ENDRULE
+RULE ResWtrHtr:RatedFlow
+  MINIMUM   0
+ENDRULE
+
+RULE DHWSolSys:RatedSSF
+  MINIMUM   0.01
+  MAXIMUM   0.99
+ENDRULE
+RULE DHWSolSys:Count
+  MINIMUM   0.01
+ENDRULE
+RULE DHWSolSys:Azimuth
+  MINIMUM   0
+ENDRULE
+RULE DHWSolSys:Tilt
+  MINIMUM   0
+ENDRULE
+RULE DHWSolSys:TankVolume
+  MINIMUM   0
+ENDRULE
+
+
+; added to ensure no use of verified alteration feature (for time being) - SAC 05/21/23 (tic #3479)
+RULE ResZn:HVACSysVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResZn:DHWSys1Verified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResAttic:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResExtWall:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResIntWall:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResUndgrWall:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResCathedralCeiling:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResCeilingBelowAttic:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResSlabFlr:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResExtFlr:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResFlrOverCrawlSpc:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResUndgrFlr:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResIntFlr:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResIntCeiling:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResWin:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResSkylt:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResDr:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResHVACSys:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+RULE ResDistSys:IsVerified
+  INPUTCLASS 
+    NotInput  IgnoreUserInput  "verified alteration not available in multifamily analysis"
+ENDRULE
+
 
 ; added to ensure ProposedModelCodeCheck rulelist evaluated BEFORE analysis - SAC 05/18/22
 RULE ResProj:Action

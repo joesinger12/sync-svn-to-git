@@ -3,8 +3,8 @@ RulesetFilename   "T24N_2022.bin"
 Proj   "MF88 Restructure Prototype"  
    BldgEngyModelVersion = 17
    CreateDate = 1665096111
-   ModDate = 1674257794
-   RunDate = 1673049486
+   ModDate = 1685730365
+   RunDate = 1685730366
    RunDateFmt = "18:13, Wed, Mar 23, 2022"
    RunDateISO = "2022-03-23T18:13:41Z"
    GasType = "NaturalGas"
@@ -31,7 +31,7 @@ Proj   "MF88 Restructure Prototype"
    CompOptDHW = 1
    ResDwellUnits = 1
    CUACReport = 1
-   SoftwareVersion = "CBECC 2022.2.1 (1286)"
+   SoftwareVersion = "CBECC 2022.3.0 RC (1301)"
    ProjFileName = "MF88Unit_5Story_ELEC-CZ12.cibd22"
    ResultsCurrentMessage = "(not current)"
    DebugScreen = 1
@@ -58,7 +58,6 @@ ResProj   "2022 Prototype 113100ft2 Prop Elec"
    ReportInclPropOnly = 0
    SpecifyTargetDRtg = 0
    Address = "1516 Ninth St"
-   RunScope = "Newly Constructed"
    WeatherFileName = "CTZ12S22A.epw"
    IsMultiFamily = 1
    CentralMFamLaundry = 0
@@ -195,6 +194,7 @@ Bldg   "Building"
    ..
 
 Story   "Building Story Nonresidential"  
+   TreeState = 254
    ..
 
 Spc   "F1 Retail N Core"  
@@ -280,7 +280,7 @@ CartesianPt   "CartesianPoint 344"
 
 IntWall   "Surface 127"  
    AdjacentSpcRef = "F1 Retail NW Inner Core"
-   ConsAssmRef = "WoodFramedInteriorWallU099"
+   ConsAssmRef = "MetalFrameWallInterior"
    ..
 
 PolyLp   "PolyLoop 79"  
@@ -303,7 +303,7 @@ CartesianPt   "CartesianPoint 348"
    ..
 
 ExtWall   "Surface 128"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 80"  
@@ -349,6 +349,7 @@ CartesianPt   "CartesianPoint 356"
    ..
 
 Spc   "F1 Retail NE Core"  
+   TreeState = 254
    ThrmlZnRef = "Thermal Zone: F1 Retail NE"
    Vol = 14400
    SpcFuncDefaultsRef = "Retail Space"
@@ -399,7 +400,7 @@ CartesianPt   "CartesianPoint 364"
 
 IntWall   "Surface 143"  
    AdjacentSpcRef = "F1 Retail NE Inner"
-   ConsAssmRef = "WoodFramedInteriorWallU099"
+   ConsAssmRef = "MetalFrameWallInterior"
    ..
 
 PolyLp   "PolyLoop 84"  
@@ -422,7 +423,7 @@ CartesianPt   "CartesianPoint 368"
    ..
 
 ExtWall   "Surface 144"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 85"  
@@ -469,7 +470,7 @@ CartesianPt   "CartesianPoint 376"
 
 IntWall   "Surface 145"  
    AdjacentSpcRef = "F1 Retail NE Outer"
-   ConsAssmRef = "WoodFramedInteriorWallU099"
+   ConsAssmRef = "MetalFrameWallInterior"
    ..
 
 PolyLp   "PolyLoop 87"  
@@ -492,6 +493,7 @@ CartesianPt   "CartesianPoint 380"
    ..
 
 Spc   "F1 Retail NE Inner"  
+   TreeState = 254
    ThrmlZnRef = "Thermal Zone: F1 Retail NE"
    Vol = 14400
    SpcFuncDefaultsRef = "Retail Space"
@@ -541,7 +543,7 @@ CartesianPt   "CartesianPoint 388"
    ..
 
 ExtWall   "Surface 137"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 90"  
@@ -587,6 +589,7 @@ CartesianPt   "CartesianPoint 396"
    ..
 
 Spc   "F1 Retail NE Outer"  
+   TreeState = 254
    ThrmlZnRef = "Thermal Zone: F1 Retail NE"
    Vol = 14400
    SpcFuncDefaultsRef = "Retail Space"
@@ -638,7 +641,7 @@ CartesianPt   "CartesianPoint 404"
    ..
 
 ExtWall   "Surface 150"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 94"  
@@ -684,7 +687,7 @@ CartesianPt   "CartesianPoint 412"
    ..
 
 ExtWall   "Surface 151"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 96"  
@@ -730,6 +733,7 @@ CartesianPt   "CartesianPoint 420"
    ..
 
 Spc   "F1 Retail NW Inner Core"  
+   TreeState = 254
    ThrmlZnRef = "Thermal Zone: F1 Retail N-NW"
    Vol = 14400
    SpcFuncDefaultsRef = "Retail Space"
@@ -780,7 +784,7 @@ CartesianPt   "CartesianPoint 428"
 
 IntWall   "Surface 118"  
    AdjacentSpcRef = "F1 Retail NW Outer Core"
-   ConsAssmRef = "WoodFramedInteriorWallU099"
+   ConsAssmRef = "MetalFrameWallInterior"
    ..
 
 PolyLp   "PolyLoop 100"  
@@ -803,7 +807,7 @@ CartesianPt   "CartesianPoint 432"
    ..
 
 ExtWall   "Surface 119"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 101"  
@@ -849,6 +853,7 @@ CartesianPt   "CartesianPoint 440"
    ..
 
 Spc   "F1 Retail NW Outer"  
+   TreeState = 254
    ThrmlZnRef = "Thermal Zone: F1 Retail N-NW"
    Vol = 14400
    SpcFuncDefaultsRef = "Retail Space"
@@ -900,7 +905,7 @@ CartesianPt   "CartesianPoint 448"
    ..
 
 ExtWall   "Surface 105"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 105"  
@@ -946,7 +951,7 @@ CartesianPt   "CartesianPoint 456"
    ..
 
 ExtWall   "Surface 106"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 107"  
@@ -993,7 +998,7 @@ CartesianPt   "CartesianPoint 464"
 
 IntWall   "Surface 107"  
    AdjacentSpcRef = "F1 Retail NW Outer Core"
-   ConsAssmRef = "WoodFramedInteriorWallU099"
+   ConsAssmRef = "MetalFrameWallInterior"
    ..
 
 PolyLp   "PolyLoop 109"  
@@ -1066,7 +1071,7 @@ CartesianPt   "CartesianPoint 476"
    ..
 
 ExtWall   "Surface 111"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 112"  
@@ -1140,7 +1145,7 @@ CartesianPt   "CartesianPoint 488"
    ..
 
 ExtWall   "Surface 10"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 115"  
@@ -1186,7 +1191,7 @@ CartesianPt   "CartesianPoint 496"
    ..
 
 ExtWall   "Surface 11"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 117"  
@@ -1257,7 +1262,7 @@ CartesianPt   "CartesianPoint 508"
 
 IntWall   "Surface 8"  
    AdjacentSpcRef = "F1 Retail SE Top"
-   ConsAssmRef = "WoodFramedInteriorWallU099"
+   ConsAssmRef = "MetalFrameWallInterior"
    ..
 
 PolyLp   "PolyLoop 120"  
@@ -1280,7 +1285,7 @@ CartesianPt   "CartesianPoint 512"
    ..
 
 ExtWall   "Surface 9"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 121"  
@@ -1378,7 +1383,7 @@ CartesianPt   "CartesianPoint 528"
    ..
 
 ExtWall   "Surface 20"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 125"  
@@ -1424,7 +1429,7 @@ CartesianPt   "CartesianPoint 536"
    ..
 
 ExtWall   "Surface 22"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 127"  
@@ -1522,7 +1527,7 @@ CartesianPt   "CartesianPoint 552"
    ..
 
 ExtWall   "Surface 2"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 131"  
@@ -1569,7 +1574,7 @@ CartesianPt   "CartesianPoint 560"
 
 IntWall   "Surface 3"  
    AdjacentSpcRef = "F1 Retail SW Core"
-   ConsAssmRef = "WoodFramedInteriorWallU099"
+   ConsAssmRef = "MetalFrameWallInterior"
    ..
 
 PolyLp   "PolyLoop 133"  
@@ -1592,7 +1597,7 @@ CartesianPt   "CartesianPoint 564"
    ..
 
 ExtWall   "Surface 4"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 134"  
@@ -1638,7 +1643,7 @@ CartesianPt   "CartesianPoint 572"
    ..
 
 ExtWall   "Surface 5"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 136"  
@@ -1736,7 +1741,7 @@ CartesianPt   "CartesianPoint 588"
    ..
 
 ExtWall   "Surface 15"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 140"  
@@ -1783,7 +1788,7 @@ CartesianPt   "CartesianPoint 596"
 
 IntWall   "Surface 16"  
    AdjacentSpcRef = "F1 Retail SW Top"
-   ConsAssmRef = "WoodFramedInteriorWallU099"
+   ConsAssmRef = "MetalFrameWallInterior"
    ..
 
 PolyLp   "PolyLoop 142"  
@@ -1806,7 +1811,7 @@ CartesianPt   "CartesianPoint 600"
    ..
 
 ExtWall   "Surface 17"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 143"  
@@ -1921,7 +1926,7 @@ CartesianPt   "CartesianPoint 620"
 
 IntWall   "Surface 29"  
    AdjacentSpcRef = "F1 Stairs W"
-   ConsAssmRef = "WoodFramedInteriorWallU099"
+   ConsAssmRef = "MetalFrameWallInterior"
    ..
 
 PolyLp   "PolyLoop 147"  
@@ -1944,7 +1949,7 @@ CartesianPt   "CartesianPoint 624"
    ..
 
 ExtWall   "Surface 30"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 148"  
@@ -1990,7 +1995,7 @@ CartesianPt   "CartesianPoint 632"
    ..
 
 ExtWall   "Surface 32"  
-   ConsAssmRef = "NonResConcreteExteriorWall"
+   ConsAssmRef = "MetalFrameWallU055"
    ..
 
 PolyLp   "PolyLoop 150"  
@@ -2036,14 +2041,15 @@ CartesianPt   "CartesianPoint 640"
    ..
 
 ResZnGrp   "ResZn Group F1"  
-   TreeState = 254
    ..
 
 ResOtherZn   "F1 Business Center"  
+   TreeState = 254
    Type = "Conditioned"
    SpcFunc = "Conference, Multipurpose and Meeting Area"
    VentSpcFunc = "General - Conference/meeting"
    ozHVACSystem = "F1 Business Cent AirSys"
+   ozDHWSys = "DHW Heat Pump"
    Area = 360
    CeilingHeight = 9
    FloorHeight = 10
@@ -2415,6 +2421,7 @@ ResOtherZn   "F1 Fitness Center"
    SpcFunc = "Exercise/Fitness Center and Gymnasium Areas"
    VentSpcFunc = "Sports/Entertainment - Gym, sports arena (play area)"
    ozHVACSystem = "F1 Fitness Cente AirSys"
+   ozDHWSys = "DHW Heat Pump"
    Area = 900
    CeilingHeight = 9
    FloorHeight = 10
@@ -2528,6 +2535,7 @@ ResOtherZn   "F1 Leasing Office"
    SpcFunc = "Office Area (>250 square feet)"
    VentSpcFunc = "Office - Office space"
    ozHVACSystem = "F1 Leasing Offic AirSys"
+   ozDHWSys = "DHW Heat Pump"
    Area = 414
    CeilingHeight = 9
    FloorHeight = 10
@@ -2677,6 +2685,7 @@ ResOtherZn   "F1 Lobby"
    SpcFunc = "Lobby, Main Entry"
    VentSpcFunc = "Residential - Common corridors"
    ozHVACSystem = "F1 Lobby AirSys"
+   ozDHWSys = "DHW Heat Pump"
    Area = 1050
    CeilingHeight = 9
    FloorHeight = 10
@@ -2825,6 +2834,7 @@ ResOtherZn   "F1 Mech Rm"
    SpcFunc = "Electrical, Mechanical, Telephone Rooms"
    VentSpcFunc = "Misc - All others"
    ozHVACSystem = "- none -"
+   ozDHWSys = "DHW Heat Pump"
    Area = 384
    CeilingHeight = 9
    FloorHeight = 10
@@ -3009,9 +3019,7 @@ ResZn   "F2 Res Zn E Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1440
@@ -3190,9 +3198,7 @@ ResZn   "F2 Res Zn E Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -3380,9 +3386,7 @@ ResZn   "F2 Res Zn N Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 3600
@@ -3628,9 +3632,7 @@ ResZn   "F2 Res Zn NE Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1410
@@ -3807,9 +3809,7 @@ ResZn   "F2 Res Zn NW Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1410
@@ -3986,9 +3986,7 @@ ResZn   "F2 Res Zn S Court 1-Bed"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 720
@@ -4130,9 +4128,7 @@ ResZn   "F2 Res Zn S Court 2-Bed"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -4373,9 +4369,7 @@ ResZn   "F2 Res Zn SE Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 540
@@ -4551,9 +4545,7 @@ ResZn   "F2 Res Zn SW Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 540
@@ -4729,9 +4721,7 @@ ResZn   "F2 Res Zn SE Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1080
@@ -4908,9 +4898,7 @@ ResZn   "F2 Res Zn SW Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1080
@@ -5087,9 +5075,7 @@ ResZn   "F2 Res Zn W Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1440
@@ -5267,9 +5253,7 @@ ResZn   "F2 Res Zn W Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -5878,9 +5862,7 @@ ResZn   "F3 Res Zn E Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1440
@@ -6027,9 +6009,7 @@ ResZn   "F3 Res Zn E Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -6176,9 +6156,7 @@ ResZn   "F3 Res Zn N Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 3600
@@ -6373,9 +6351,7 @@ ResZn   "F3 Res Zn NE Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1410
@@ -6541,9 +6517,7 @@ ResZn   "F3 Res Zn NW Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1410
@@ -6709,9 +6683,7 @@ ResZn   "F3 Res Zn S Court 1-Bed"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 720
@@ -6842,9 +6814,7 @@ ResZn   "F3 Res Zn S Court 2-Bed"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -7034,9 +7004,7 @@ ResZn   "F3 Res Zn SE Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 540
@@ -7211,9 +7179,7 @@ ResZn   "F3 Res Zn SW Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 540
@@ -7388,9 +7354,7 @@ ResZn   "F3 Res Zn SE Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1080
@@ -7556,9 +7520,7 @@ ResZn   "F3 Res Zn SW Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1080
@@ -7724,9 +7686,7 @@ ResZn   "F3 Res Zn W Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1440
@@ -7873,9 +7833,7 @@ ResZn   "F3 Res Zn W Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -8290,9 +8248,7 @@ ResZn   "F4 Res Zn E Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1440
@@ -8439,9 +8395,7 @@ ResZn   "F4 Res Zn E Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -8588,9 +8542,7 @@ ResZn   "F4 Res Zn N Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 3600
@@ -8785,9 +8737,7 @@ ResZn   "F4 Res Zn NE Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1410
@@ -8953,9 +8903,7 @@ ResZn   "F4 Res Zn NW Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1410
@@ -9121,9 +9069,7 @@ ResZn   "F4 Res Zn S Court 1-Bed"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 720
@@ -9254,9 +9200,7 @@ ResZn   "F4 Res Zn S Court 2-Bed"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -9446,9 +9390,7 @@ ResZn   "F4 Res Zn SE Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 540
@@ -9623,9 +9565,7 @@ ResZn   "F4 Res Zn SW Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 540
@@ -9800,9 +9740,7 @@ ResZn   "F4 Res Zn SE Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1080
@@ -9968,9 +9906,7 @@ ResZn   "F4 Res Zn SW Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1080
@@ -10136,9 +10072,7 @@ ResZn   "F4 Res Zn W Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1440
@@ -10285,9 +10219,7 @@ ResZn   "F4 Res Zn W Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -10703,9 +10635,7 @@ ResZn   "F5 Res Zn E Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1440
@@ -10860,9 +10790,7 @@ ResZn   "F5 Res Zn E Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -11017,9 +10945,7 @@ ResZn   "F5 Res Zn N Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 3600
@@ -11222,9 +11148,7 @@ ResZn   "F5 Res Zn NE Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1410
@@ -11398,9 +11322,7 @@ ResZn   "F5 Res Zn NW Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1410
@@ -11576,9 +11498,7 @@ ResZn   "F5 Res Zn S Court 1-Bed"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 720
@@ -11717,9 +11637,7 @@ ResZn   "F5 Res Zn S Court 2-Bed"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -11918,9 +11836,7 @@ ResZn   "F5 Res Zn SE Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 540
@@ -12103,9 +12019,7 @@ ResZn   "F5 Res Zn SW Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 540
@@ -12290,9 +12204,7 @@ ResZn   "F5 Res Zn SE Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1080
@@ -12467,9 +12379,7 @@ ResZn   "F5 Res Zn SW Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1080
@@ -12643,9 +12553,7 @@ ResZn   "F5 Res Zn W Court"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 1440
@@ -12799,9 +12707,7 @@ ResZn   "F5 Res Zn W Perim"
    Type = "Conditioned"
    Status = "New"
    HVACSysStatus = "New"
-   HVACSysVerified = 0
    DHWSys1Status = "New"
-   DHWSys1Verified = 0
    DHWSys2Status = "New"
    DHWSys2Verified = 0
    FloorArea = 2160
@@ -13248,7 +13154,6 @@ ResCathedralCeiling   "F5 Stairs W Cathedral Ceiling"
    ..
 
 ResZnGrp   "ResZn Group UG Garage"  
-   TreeState = 254
    ..
 
 ResOtherZn   "UG Garage"  
@@ -13297,7 +13202,14 @@ ResUndgrWall   "UG Garage UG Wall - Right"
 
 ResUndgrFlr   "UG Garage UG Floor"  
    Status = "New"
-   Area = 27900
+   Area = 13950
+   DepthBelowGrade = 15
+   Surface = "Exposed"
+   ..
+
+ResUndgrFlr   "UG Garage UG Floor-2"  
+   Status = "New"
+   Area = 13950
    DepthBelowGrade = 15
    Surface = "Exposed"
    ..
@@ -13359,7 +13271,7 @@ AirSeg   "BaseSys5 RetAirSeg"
    ..
 
 OACtrl   "BaseSys5 OACtrl"  
-   EconoCtrlMthd = "DifferentialDryBulb"
+   EconoCtrlMthd = "FixedDryBulb"
    EconoIntegration = "Integrated"
    AirSegSupRef = "BaseSys5 SupAirSeg"
    AirSegRetRef = "BaseSys5 RetAirSeg"
@@ -13412,7 +13324,7 @@ CoilHtg   "BaseVAVBox CoilHtg-10"
 AirSys   "F1 Business Cent AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F1 Business Center"
@@ -13459,7 +13371,7 @@ OACtrl   "F1 Business Cent OACtrl"
 AirSys   "F1 Corridor AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F1 Corridor"
@@ -13507,7 +13419,7 @@ OACtrl   "F1 Corridor OACtrl"
 AirSys   "F1 Fitness Cente AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F1 Fitness Center"
@@ -13555,7 +13467,7 @@ OACtrl   "F1 Fitness Cente OACtrl"
 AirSys   "F1 Leasing Offic AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F1 Leasing Office"
@@ -13603,7 +13515,7 @@ OACtrl   "F1 Leasing Offic OACtrl"
 AirSys   "F1 Lobby AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F1 Lobby"
@@ -13651,7 +13563,7 @@ OACtrl   "F1 Lobby OACtrl"
 AirSys   "F1 Stairs E AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F1 Stairs E"
@@ -13699,7 +13611,7 @@ OACtrl   "F1 Stairs E OACtrl"
 AirSys   "F1 Stairs W AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F1 Stairs W"
@@ -13747,7 +13659,7 @@ OACtrl   "F1 Stairs W OACtrl"
 AirSys   "F2 Corridor AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F2 Corridor"
@@ -13796,7 +13708,7 @@ OACtrl   "F2 Corridor OACtrl"
 AirSys   "F2 Break Room AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F2 Break Room"
@@ -13844,7 +13756,7 @@ OACtrl   "F2 Break Room OACtrl"
 AirSys   "F2 Stairs E AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F2 Stairs E"
@@ -13892,7 +13804,7 @@ OACtrl   "F2 Stairs E OACtrl"
 AirSys   "F2 Stairs W AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F2 Stairs W"
@@ -13939,7 +13851,7 @@ OACtrl   "F2 Stairs W OACtrl"
 AirSys   "F3 Corridor AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F3 Corridor"
@@ -13988,7 +13900,7 @@ OACtrl   "F3 Corridor OACtrl"
 AirSys   "F3 Break Room AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F3 Break Room"
@@ -14036,7 +13948,7 @@ OACtrl   "F3 Break Room OACtrl"
 AirSys   "F3 Stairs E AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F3 Stairs E"
@@ -14084,7 +13996,7 @@ OACtrl   "F3 Stairs E OACtrl"
 AirSys   "F3 Stairs W AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F3 Stairs W"
@@ -14132,7 +14044,7 @@ OACtrl   "F3 Stairs W OACtrl"
 AirSys   "F4 Corridor AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F4 Corridor"
@@ -14181,7 +14093,7 @@ OACtrl   "F4 Corridor OACtrl"
 AirSys   "F4 Break Room AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F4 Break Room"
@@ -14229,7 +14141,7 @@ OACtrl   "F4 Break Room OACtrl"
 AirSys   "F4 Stairs E AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F4 Stairs E"
@@ -14277,7 +14189,7 @@ OACtrl   "F4 Stairs E OACtrl"
 AirSys   "F4 Stairs W AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F4 Stairs W"
@@ -14325,7 +14237,7 @@ OACtrl   "F4 Stairs W OACtrl"
 AirSys   "F5 Corridor AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F5 Corridor"
@@ -14374,7 +14286,7 @@ OACtrl   "F5 Corridor OACtrl"
 AirSys   "F5 Break Room AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F5 Break Room"
@@ -14422,7 +14334,7 @@ OACtrl   "F5 Break Room OACtrl"
 AirSys   "F5 Stairs E AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F5 Stairs E"
@@ -14470,7 +14382,7 @@ OACtrl   "F5 Stairs E OACtrl"
 AirSys   "F5 Stairs W AirSys"  
    TreeState = 253
    Type = "SZHP"
-   SubType = "Packaged1Phase"
+   SubType = "Split1Phase"
    EffMetric = "SEER2/EER2/HSPF2"
    ResHVACAutoSizing = 1
    CtrlZnRef = "F5 Stairs W"
@@ -14602,14 +14514,6 @@ ConsAssm   "NonResConcreteExteriorWall"
    MatRef[8] = "- none -"
    ..
 
-ConsAssm   "WoodFramedInteriorWallU099"  
-   SpecMthd = "Layers"
-   ExtRoughness = "MediumSmooth"
-   MatRef[1] = "Gypsum Board - 1/2 in."
-   MatRef[2] = "WoodFrameWall16inOC R11.25"
-   MatRef[3] = "Gypsum Board - 1/2 in."
-   ..
-
 FenCons   "Nonres Fixed Window"  
    FenProdType = "FixedWindow"
    SHGC = 0.22
@@ -14623,6 +14527,7 @@ SpcFuncDefaults   "Retail Space"
    ..
 
 FluidSys   "Nonresidential Elec DHW System"  
+   TreeState = 253
    Type = "ServiceHotWater"
    ..
 
@@ -14641,6 +14546,7 @@ WtrHtr   "Nonres Elec Water Heater"
    ..
 
 FluidSys   "Nonresidential Gas DHW System"  
+   TreeState = 253
    Type = "ServiceHotWater"
    ..
 
@@ -14659,7 +14565,9 @@ WtrHtr   "Nonres Gas Water Heater"
    ..
 
 FluidSys   "BaseHWSystem"  
+   TreeState = 253
    Type = "HotWater"
+   DsgnSupWtrTemp = 160
    ..
 
 FluidSeg   "BaseHW PriSupSeg"  
@@ -14692,6 +14600,48 @@ Batt   "Battery"
    Ctrl = "Time of Use"
    MaxChrgPwr = 71.29
    MaxDschrgPwr = 71.29
+   ..
+
+ConsAssm   "MetalFrameWallU055"  
+   CompatibleSurfType = "ExteriorWall"
+   SpecMthd = "Layers"
+   ExtRoughness = "MediumRough"
+   MatRef[1] = "Stucco - 7/8 in."
+   MatRef[2] = "Compliance Insulation R14.60"
+   MatRef[3] = "Compliance Insulation R1.41"
+   MatRef[4] = "Compliance Insulation R0.02"
+   MatRef[5] = "Compliance Insulation R0.02"
+   MatRef[6] = "Air - Metal Wall Framing - 16 or 24 in. OC"
+   MatRef[7] = "Gypsum Board - 1/2 in."
+   ..
+
+Mat   "Compliance Insulation R14.60"  
+   CodeCat = "Insulation Board"
+   CodeItem = "Compliance Insulation R14.60"
+   ..
+
+Mat   "Compliance Insulation R1.41"  
+   CodeCat = "Insulation Board"
+   CodeItem = "Compliance Insulation R1.41"
+   ..
+
+Mat   "Air - Metal Wall Framing - 16 or 24 in. OC"  
+   CodeCat = "Air"
+   CodeItem = "Air - Metal Wall Framing - 16 or 24 in. OC"
+   ..
+
+ConsAssm   "MetalFrameWallInterior"  
+   CompatibleSurfType = "InteriorWall"
+   SpecMthd = "Layers"
+   ExtRoughness = "MediumRough"
+   MatRef[1] = "Gypsum Board - 5/8 in."
+   MatRef[2] = "Air - Metal Wall Framing - 16 or 24 in. OC"
+   MatRef[3] = "Gypsum Board - 5/8 in."
+   ..
+
+Mat   "Gypsum Board - 5/8 in."  
+   CodeCat = "Bldg Board and Siding"
+   CodeItem = "Gypsum Board - 5/8 in."
    ..
 
 CUAC   "CUAC Inputs"  
@@ -14745,29 +14695,29 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
    Title3[19] = "Emis. (tonne)"
    Enduse1[1] = "Space Heating"
    Enduse1[2] = "0.0"
-   Enduse1[3] = "162.7"
-   Enduse1[4] = "4.03"
-   Enduse1[9] = "--"
-   Enduse1[11] = "1.35"
+   Enduse1[3] = "150.0"
+   Enduse1[4] = "3.69"
+   Enduse1[9] = "0.0"
+   Enduse1[11] = "1.24"
    Enduse1[17] = "0.00"
-   Enduse1[18] = "9.12"
-   Enduse1[19] = "9.12"
+   Enduse1[18] = "8.41"
+   Enduse1[19] = "8.41"
    Enduse2[1] = "Space Cooling"
-   Enduse2[2] = "33.7"
+   Enduse2[2] = "33.9"
    Enduse2[3] = "--"
-   Enduse2[4] = "11.27"
-   Enduse2[9] = "13.0"
+   Enduse2[4] = "11.06"
+   Enduse2[9] = "3.2"
    Enduse2[11] = "0.50"
-   Enduse2[17] = "3.48"
-   Enduse2[19] = "3.48"
+   Enduse2[17] = "3.50"
+   Enduse2[19] = "3.50"
    Enduse3[1] = "Indoor Fans"
-   Enduse3[2] = "9.3"
+   Enduse3[2] = "9.5"
    Enduse3[3] = "--"
-   Enduse3[4] = "2.38"
-   Enduse3[9] = "1.7"
+   Enduse3[4] = "2.31"
+   Enduse3[9] = "0.7"
    Enduse3[11] = "0.17"
-   Enduse3[17] = "1.19"
-   Enduse3[19] = "1.19"
+   Enduse3[17] = "1.20"
+   Enduse3[19] = "1.20"
    Enduse4[1] = "Heat Rejection"
    Enduse4[2] = "--"
    Enduse4[3] = "--"
@@ -14775,10 +14725,10 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
    Enduse4[9] = "--"
    Enduse4[11] = "--"
    Enduse5[1] = "Pumps & Misc."
-   Enduse5[2] = "0.8"
+   Enduse5[2] = "0.7"
    Enduse5[3] = "--"
    Enduse5[4] = "0.18"
-   Enduse5[9] = "--"
+   Enduse5[9] = "0.1"
    Enduse5[11] = "0.02"
    Enduse5[17] = "0.16"
    Enduse5[19] = "0.16"
@@ -14786,7 +14736,7 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
    Enduse6[2] = "11.8"
    Enduse6[3] = "--"
    Enduse6[4] = "2.78"
-   Enduse6[9] = "1.7"
+   Enduse6[9] = "0.8"
    Enduse6[11] = "0.23"
    Enduse6[17] = "1.62"
    Enduse6[19] = "1.62"
@@ -14794,24 +14744,24 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
    Enduse7[2] = "54.7"
    Enduse7[3] = "--"
    Enduse7[4] = "12.45"
-   Enduse7[9] = "8.7"
+   Enduse7[9] = "2.8"
    Enduse7[11] = "0.95"
    Enduse7[17] = "6.62"
    Enduse7[19] = "6.62"
    Enduse8[1] = "Total Compliance"
-   Enduse8[2] = "-251.8"
-   Enduse8[3] = "162.7"
-   Enduse8[4] = "-44.18"
-   Enduse8[9] = "-48.9"
-   Enduse8[11] = "-0.26"
-   Enduse8[17] = "-16.99"
-   Enduse8[18] = "9.12"
-   Enduse8[19] = "-7.87"
+   Enduse8[2] = "-295.9"
+   Enduse8[3] = "150.0"
+   Enduse8[4] = "-54.35"
+   Enduse8[9] = "-12.6"
+   Enduse8[11] = "-0.91"
+   Enduse8[17] = "-21.70"
+   Enduse8[18] = "8.41"
+   Enduse8[19] = "-13.29"
    Enduse9[1] = "Receptacle"
    Enduse9[2] = "64.0"
    Enduse9[3] = "--"
    Enduse9[4] = "14.44"
-   Enduse9[9] = "10.0"
+   Enduse9[9] = "3.0"
    Enduse9[11] = "1.08"
    Enduse9[17] = "7.48"
    Enduse9[19] = "7.48"
@@ -14834,48 +14784,49 @@ EUseSummary   "Pol 15% RetAdd CH4Leak 20yr"
    Enduse12[9] = "--"
    Enduse12[11] = "--"
    Enduse13[1] = "Photovoltaics"
-   Enduse13[2] = "-369.4"
+   Enduse13[2] = "-415.0"
    Enduse13[3] = "--"
-   Enduse13[4] = "-63.93"
-   Enduse13[9] = "-8.3"
-   Enduse13[11] = "-1.80"
-   Enduse13[17] = "-15.79"
-   Enduse13[19] = "-15.79"
+   Enduse13[4] = "-71.84"
+   Enduse13[9] = "-1.0"
+   Enduse13[11] = "-2.02"
+   Enduse13[17] = "-17.75"
+   Enduse13[19] = "-17.75"
    Enduse14[1] = "Battery"
-   Enduse14[2] = "7.3"
+   Enduse14[2] = "8.5"
    Enduse14[3] = "--"
-   Enduse14[4] = "-13.34"
-   Enduse14[9] = "-65.7"
-   Enduse14[11] = "-1.68"
-   Enduse14[17] = "-14.27"
-   Enduse14[19] = "-14.27"
+   Enduse14[4] = "-14.98"
+   Enduse14[9] = "-19.2"
+   Enduse14[11] = "-2.00"
+   Enduse14[17] = "-17.05"
+   Enduse14[19] = "-17.05"
    Enduse15[1] = "TOTAL"
-   Enduse15[2] = "-187.8"
-   Enduse15[3] = "162.7"
-   Enduse15[4] = "-29.74"
-   Enduse15[9] = "-38.9"
-   Enduse15[11] = "0.82"
-   Enduse15[17] = "-9.51"
-   Enduse15[18] = "9.12"
-   Enduse15[19] = "-0.39"
+   Enduse15[2] = "-231.9"
+   Enduse15[3] = "150.0"
+   Enduse15[4] = "-39.91"
+   Enduse15[9] = "-9.5"
+   Enduse15[11] = "0.17"
+   Enduse15[17] = "-14.22"
+   Enduse15[18] = "8.41"
+   Enduse15[19] = "-5.81"
    Enduse16[1] = "Efficiency Compliance"
-   Enduse16[2] = "110.3"
-   Enduse16[3] = "162.7"
-   Enduse16[4] = "33.09"
-   Enduse16[9] = "25.1"
-   Enduse16[11] = "3.22"
-   Enduse16[17] = "13.07"
-   Enduse16[18] = "9.12"
-   Enduse16[19] = "22.19"
+   Enduse16[2] = "110.6"
+   Enduse16[3] = "150.0"
+   Enduse16[4] = "32.47"
+   Enduse16[9] = "7.7"
+   Enduse16[11] = "3.11"
+   Enduse16[17] = "13.10"
+   Enduse16[18] = "8.41"
+   Enduse16[19] = "21.51"
    ZoneUMLHsLoaded[1] = 1
    ZoneUMLHs[1] = "clg: 0  htg: 0  'Thermal Zone: F1 Retail N-NW'
 clg: 0  htg: 0  'Thermal Zone: F1 Retail NE'
 clg: 0  htg: 0  'Thermal Zone: F1 Retail SE'
 clg: 0  htg: 0  'Thermal Zone: F1 Retail SW'"
-   SimSummary[1] = "CSE Successful, E+ Successful (138 warnings)"
-   PropPV_Total = 369376
-   PropPV_Export = 213666
-   PropPV_PctExport = 57.845
+   SimSummary[1] = "CSE Successful, E+ Successful (137 warnings)"
+   AnalysisValid = 0
+   PropPV_Total = 415040
+   PropPV_Export = 253364
+   PropPV_PctExport = 61.0457
    ..
 
 ResConsAssm   "Res Exterior Wall Cons"  
@@ -14896,10 +14847,10 @@ ResConsAssm   "Res Exterior Wall Cons"
    FurringInsulLayer = "- no insulation -"
    Furring2Layer = "- none -"
    FurringLayer = "- none -"
-   CavityLayer = "R 21"
+   CavityLayer = "R 19 in 5-1/2 in. cavity (R-18)"
    FrameLayer = "2x6 @ 16 in. O.C."
-   SheathInsulLayer = "R4 Sheathing"
-   SheathInsulLayerRVal = 1.8
+   SheathInsulLayer = "- specify R-value -"
+   SheathInsulLayerRVal = 5
    WallExtFinishLayer = "Synthetic Stucco"
    OtherSideFinishLayer = "Gypsum Board"
    FlrExtFinishLayer = "- select finish -"
@@ -15909,7 +15860,7 @@ DwellUnitType   "2-Bed Type"
    DHWSysRef[1] = "DHW Heat Pump"
    TotShowersServed[1] = 1
    TotBathsServed[1] = 1
-   CompactDistrib = "Expanded Credit (HERS req'd)"
+   CompactDistrib = "not compact"
    CDSpecFixDists = 0
    CDNumFloorsServed = 1
    UsrSpecCmpctDist = 1
@@ -15951,7 +15902,7 @@ DwellUnitType   "3-Bed Type"
    DHWSysRef[1] = "DHW Heat Pump"
    TotShowersServed[1] = 1
    TotBathsServed[1] = 1
-   CompactDistrib = "Expanded Credit (HERS req'd)"
+   CompactDistrib = "not compact"
    CDSpecFixDists = 0
    CDNumFloorsServed = 1
    UsrSpecCmpctDist = 1
@@ -15991,7 +15942,7 @@ DwellUnitType   "Studio Type"
    DHWSysRef[1] = "DHW Heat Pump"
    TotShowersServed[1] = 1
    TotBathsServed[1] = 1
-   CompactDistrib = "Expanded Credit (HERS req'd)"
+   CompactDistrib = "not compact"
    CDSpecFixDists = 0
    CDNumFloorsServed = 1
    UsrSpecCmpctDist = 1
@@ -16256,7 +16207,7 @@ ResWtrHtr   "Heat Pump"
 ResWtrHtr   "Electric"  
    HeaterElementType = "Electric Resistance"
    TankType = "Consumer Instantaneous (UEF)"
-   HPWHCategory = "Non-UEF Rated"
+   HPWHCategory = "Non-UEF Rated (existing only)"
    HPWHBrand = "n/a"
    HPWHModel = "n/a"
    HPWHComModel = "n/a"

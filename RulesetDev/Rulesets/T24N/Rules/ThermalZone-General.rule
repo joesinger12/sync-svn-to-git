@@ -755,14 +755,14 @@ RULE ThrmlZn:HVACZnCnt
         then // Has Htg/ClgSys
           if( IfValidAnd( PriAirCondgSysRef[1]:IsSglZnSys > 0 ) )
           then // Is a single-zone system, set to Cnt of that system
-            ValidOr( PriAirCondgSysRef[1]:Cnt, 1 )
+            ValidOr( PriAirCondgSysRef[1]:Cnt, 1 ) / ValidOr( Mult, 1 )
           else 1 
           endif
         else 
         if( LocalCompAssigned( VentSysRef ) > 0 .AND.
             LocalCompAssigned( TrmlUnitRef ) > 0 )
         then // Is a DOAS AirSys or multizone system, set to Cnt of TrmlUnit
-          ValidOr( TrmlUnitRef:Cnt, 1 )
+          ValidOr( TrmlUnitRef:Cnt, 1 ) / ValidOr( Mult, 1 )
         else 1
         endif endif
       else 1
@@ -924,7 +924,7 @@ RULE NEW ThrmlZn:CondFlrArea
         ( CommKitArea > 0 .AND. ProcArea != CommKitArea  ) )
     then
       PostError("ThermalZone '%s' is comprised of different types of process spaces. This is not allowed.", Name)
-    else if( ProcArea > 0 .AND. ProcArea != CondFlrArea )
+    else if( ProcArea > 0 .AND. ProcArea != CondFlrAreaWithMult )
     then
       PostError("ThermalZone '%s' is comprised of both process
                  and non-process space. This is not allowed.", Name)
@@ -1516,7 +1516,53 @@ RULE NEW Spc:HasHtg
     HasHtg
 ENDRULE
 
-
+RULE NEW ThrmlZn:HasHtRcvryDOAS
+  DATATYPE
+    Integer
+  LONGFORM
+    HasHeatRecoveryDOAS
+  DESCRIPTION
+    "A flag that indicates if a thermal zone is served by a DOAS with heat recovery."
+  INPUTCLASS
+    NotInput
+  DEFAULT
+    if( LocalCompAssigned( VentSysRef ) == ComponentType( "AirSys" ) )
+    then
+      if( ( VentSysRef:Type = "DOASCV" .OR. VentSysRef:Type = "DOASVAV" ) .AND. IfValidAnd( VentSysRef:HasHtRcvry > 0 ) )
+      then 1
+      else 0
+      endif
+    else if( LocalCompAssigned( VentSysRef ) == ComponentType( "ZnSys" ) )
+    then
+      if( IfValidAnd( VentSysRef:HasHtRecvry > 0 ) )
+      then 1
+      else 0
+      endif    
+    else 0
+    endif endif
+ENDRULE
+RULE NEW AirSys:PairedWithHtRcvryDOAS
+  DATATYPE
+    Integer
+  LONGFORM
+    PairedWithHeatRecoveryDOAS
+  DESCRIPTION
+    "A flag that indicates if a air system is paired with a DOAS with heat recovery."
+  INPUTCLASS
+    NotInput
+  DEFAULT
+    if( CountRefs( ThrmlZn:PriAirCondgSysRef[1] ) + CountRefs( ThrmlZn:PriAirCondgSysRef[2] ) > 0 .AND.
+        SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:HasHtRcvryDOAS ) + SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:HasHtRcvryDOAS ) > 0 .AND.
+        SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:HasHtRcvryDOAS ) = 
+          CountRefs( ThrmlZn:PriAirCondgSysRef[1] ) .AND.
+        SumRevRef( ThrmlZn:PriAirCondgSysRef[2], ThrmlZn:HasHtRcvryDOAS ) = 
+          CountRefs( ThrmlZn:PriAirCondgSysRef[2] ) )
+    then 1
+    else 0
+    endif 
+  SIZING
+    ValidOr( PairedWithHtRcvryDOAS, 0 ) // for PropVentOnlyAirSys and BaseSys
+ENDRULE
 // QC rules for ThermalZone
 
 // Number of building stories 

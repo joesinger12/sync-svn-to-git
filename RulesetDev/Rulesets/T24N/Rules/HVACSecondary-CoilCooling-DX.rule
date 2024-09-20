@@ -1181,7 +1181,8 @@ RULE CoilClg:DXSEER2
     else UNDEFINED // Purge from model if not used
     endif endif
   ANNUAL
-    if( BaseSysNum > 0 .AND. Type = "DirectExpansion" )
+    if( ( BaseSysNum > 0 .OR. IsBaseHlthCare > 0 ) .AND.
+        Type = "DirectExpansion" )
     then // Is baseline system
       if( IfValidAnd( CodeMinSEER2 > 0 ) )
       then CodeMinSEER2
@@ -1270,7 +1271,8 @@ RULE CoilClg:DXSEER
     else z:DXSEER
     endif
   ANNUAL
-    if( BaseSysNum > 0 .AND. Type = "DirectExpansion" )
+    if( ( BaseSysNum > 0 .OR. IsBaseHlthCare > 0 ) .AND.
+        Type = "DirectExpansion" )
     then // Is baseline system
       if( IfValidAnd( CodeMinSEER2 > 0 ) .AND. IfValidAnd( SEERToSEER2Rat > 0 ) )
       then // Baseline uses SEER2
@@ -1381,7 +1383,8 @@ RULE CoilClg:DXEER2
     else UNDEFINED // Purge from model if not used
     endif endif
   ANNUAL
-    if( BaseSysNum > 0 .AND. Type = "DirectExpansion" )
+    if( ( BaseSysNum > 0 .OR. IsBaseHlthCare > 0 ) .AND.
+        Type = "DirectExpansion" )
     then // Is baseline system
       if( IfValidAnd( CodeMinEER2 > 0 ) )
       then CodeMinEER2
@@ -1515,7 +1518,8 @@ RULE CoilClg:DXEER
     else z:DXEER
     endif
   ANNUAL
-    if( BaseSysNum > 0 .AND. Type = "DirectExpansion" )
+    if( ( BaseSysNum > 0 .OR. IsBaseHlthCare > 0 ) .AND.
+        Type = "DirectExpansion" )
     then // Is baseline system
       if( IfValidAnd( CodeMinEER > 0 ) )
       then // Baseline uses EER
@@ -1642,7 +1646,10 @@ RULE CoilClg:DXIEER
       DXIEER
     endif
   ANNUAL
-    z:DXIEER
+    if( IsBaseHlthCare > 0 .AND. Type = "DirectExpansion" .AND. IfValidAnd( CodeMinIEER > 0 ) )
+    then CodeMinIEER
+    else z:DXIEER
+    endif
 ENDRULE
 
 // -----------------------------------------------------------------------------
@@ -1763,7 +1770,8 @@ RULE CoilClg:DXEERAdj
     else 0
     endif endif
   ANNUAL
-    if( BaseSysNum > 0 .AND. Type = "DirectExpansion")
+    if( ( BaseSysNum > 0 .OR. IsBaseHlthCare > 0 ) .AND.
+        Type = "DirectExpansion" )
     then
       if( IfValidAnd( CapTotGrossRtd > 0 ) .AND.
           IfValidAnd( DXEERRnd > 0 ) .AND.
@@ -1814,7 +1822,8 @@ RULE CoilClg:DXEIR
     else UNDEFINED
     endif endif
   ANNUAL 
-    if( BaseSysNum > 0 .AND. Type = "DirectExpansion" )
+    if( ( BaseSysNum > 0 .OR. IsBaseHlthCare > 0 ) .AND.
+        Type = "DirectExpansion" )
     then
       if( IfValidAnd( DXEERAdj > 0 ) )
       then 1 / ( DXEERAdj / 3.412 )
@@ -2143,20 +2152,12 @@ RULE CoilClg:DXCrankcaseHtrCap
     Optional
   UNITS 
     Btu/hr
-  DEFAULT
-    if( Type = "DirectExpansion" .AND. 
-        IfValidAnd( ServesResZn > 0 ) .AND.
-        IfValidAnd( CndsrType = "Air" ) )
-    then 40 * 3.412 // 40 Watts per BW
-    else 0
-    endif
   ANNUAL
-    if( Type = "DirectExpansion" )
-    then 
-      if( BaseSysNum > 0 .AND. ServesResZn > 0 )
-      then 40 * 3.412 // 40 Watts per BW
-      else UNCHANGED
-      endif
+  // When the CoilClg is part of a HP the crankcase heater defined for the CoilClg is
+  // ignored and the crankcase heater defined for the CoilHtg is simulated in EnergyPlus.
+  // Ignore user inputs and set to 10 W/ton (tic #3407)
+    if( SysUnitaryCat = "AC" .AND. IfValidAnd( CndsrType = "Air" ) )
+    then 10 * 3.412 * ValidOr( CapTotNetRtd, 0 ) / 12000
     else 0
     endif
 ENDRULE
@@ -2168,8 +2169,6 @@ RULE CoilClg:DXCrankcaseCtrlTemp
      not permitted to operate."
   HELP
     "Only applicable if Type = 'DirectExpansion'"
-  REFERENCE 
-    NACM Section 5.7.6.5
   INPUTCLASS 
     Default
   COMMONMINIMUM
@@ -2180,18 +2179,10 @@ RULE CoilClg:DXCrankcaseCtrlTemp
     °F
   REPORTPRECISION
     0
-  DEFAULT
-    if( Type = "DirectExpansion" .AND. IfValidAnd( DXCrankcaseHtrCap > 0 ) )
-    then 50
-    else UNDEFINED
-    endif
   ANNUAL
-    if( Type = "DirectExpansion" .AND. IfValidAnd( DXCrankcaseHtrCap > 0 ) )
-    then 
-      if( BaseSysNum > 0 .AND. ServesResZn > 0 )
-      then 50 // 50F per BW
-      else UNCHANGED
-      endif
+  // Ignore user inputs and set to 50F (tic #3407)
+    if( SysUnitaryCat = "AC" .AND. IfValidAnd( DXCrankcaseHtrCap > 0 ) )
+    then 50
     else UNDEFINED
     endif
 ENDRULE
@@ -2225,6 +2216,12 @@ RULE NEW CoilClg:HtRejLdSim
   UNITS
     Btu/h
   DEFAULT
+    if( Type = "DirectExpansion" .AND. IfValidAnd( CndsrType = "WaterSource" ) .AND.
+        CapTotGrossRtdSim > 0 )
+    then CapTotGrossRtdSim * ( 1 + ( 3.412 / ValidOr( DXEERAdj, 12 ) ) )
+    else 0
+    endif
+  ANNUAL
     if( Type = "DirectExpansion" .AND. IfValidAnd( CndsrType = "WaterSource" ) .AND.
         CapTotGrossRtdSim > 0 )
     then CapTotGrossRtdSim * ( 1 + ( 3.412 / ValidOr( DXEERAdj, 12 ) ) )

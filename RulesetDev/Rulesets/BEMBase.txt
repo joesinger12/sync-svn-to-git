@@ -433,7 +433,6 @@
 1,           "ExcptCondElevEscal",                BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionalConditionElevatorEscalator",  "" 
 1,           "ExcptCondWtrHtrSizing",             BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionalConditionWaterHeaterSizing",  "" 
 1,           "ExcptCondWtrHtr",                   BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionalConditionWaterHeater",  "" 
-1,           "ExcptCondFxdSeat",                  BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionalFixedSeating",  "" 
 1,           "ExcptCondWtrHtrPrscrp",             BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionalConditionWaterHeaterPrescriptive",  "" 
 1,           "AnnualSolFrac",                     BEMP_Flt,  1,  0,  0,  NInp,  "frac",             0,  0,                           3008, "AnnualSolarFraction",  "" 
 1,           "ExcptCondNarrative",                BEMP_Sym,  1,  0,  0,   Req,  "",                 0,  0,                           1001, "ExceptionalConditionNarrative",  "" 
@@ -447,7 +446,8 @@
 1,           "ExcptCondVentStdOther",             BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionalConditionVentilationStandardOther",  "" 
 1,           "ExcptCondFlexEnduse",               BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionalConditionFlexibilityEnduse",  ""         ; SAC 9/15/20
 1,           "ExcptCondPVReqdSolThrml",           BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionalConditionPVRequiredSolarThermal",  ""    ; SAC 9/15/20
-1,           "ExcptCondFxdSeat",                  BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionalConditionFixedSeating",  ""    
+;1,           "ExcptCondFxdSeat",                  BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionalConditionFixedSeating",  ""             ; JP 6/7/23, renamed as ExcptCondDsgnOcc to better match the Std language
+1,           "ExcptCondDsgnOcc",                  BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionalConditionDesignedOccupancy",  ""
 1,           "ExcptSARAReducedPVReq",             BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "ExceptionSolarAccessRoofAreaReducedPVRequirement",  ""    
 1,           "Excpt1ReducedPVReq",                BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "Exception1ReducedPVRequirement",  ""    
 1,           "Excpt2ReducedPVReq",                BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1001, "Exception2ReducedPVRequirement",  ""    
@@ -607,6 +607,7 @@
 1,           "RunTitle",                          BEMP_Str,  1,  0,  0,   Opt,  "",                 0,  0,                           1044, "RunTitle",  "" 
 1,           "AnalysisType",                      BEMP_Sym,  1,  0,  0,   Req,  "",                 0,  0,                           1003, "AnalysisType",  ""   
 1,           "CompType",                          BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                           1003, "ComplianceType",  ""
+1,           "ResCompOpt",                        BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                           1003, "ResidentialComplianceOption",  ""    ; MFam EAA - SAC 05/19/23 (tic #3479)
 1,           "ResCompType",                       BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1003, "ResidentialComplianceType",  ""
 1,           "CompOptNew",                        BEMP_Int,  1,  0,  0,   Req,  "",                 0,  0,                           1003, "ComplianceOptionNew",  ""
 1,           "ResCompOptNew",                     BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1003, "ResidentialComplianceOptionNew",  ""
@@ -624,7 +625,7 @@
 1,           "CompOptDHW",                        BEMP_Int,  1,  0,  0,   Req,  "",                 0,  0,                           1003, "ComplianceOptionDomesticHotWater",  ""
 1,           "ResCompOptDHW",                     BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1003, "ResidentialComplianceOptionDomesticHotWater",  ""
 ;1,           "CompOptPartDHW",                    BEMP_Int,  1,  0,  0,   Req,  "",                 0,  0,                           1003, "ComplianceOptionPartialDomesticHotWater",  ""
-1,           "RunScope",                          BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1020, "Run Scope",  ""     ; for MFam Res compatibility - SAC 03/02/22
+;1,           "RunScope",                          BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1020, "Run Scope",  ""     ; for MFam Res compatibility - SAC 03/02/22
 
 1,           "ZEROCode",                          BEMP_Int,  1,  0,  0,   Opt,  "",                 0,  0,                           1003, "ZEROCode",  ""
 1,           "ZEROCodeEmissionMult",              BEMP_Flt,  1,  0,  0,  NInp,  "lb/kBtu",          0,  0,                           1003, "ZEROCodeEmissionMultiplier",  ""
@@ -675,6 +676,7 @@
 1,           "RptGenUIApp",                       BEMP_Str,  1,  0,  0,   Opt,  "",                 0,  0,                           1080, "ReportGeneratorUserInterfaceApplication",  "" 
 1,           "CompManagerVersion",                BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           1080, "ComplianceManagerVersion",  "" 
 1,           "SoftwareVersion",                   BEMP_Str,  1,  0,  0,   Req,  "",                 0,  0,                           1080, "SoftwareVersion",  "" 
+1,           "SoftwareVendor",                    BEMP_Str,  1,  0,  0,   Def,  "",                 0,  0,                           1080, "SoftwareVendor",  ""        ; SAC 06/20/23 (gh LMCC #24)
 1,           "OpenStudioVersion",                 BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           1080, "OpenStudioVersion",  "" 
 1,           "EngyPlusVersion",                   BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           1080, "EnergyPlusVersion",  "" 
 1,           "CSEVersion",                        BEMP_Str,  1,  0,  0,  NInp,  "",                 0,  0,                           1080, "CaliforniaSimulationEngineVersion",  "" 
@@ -1023,6 +1025,7 @@
 1,           "DefaultOptionDone",                 BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                           1030, "DefaultOptionDone",     "" 
 1,           "DefaultingRounds",                  BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1003, "DefaultingRounds",                 ""  ; number rounds of defaulting since the model was opened, a criteria used for checks made when opening a model - DR 3/6/21 
 1,           "EnableResearchMode",                BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1003, "EnableResearchMode", ""   ; "Boolean (0/1) determining access to 'Research' mode analysis"   ; moved from ResProj to ensure access outside MFam models - SAC 02/26/22
+1,           "InclSrcEngyInCompTest",             BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1003, "IncludeSourceEnergyInComplianceTest",   ""   ; SAC 06/01/23 (tic #3521)
 
 1,           "NumResultsSets",                    BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           1003, "NumberResultsSets",                 ""  ; number of SETS of results (first implemented for 2022 testing to include 6 sets of TDV & C02 multiplier tables & results) - SAC 11/03/19
 ;1,           "PrimResultSet",                     BEMP_Sym,  1,  0,  0,   Def,  "",                 0,  0,                           1003, "PrimaryResultSet",                  ""  ; label of TDV result set that is considered the 'Primary' (the one exported to hourly results & used in advanced battery control sim) - SAC 3/21/20
@@ -1457,7 +1460,7 @@
 ; 1,           "ZipCode",                           BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1006, "Zip Code",  "" 
 ; 1,           "Owner",                             BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1010, "Owner",  ""     
 ; 1,           "Designer",                          BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1015, "Designer",  "" 
-1,           "RunScope",                          BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                           1020, "Run Scope",  ""   
+1,           "RunScope",                          BEMP_Sym,  1,  0,  0,  NInp,  "",                 0,  0,                           1020, "Run Scope",  ""   
 ; 1,           "City",                              BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                           1025, "City",  ""             
 ; 1,           "SpecifyWeatherFN",                  BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           1025, "Whether or not to specify the hourly simulation weather file",  ""   ; SAC 5/17/19
 1,           "WeatherFileSet",                    BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                           1020, "Set of weather files to use in analysis",  ""   ; SAC 6/8/19 - 2022 research   
@@ -1495,7 +1498,7 @@
 			; SAC 5/3/16 - added DefaultACH50 to prevent flagging HERS building envelope leakage in models where default ACH50 is lower due solely to low leakage ducts (VLLDCS) (tic #627)
 1,           "DefaultACH50",                      BEMP_Flt,  1,  0,  0,  Pres,  "ACH @ 50Pa",       0,  0,                           1046, "Default Infiltration - Air Changes per Hour at 50 Pascals pressure difference that leak through the envelope of the conditioned zones",  "" 
 			; mjb	4/28/14 - property to sum all conditioned zone volumes - needed to convert ACH50 to CFM50
-1,           "CondVolume",                        BEMP_Flt,  1,  0,  0,  Pres,  "ft3",              0,  0,                           3012, "Volume of conditioned air in this zone",  ""    
+1,           "CondVolume",                        BEMP_Flt,  1,  0,  0,  Pres,  "ft3",              0,  0,                           3012, "Volume of conditioned air in this zone (taking into account zone multipliers)",  ""    
 1,           "CFM50",                             BEMP_Flt,  1,  0,  0,  Pres,  "ft3/min @ 50Pa",   0,  0,                           1046, "Infiltration - CFM at 50 Pascals pressure difference that leak through the envelope of the conditioned zones",  "" 
 ; mjb E+A+A 12/3/13
 1,           "exACH50",                           BEMP_Flt,  1,  0,  0,  Pres,  "ACH @ 50Pa",       0,  0,                           1046, "Infiltration - Air Changes per Hour at 50 Pascals pressure difference that leak through the envelope of the conditioned zones",  "" 
@@ -1509,16 +1512,19 @@
 1,           "IsNew",                             BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           3008, "flag set if this project is New",  ""
 1,           "IsAltered",                         BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           3008, "flag set if this project is Altered",  ""
 ; mjb Addition Alone & adjustments to Internal Gains for Additions
-1,           "IsAddAlone",                        BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           3008, "flag set if this project is an Addition Alone",  ""
+1,           "IsAddAlone",                        BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                           3008, "flag set if this project is an Addition Alone",  ""
 			; SAC 12/28/15 - replacement inputs for AdditionCFAFrac
-1,           "AddAloneExistArea",                 BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                           3008, "Existing home/project area (excluding addition)",  ""    
-1,           "AddAloneAddedArea",                 BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                           3008, "Area of addition (excluding existing home area)",  ""    
+1,           "AddAloneExistArea",                 BEMP_Flt,  1,  0,  0,   Opt,  "ft2",              0,  0,                           3008, "Existing home/project area (excluding addition)",  ""    
+1,           "AddAloneAddedArea",                 BEMP_Flt,  1,  0,  0,   Opt,  "ft2",              0,  0,                           3008, "Area of addition (excluding existing home area)",  ""    
+1,           "AddAloneAddedAreaWithMult",         BEMP_Flt,  1,  0,  0,  NInp,  "ft2",              0,  0,                           3008, "Area of addition (excluding existing home area) x zone mults",  ""    ; SAC 04/27/23 (tic #3392)
 1,           "AddAloneTotalArea",                 BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                           3008, "Area of home/project including existing & addition",  ""    
 1,           "AdditionCFAFrac",                   BEMP_Flt,  1,  0,  0,  Pres,  "frac",             0,  0,                           1001, "Mulitplier used to adjust Internal Gains & Infiltration for Additions",  "" 
 1,           "AlterIncl2Categs",                  BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           3008, "alterations include at least 2 categories of upgraded component(s)",  ""
 1,           "NumAlterations",                    BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                           3008, "number of alterations (max estimate)",  ""
 1,           "AdditionSize",                      BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                           3008, "Cumulative size of added zones; negative value if not an addition analysis",  ""
+1,           "AdditionSizeWithMult",              BEMP_Flt,  1,  0,  0,  NInp,  "ft2",              0,  0,                           3008, "Cumulative size of added zones; negative value if not an addition analysis w/ zone mults",  ""    ; SAC 04/27/23 (tic #3392)
 1,           "CondAdditionSize",                  BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                           3008, "Size of added (not addition alone) conditioned zones",  ""
+1,           "CondAdditionSizeWithMult",          BEMP_Flt,  1,  0,  0,  NInp,  "ft2",              0,  0,                           3008, "Size of added (not addition alone) conditioned zones x ResZnGrp:Mult",  ""     ; SAC 04/27/23 (tic #3392)
 1,           "ProjInclKitchen",                   BEMP_Int,  1,  0,  0,   Def,  "",                 0,  0,                           3008, "Project includes kitchen - triggering kitchen range hood HERS verification",  ""  ; SAC 3/8/19 (tic #1085)
 
 1,           "InsulConsQuality",                  BEMP_Sym,  1,  0,  0,  Pres,  "",                 0,  0,                           1042, "Insulation construction quality",  ""    
@@ -1801,6 +1807,7 @@
 1,           "CondFloorArea",                     BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                           3008, "Conditioned floor area",  ""    
 1,           "UncondFloorArea",                   BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                           3008, "Unconditioned floor area (attic(s), garage, uncond zones)",  ""   ; SAC 12/01/20
 1,           "LtgCondFloorArea",                  BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                           3008, "Conditioned floor area (used in calc of T24-2016 lighting power (max out @ 4150/dwellunit))",  ""    
+1,           "CondFloorAreaWithMult",             BEMP_Flt,  1,  0,  0,  NInp,  "ft2",              0,  0,                           3008, "Conditioned floor area w/ ResZnGrp multipliers",  ""   ; SAC 04/27/23 (tic #3392)
 1,           "AdditionCFA",                       BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                           3008, "Conditioned floor area of Additions",  ""    
 1,           "EffLeakageArea",                    BEMP_Flt,  1,  0,  0,  Pres,  "ft2",              0,  0,                           3008, "Effective leakage area (ELAtot for AirNet)",  ""    
 1,           "SlabRatio",                         BEMP_Flt,  1,  0,  0,  Pres,  "",                 0,  0,                           3008, "Ratio of slab/total floor area (for AirNet)",  ""    
@@ -2211,6 +2218,9 @@
 1,           "DischrgSchWeekRef",  BEMP_Obj,  1,  0,  1,  NInp,  "",               0,  1, "SchWeek",  2, "Type",        3008, "DischargeScheduleReference",  ""   ; ruleset-generated for TES Mode scheduling
 1,           "ChrgSchWeekRef",     BEMP_Obj,  1,  0,  1,  NInp,  "",               0,  1, "SchWeek",  2, "Type",        3008, "ChargeScheduleReference",  ""   
 1,           "ChlrOnlySchWeekRef", BEMP_Obj,  1,  0,  1,  NInp,  "",               0,  1, "SchWeek",  2, "Type",        3008, "ChillerOnlyScheduleReference",  ""   
+
+1,           "SchDayNoTESWDRef",   BEMP_Obj,  1,  0,  0,  NInp,  "",               0,  1, "SchDay", -99, "Type",        3004, "ScheduleDayNoTESWeekdaysReference",  ""   ; copies of SchDayWDRef/SchDayWERef properties that can reference only SchDay to facilitate defaulting - SAC 04/25/23
+1,           "SchDayNoTESWERef",   BEMP_Obj,  1,  0,  0,  NInp,  "",               0,  1, "SchDay", -99, "Type",        3004, "ScheduleDayNoTESWeekendsReference",  "" 
 ;------------------------------------------------------------------------------------------------
 
 
@@ -2863,6 +2873,12 @@
 1,           "StoryRef",          BEMP_Obj,  1,  0,  0,  NInp,  "",                 0,  1, "Story", 0, "",                    3004, "Create a story component when any child ResZn or ResOtherZn need to be modeled using EnergyPlus.", ""
 1,           "PredomPVBattSizeBldgTypeArea", BEMP_Flt, 10,  1,  0,  NInp,  "ft2",   0,  0,                                    3008, "PredominantPVBatterySizeBuildingTypeArea",  ""   ; SAC 01/14/23
 1,           "PredomPVBattSizeBldgType",     BEMP_Int,  1,  0,  0,  NInp,  "",      0,  0,                                    3008, "PredominantPVBatterySizeBuildingType",  "" 
+
+1,           "NumDwellingUnitsByBedrmsWithMult",  BEMP_Int,  8,  1,  0,  NInp,  "",         0,  0,                                    1001, "NumDwellingUnitsByBedrmsWithMult",    ""    ; 1-Studio, 2-1bdrm, ... 7-6bdrm, 8->6bdrm - SAC 04/23/23 (tic #3392)
+1,           "CSE_ElecSubMETERs",         BEMP_Obj,  9,  1,  0,  NInp,  "",         0,  1, "cseMETER",    0, "",              7010, "CSE_ElecSubMETERs",        ""    ; SAC 04/23/23 (tic #3392)
+1,           "CSE_Elec2SubMETERs",        BEMP_Obj,  9,  1,  0,  NInp,  "",         0,  1, "cseMETER",    0, "",              7010, "CSE_Elec2SubMETERs",       "" 
+1,           "CSE_NatGasSubMETERs",       BEMP_Obj,  9,  1,  0,  NInp,  "",         0,  1, "cseMETER",    0, "",              7010, "CSE_NatGasSubMETERs",      "" 
+1,           "CSE_OtherFuelSubMETERs",    BEMP_Obj,  9,  1,  0,  NInp,  "",         0,  1, "cseMETER",    0, "",              7010, "CSE_OtherFuelSubMETERs",   "" 
 ;------------------------------------------------------------------------------------------------
 
 
@@ -2907,8 +2923,10 @@
 1,           "OccSensHtRt",             BEMP_Flt,  1,  0,  1,   Opt,  "Btu/h-person",     0,  0,                              3008, "OccupantSensibleHeatRate",  ""    
 1,           "OccLatHtRt",              BEMP_Flt,  1,  0,  1,   Opt,  "Btu/h-person",     0,  0,                              3008, "OccupantLatentHeatRate",  ""      
 1,           "OccSchRef",               BEMP_Obj,  1,  0,  1,   Opt,  "",                 0,  1, "Schedule",   1, "Type",     3008, "OccupantScheduleReference",  ""   
-1,           "FxdSeat",                 BEMP_Int,  1,  0,  0,   Def,  "",                 0,  0,                              3008, "FixedSeating",	 "" 	
-1,           "OccNumFxdSeat",           BEMP_Flt,  1,  0,  0,   Def,  "people",           0,  0,                              3008, "OccupantNumberFixedSeating",	 "" 	
+;1,           "FxdSeat",                 BEMP_Int,  1,  0,  0,   Def,  "",                 0,  0,                              3008, "FixedSeating",	 ""            ; JP 6/7/23, renamed as DsgnOcc to better match the Std language
+;1,           "OccNumFxdSeat",           BEMP_Flt,  1,  0,  0,   Def,  "people",           0,  0,                              3008, "OccupantNumberFixedSeating", ""  ; JP 6/7/23, renamed as DsgnOccNum to better match the Std language
+1,           "DsgnOcc",                 BEMP_Int,  1,  0,  0,   Def,  "",                 0,  0,                              3008, "DesignedOccupancy",	 ""
+1,           "DsgnOccNum",              BEMP_Flt,  1,  0,  0,   Def,  "people",           0,  0,                              3008, "DesignedOccupantNumber",	 ""
 1,           "IsAtriumGT55Ft",          BEMP_Int,  1,  0,  0,   Def,  "",                 0,  0,                              3008,  "IsAtriumGreaterThan55Feet",  "" 
 1,           "IsHlthCare",              BEMP_Int,  1,  0,  0,   Def,  "",                 0,  0,                              3008,  "IsHealthCare",  "" 
 1,           "IsResCommon",             BEMP_Int,  1,  0,  0,   Def,  "",                 0,  0,                              3008,  "IsResidentialCommon",  "" 
@@ -3084,7 +3102,7 @@
 1,           "RecptRadFrac",            BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ReceptacleRadiationFraction",  "" 
 1,           "RecptLatFrac",            BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ReceptacleLatentFraction",  "" 
 1,           "RecptLostFrac",           BEMP_Flt,  1,  0,  1,   Opt,  "",                 0,  0,                              3008, "ReceptacleLostFraction",  "" 
-1,           "RecptPwrExcptCond",       BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                              3008, "ReceptaclePowerExceptionalCondition",  "" 
+1,           "RecptPwrDensExcptCond",       BEMP_Int,  1,  0,  0,  NInp,  "",                 0,  0,                              3008, "ReceptaclePowerExceptionalCondition",  "" 
 ;1,           "RecptSchExcptCond",       BEMP_Int,  1,  0,  0,   Opt,  "",                 0,  0,                              3008, "ReceptacleScheduleExceptionalCondition",  "" 
 
 1,           "GasEqpPwrDens",           BEMP_Flt,  1,  0,  1,   Opt,  "Btu/h-ft2",       0,  0,                              3008, "GasEquipmentPowerDensity",  "" 
@@ -3424,7 +3442,7 @@
 ; RJH 9/15/2021 NRCC PRF reporting properties
 1,           "ParentSpcNameRpt",        BEMP_Str,  1,  0,  0,  NInp,  "",          0,  0,                         3008, "ParentSpcNameRpt",  ""
 1,           "ParentResDHWSysRefRpt",   BEMP_Str,  1,  0,  0,  NInp,  "",          0,  0,                         3008, "ParentResDHWSysRefRpt",  ""
-1,           "NRCCPRF_tblRowDWHR",      BEMP_Obj,  6,  1,  0,  NInp,  "",          0,  1, "nrcctblRowDWHR", 0, "", 1003, "NRCCPRF_tblRowDWHR", "" 
+; 1,           "NRCCPRF_tblRowDWHR",      BEMP_Obj,  6,  1,  0,  NInp,  "",          0,  1, "nrcctblRowDWHR", 0, "", 1003, "NRCCPRF_tblRowDWHR", "" 
 
 ; ; SAC 12/30/18 - 2019 Compact Distribution inputs
 ; DwellUnitType:IsDHWRecircSystem[ALL], NotInput,     0,    0,   0,    1,  1,  1 - NEW
@@ -4347,6 +4365,12 @@
 1,           "ERVEff",                        BEMP_Flt, 1,  0,  0,  NInp,  "frac.",    0,  0,                              3008, "ERVEffectiveness",  ""                                      
 ;1,           "ERVCoilRunaroundNumAirstreams", BEMP_Flt, 1,  0,  0,  NInp,  "frac.",    0,  0,                              3008, "ERVCoilRunaroundNumberOfAirstreams",  ""                         
 
+; Fan power budget for healthcare facilities (tic 3359)
+1,           "SupFanPwrIdxAllow",             BEMP_Flt,  1,  0,  0,  CReq,  "W/cfm",           0,  0,                              1001, "SupplyFanPowerIndexAllowance",  ""
+1,           "ExhFanPwrIdxAllow",             BEMP_Flt,  1,  0,  0,  CReq,  "W/cfm",           0,  0,                              1001, "ExhaustFanPowerIndexAllowance",  ""
+1,           "RetFanPwrIdxAllow",             BEMP_Flt,  1,  0,  0,  CReq,  "W/cfm",           0,  0,                              1001, "ReturnFanPowerIndexAllowance",  ""
+1,           "ReliefFanPwrIdxAllow",          BEMP_Flt,  1,  0,  0,  CReq,  "W/cfm",           0,  0,                              1001, "ReliefFanPowerIndexAllowance",  ""
+
 ; added to facilitate simulation and baseline system library retrieval and reference purposes
 1,           "ExcludeFromSizing",             BEMP_Int,  1,  0,  0,  NInp,  "",                0,  0,                              1001, "ExcludeFromSizing",  ""
 1,           "SupAirSegRef",                  BEMP_Obj,  1,  0,  0,  NInp,  "",                0,  1, "AirSeg",    1, "Type",     10001, "SupplyAirSegmentReference",  "" 
@@ -4616,6 +4640,11 @@
 1,           "GasPhaseAirCleanersDsgnPD",     BEMP_Flt,  1,  0,  0,  NInp,  "inH2O",           0,  0,                              3008, "GasPhaseAirCleanersDesignPressureDrop",  ""                 
 1,           "ERVEff",                        BEMP_Flt,  1,  0,  0,  NInp,  "frac.",           0,  0,                              3008, "ERVEffectiveness",  ""                                      
 ;1,          "ERVCoilRunaroundNumAirstreams", BEMP_Flt,  1,  0,  0,  NInp,  "frac.",           0,  0,                              3008, "ERVCoilRunaroundNumberOfAirstreams",  ""        
+
+; Fan power budget for healthcare facilities (tic 3359)
+1,           "TotFanPwrIdxAllow",             BEMP_Flt,  1,  0,  0,  CReq,  "W/cfm",           0,  0,                              1001, "TotalFanPowerIndexAllowance",  ""
+1,           "SupFanPwrIdxAllow",             BEMP_Flt,  1,  0,  0,  CReq,  "W/cfm",           0,  0,                              1001, "SupplyFanPowerIndexAllowance",  ""
+1,           "ExhFanPwrIdxAllow",             BEMP_Flt,  1,  0,  0,  CReq,  "W/cfm",           0,  0,                              1001, "ExhaustFanPowerIndexAllowance",  ""
 
 ; added to facilitate simulation and baseline system library retrieval and reference purposes
 1,           "ExcludeFromSizing",             BEMP_Int,  1,  0,  0,  NInp,  "",                0,  0,                               1001, "ExcludeFromSizing",  ""
@@ -5412,6 +5441,9 @@
          ; to support Load Passing from CSE -> E+ - SAC 03/18/22 (WSHP)
 1,           "CSE_LoadPassingExportCol",  BEMP_Obj,  8,  1,  0,  NInp,  "",                0,  1, "cseEXPORTCOL", 0, "",      3006, "Export columns of Load Passing results export",  "" 
 1,           "CSE_LoadPassingProcLdRef",  BEMP_Obj,  6,  1,  0,  Pres,  "",                0,  1, "ProcLd",    0, "",        10001, "CSE_LoadPassingProcessLoadReference",  ""  
+         ; to support load passing for ResZns w/ ResZnGrp multipliers > 1 - SAC 05/26/23 (tic #3392)
+1,           "NumResZnsByZnGrpMult",  BEMP_Int, 20,  1,  0,  NInp,  "",                0,  0,                              3008, "NumberResidentialZonesByZoneGroupMultiplier",  ""                                                         
+1,           "CSE_LoadSubMeters",     BEMP_Obj, 20,  1,  0,  NInp,  "",                0,  1, "cseLOADMETER", 0, "",      10001, "CSE_LoadSubMeters",  "" 
 ;------------------------------------------------------------------------------------------------
 
 
@@ -6560,6 +6592,9 @@
 1,           "ComplyMessage",     BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                              39110, "",  "" 
 1,           "StdPVBatteryMsg",   BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                              39110, "",  "" 
 1,           "CommunitySolMsg",   BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                              39110, "",  ""    ; SAC 06/04/22
+1,           "AnalysisValid",     BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                              39110, "",  ""    ; SAC 05/06/23 (gh NRes PRF schema issue #51)
+1,           "HideCompSmrySrc",   BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                              39110, "",  ""    ; whether to hide Source energy use data in Compliance Summary - SAC 06/01/23 (tic #3521)
+1,           "HideCompSmryTot",   BEMP_Int,  1,  0,  0,  Pres,  "",                 0,  0,                              39110, "",  ""    ; whether to hide Total TDV data in Compliance Summary - SAC 06/01/23 (tic #3521)
 
 1,           "PctSavingsTDV",     BEMP_Flt,  1,  1,  0,  Pres,  "%",                0,  0,                               7010, "",  ""  ; "Percent TDV savings (standard minus proposed / standard results)"
 1,           "PctSavingsEffTDV",  BEMP_Flt,  1,  1,  0,  Pres,  "%",                0,  0,                               7010, "",  ""  ; "Percent Efficiency TDV savings (standard efficiency minus proposed efficiency / standard efficiency results)"   ; SAC 12/11/21
@@ -7210,7 +7245,9 @@
 1,           "Info05_Title24StandardsVersion",          BEMP_Str,  1,  0,  1,  Pres,  "",       0,  0,                             555, "Info05_Title24StandardsVersion",          "map from: Project:StandardsVersion"
 1,           "Info06_ProjectZipcode",                   BEMP_Int,  1,  0,  1,  Pres,  "",       0,  0,                             555, "Info06_ProjectZipcode",                   "map from: Project:ZipCode"
 1,           "Info07_ComplianceSoftwareVersion",        BEMP_Str,  1,  0,  1,  Pres,  "",       0,  0,                             555, "Info07_ComplianceSoftwareVersion",        "map from: Project:SoftwareVersion"   
+1,           "Info07a_Vendor",                          BEMP_Str,  1,  0,  1,  Pres,  "",       0,  0,                             555, "Info07a_Vendor",        "map from: Proj:SoftwareVendor"      ; SAC 06/20/23 (gh LMCC #24)
 1,           "Info07b_ComplianceSoftwareVersionDetail", BEMP_Str,  1,  0,  1,  Pres,  "",       0,  0,                             555, "Info07b_ComplianceSoftwareVersionDetail", "map from: Project:SoftwareVersionDetail"
+1,           "Info07c_Build",                           BEMP_Int,  1,  0,  1,  Pres,  "",       0,  0,                             555, "Info07c_Build",         "map from: Proj:RuleRepoRev"         ; SAC 06/20/23 (gh LMCC #24)
 1,           "Info08_ClimateZone",                      BEMP_Int,  1,  0,  1,  Pres,  "",       0,  0,                             555, "Info08_ClimateZone",                      "map from: Project:CliZnNum"
 1,           "Info09_Azimuth",                          BEMP_Flt,  1,  0,  1,  Pres,  "",       0,  0,                             555, "Info09_Azimuth",                          "map from: Proj:Bldg:BldgAz"
 1,           "Info10_TopLevelOccupancy",                BEMP_Str,  1,  0,  0,  Pres,  "",       0,  0,                             555, "Info10_TopLevelOccupancy",                "map from: Bldg:BldgType"
@@ -7369,6 +7406,8 @@
 1,           "C22Result1_PassFailEfficiency",                BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                             555, "C22Result1_PassFailEfficiency",        ""
 1,           "C22Result1_PassFailTotal",                     BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                             555, "C22Result1_PassFailTotal",        ""
 1,           "C22Result1_PassFailSource",                    BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                             555, "C22Result1_PassFailSource",        ""
+
+1,           "C22Result1_PerformanceComplianceValidity",  BEMP_Str,  1,  0,  0,  Pres,  "",                 0,  0,                             555, "C22Result1_PerformanceComplianceValidity",   ""   ; SAC 05/05/23 (gh issue #51)
 ;------------------------------------------------------------------------------------------------
 
 
@@ -9519,8 +9558,7 @@
 ;                                               -------------------------------------------------------------------------------------------
 1,           "Hvacdwell01_DwellingUnitName",             BEMP_Str,  1,  0,  0,  Pres,  "",   0,  0,                555, "Hvacdwell01_DwellingUnitName",          ""
 1,           "Hvacdwell02_HvacEquipmentName",            BEMP_Str,  5,  0,  0,  Pres,  "",   0,  0,                555, "Hvacdwell02_HvacEquipmentName",          ""
-1,           "Hvacdwell03_AirSystemType",                BEMP_Str,  1,  0,  0,  Pres,  "",   0,  0,                555, "Hvacdwell03_AirSystemType",          ""
-1,           "Hvacdwell03_ZoneSystemType",               BEMP_Str,  1,  0,  0,  Pres,  "",   0,  0,                555, "Hvacdwell03_ZoneSystemType",          ""
+1,           "Hvacdwell03_ResidentialSpaceConditioningSystemType", BEMP_Str,  1,  0,  0,  Pres,  "",   0,  0,      555, "Hvacdwell03_ResidentialSpaceConditioningSystemType",          ""
 1,           "Hvacdwell03_NotApplicableMessage",         BEMP_Str,  1,  0,  0,  Pres,  "",   0,  0,                555, "Hvacdwell03_NotApplicableMessage",    "NotApplicable"
 1,           "Hvacdwell03b_ResidentialHeatingSystemType", BEMP_Str,  1,  0,  0,  Pres,  "",   0,  0,                555, "Hvacdwell03b_ResidentialHeatingSystemType",          ""
 1,           "Hvacdwell03b_NotApplicableMessage",         BEMP_Str,  1,  0,  0,  Pres,  "",   0,  0,                555, "Hvacdwell03b_NotApplicableMessage",    "NotApplicable"
@@ -10534,6 +10572,7 @@
 1,           "WaterCHPWH01_WaterHeatingSystemName", BEMP_Str,  1,  0,  0,  Pres,  "",              0,  0,                          555, "WaterCHPWH01_WaterHeatingSystemName", "ResDHWSys:Name"
 
 1,           "afterchildren_WaterCHPWH02a_HeatPumpWaterHeaterSimulationGroup", BEMP_Str,  1,  0,  0,  Pres,  "", 0,  0,            555, "afterchildren_WaterCHPWH02a_HeatPumpWaterHeaterSimulationGroup", "ResDHWSys:CHPWHTankLoc"
+1,           "afterchildren_WaterCHPWH02b_WaterHeaterFuelSource", BEMP_Str,  1,  0,  0,  Pres,  "",              0,  0,            555, "afterchildren_WaterCHPWH02b_WaterHeaterFuelSource",   ""
 1,           "afterchildren_WaterCHPWH03_CompressorCountCHPWH", BEMP_Int,  1,  0,  0,  Pres,  "",                0,  0,            555, "afterchildren_WaterCHPWH03_CompressorCountCHPWH", "ResDHWSys:CentralHPWHCprsrCnt"
 1,           "afterchildren_WaterCHPWH04_PrimaryTankCapacity",  BEMP_Flt,  1,  0,  0,  Pres,  "",                0,  0,            555, "afterchildren_WaterCHPWH04_PrimaryTankCapacity", "ResDHWSys:CentralHPWHPriTankVol"
 1,           "afterchildren_WaterCHPWH05_TankCountCHPWH",       BEMP_Int,  1,  0,  0,  Pres,  "",                0,  0,            555, "afterchildren_WaterCHPWH05_TankCountCHPWH", "ResDHWSys:CentralHPWHPriTankCnt"
@@ -10587,6 +10626,7 @@
 ;                                               -------------------------------------------------------------------------------------------
 1,           "LpTank01_LoopTankType",                       BEMP_Str,  1,  0,  0,  Pres,  "",       0,  0,                          555, "LpTank01_LoopTankType", "ResDHWSys:CentralHPWHLpTankType"
 1,           "LpTank01a_LoopTankConfig",                    BEMP_Str,  1,  0,  0,  Pres,  "",       0,  0,                          555, "LpTank01a_LoopTankConfig", "ResDHWSys:CHPWHLoopTankConfig"
+1,           "LpTank01b_WaterHeatingSystemName",            BEMP_Str,  1,  0,  0,  Pres,  "",       0,  0,                          555, "LpTank01b_WaterHeatingSystemName", "ResDHWSys:Name"
 
 1,           "afterchildren_LpTank03_CompressorCountCHPWH", BEMP_Int,  1,  0,  0,  Pres,  "",       0,  0,                          555, "afterchildren_LpTank03_CompressorCountCHPWH", "ResDHWSys:CentralHPWHLpTankCprsrCnt"
 1,           "afterchildren_LpTank04_LoopTankCapacity",     BEMP_Flt,  1,  0,  0,  Pres,  "",       0,  0,                          555, "afterchildren_LpTank04_LoopTankCapacity", "ResDHWSys:CentralHPWHLpTankVol"
@@ -11217,7 +11257,7 @@
 ;------------------------------------------------------------------------------------------------
 ;                     LName              Template         MD  MR  AC   Parent1             P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
 ;                    ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "nrccTableIntLtgSysWall", "nrccTableIntLtgSysWall",   "TableIntLtgSysWall <i>",   1,  0,  0, "nrcctblRowTailoredWall",  "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  1,   1000
+0,  "nrccTableIntLtgSysWall", "nrccTableIntLtgSysWall",   "TableIntLtgSysWall <i>",   0,  0,  0, "nrcctblRowTailoredWall",  "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  1,   1000
 ;
 ;                                                  VType     NV  WA  SP  UL                 UT  NO  OC            CV  CP         HI    LName                  
 ;                                                 -------------------------------------------------------------------------------------------
@@ -11446,7 +11486,7 @@
 ;------------------------------------------------------------------------------------------------
 ;                     LName              Template         MD  MR  AC   Parent1             P2  P3  P4  P5  P6  P7  P8  P9  P10 P11 P12 P13 P14 P15 P16 P17 P18 P19 P20  MC  MS  bP  CF  SR  IN     HI 
 ;                    ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-0,  "nrccTableTailoredCase", "nrccTableTailoredCase",   "TableTailoredCase <i>",   1,  0,  0, "nrcctblRowTailoredValuable",  "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  1,   1000
+0,  "nrccTableTailoredCase", "nrccTableTailoredCase",   "TableTailoredCase <i>",   0,  0,  0, "nrcctblRowTailoredValuable",  "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",  -1,  1,  0,  0,  0,  1,   1000
 ;
 ;                                                  VType     NV  WA  SP  UL                 UT  NO  OC            CV  CP         HI    LName                  
 ;                                                 -------------------------------------------------------------------------------------------

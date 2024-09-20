@@ -38,7 +38,7 @@ RULE Proj:CompManagerVersion
   DESCRIPTION
     "Version of Compliance Manager software"
   DEFAULT 
-    Format( "BEMCmpMgr 2022.2.1 (%g)", RuleRepoRev )
+    Format( "BEMCmpMgr 2022.3.0 RC (%g)", RuleRepoRev )
   SIZING
     u:CompManagerVersion
   ANNUAL
@@ -57,11 +57,12 @@ RULE Proj:DevMode
     u:DevMode
 ENDRULE
 
+   // 220201->220300 - SAC 05/22/23
 RULE Proj:AnalysisVersion
   DESCRIPTION
     "Version ID of analysis, enabling rule logic to be sensitive to analysis version"
   DEFAULT 
-    220200
+    220300
 ENDRULE
 
 // ********** Compliance Reporting properties **********************************
@@ -179,7 +180,7 @@ RULE NEW Proj:RptGenServer
   INPUTCLASS
     Prescribed
   DEFAULT 
-    "t24docs.com"
+    "cf6r.com"
   SIZING
     u:RptGenServer
   ANNUAL
@@ -205,7 +206,7 @@ RULE NEW Proj:RptGenService
   INPUTCLASS
     Prescribed
   DEFAULT 
-    "ReportGeneratorService.svc"
+    "ReportGeneratorCom2022_SVN"
   SIZING
     u:RptGenService
   ANNUAL
@@ -231,7 +232,7 @@ RULE NEW Proj:RptGenCheckURL
   INPUTCLASS
     Prescribed
   DEFAULT 
-    "https://t24docs.com/RGServiceStatus_2.0/RGServiceStatus.svc/IsComServiceActive"
+    "https://cf6r.com/RGServiceStatus_2.0/RGServiceStatus.svc/IsComServiceActive"
   SIZING
     u:RptGenCheckURL
   ANNUAL
@@ -266,7 +267,7 @@ RULE NEW Proj:NRCC_RptGenServer
   INPUTCLASS
     Prescribed
   DEFAULT 
-    "t24docs.com"
+    "cf6r.com"
   SIZING
     u:NRCC_RptGenServer
   ANNUAL
@@ -279,7 +280,7 @@ RULE NEW Proj:NRCC_RptGenApp
   INPUTCLASS
     Prescribed
   DEFAULT 
-    "ReportGenerator2022.2.1"
+    "ReportGeneratorCom2022_SVN"
   SIZING
     u:NRCC_RptGenApp
   ANNUAL
