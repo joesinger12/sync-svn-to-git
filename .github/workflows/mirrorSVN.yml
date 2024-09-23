@@ -172,10 +172,10 @@ jobs:
               
               if [ -f "$git_file" ]; then
                 git rm "$git_file"
-                echo "Deleted file from git-repo: $git_file"
+                # echo "Deleted file from git-repo: $git_file"
               elif [ -d "$git_file" ]; then
                 git rm -r "$git_file"
-                echo "Deleted directory from git-repo: $git_file"
+                # echo "Deleted directory from git-repo: $git_file"
               fi
             done
             echo "Deleted files from git-repo"
