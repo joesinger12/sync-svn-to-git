@@ -143,8 +143,9 @@ jobs:
             echo "    Commit Message: $COMMIT_MSG"
             
             # Update the SVN repository to the revision number
+            echo "Updating SVN files for revision $REV_NUMBER"
             svn update -r $REV_NUMBER > /dev/null 2>&1
-            echo "files updated for revision $REV_NUMBER"
+            echo "SVN files updated for revision $REV_NUMBER"
 
             # Get deleted files from previous revision to this revision
             deleted_files=$(svn diff --summarize -r $PREVIOUS_REV_NUMBER:$REV_NUMBER | grep '^D' | awk '{print $2}')
@@ -178,7 +179,11 @@ jobs:
                 # echo "Deleted directory from git-repo: $git_file"
               fi
             done
-            echo "Deleted files from git-repo"
+            if [ -n "$deleted_files" ]; then
+              echo "Deleted files from git-repo: $deleted_files"
+            else
+              echo "No files were deleted from git-repo."
+            fi
 
             # Set the author and email for the commit
             git config --global user.name "$AUTHOR_NAME"
@@ -186,6 +191,7 @@ jobs:
 
             git add .
             if ! git diff-index --quiet HEAD --; then
+              echo "Committing git to SVN revision number $REV_NUMBER"
               git commit --author="$AUTHOR" --date="$COMMIT_DATE" -m "SVN Revision #$REV_NUMBER by $SVN_AUTHOR
               $COMMIT_MSG"
               echo "FINISHED: Successfully committed revision $REV_NUMBER"
@@ -193,6 +199,9 @@ jobs:
               PREVIOUS_REV_NUMBER=$REV_NUMBER
               echo "PREVIOUS_REV_NUMBER=$REV_NUMBER" >> $GITHUB_ENV
               echo "Set 'PREVIOUS_REV_NUMBER' to : $PREVIOUS_REV_NUMBER"
+              
+              echo "========================= END r$REV_NUMBER ============================"
+              echo ""
               
             else
               echo "Skipping revision number $REV_NUMBER: Nothing to commit, working tree clean."
