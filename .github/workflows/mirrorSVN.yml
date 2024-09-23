@@ -139,12 +139,12 @@ jobs:
             echo "Commit Message: $COMMIT_MSG"
             
             # Update the SVN repository to the revision number
-            svn update -r $REV_NUMBER
+            svn update -r $REV_NUMBER > /dev/null 2>&1
             echo "files updated for revision $REV_NUMBER"
 
             # Get deleted files from previous revision to this revision
             deleted_files=$(svn diff --summarize -r $PREVIOUS_REV_NUMBER:$REV_NUMBER | grep '^D' | awk '{print $2}')
-            echo "found deleted files in SVN as: $deleted_files"
+            # echo "found deleted files in SVN as: $deleted_files"
             
             # Print the deleted files
             if [ -n "$deleted_files" ]; then
@@ -204,6 +204,7 @@ jobs:
         echo $REV_NUMBER > ../git-repo/last_revision.txt
         echo "Last revision number saved as: $REV_NUMBER"
         PREVIOUS_REV_NUMBER=$REV_NUMBER
+        echo "PREVIOUS_REV_NUMBER=$REV_NUMBER" >> $GITHUB_ENV
         
         git add .
         
