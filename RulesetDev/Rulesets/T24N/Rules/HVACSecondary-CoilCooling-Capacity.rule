@@ -252,7 +252,7 @@ ENDRULE
 
 // -----------------------------------------------------------------------------
 // Set IsDummy flag for all components
-RULE CoilClg:IsDummy
+RULE CoilHtg:IsDummy
   INPUTCLASS
     NotInput
   DEFAULT

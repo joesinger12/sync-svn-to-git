@@ -774,7 +774,7 @@ RULE NEW AirSys:CompRmPwr
     ComputerRoomPower
   INPUTCLASS
     NotInput
-  ANNUAL : T24N
+  ANNUAL_BASELINE : T24N
     SumRevRef( ThrmlZn:PriAirCondgSysRef[1], ThrmlZn:CompRmPwr )
 ENDRULE
 RULE OACtrl:EconoCtrlMthd
@@ -1233,7 +1233,7 @@ RULE OACtrl:EconoHiTempLockout
   COMMONMAXIMUM
     85  
   UNITS 
-    Â°F  
+    °F  
   REPORTPRECISION
     0
   DEFAULT : S901G
@@ -1387,7 +1387,7 @@ RULE OACtrl:EconoLowTempLockout
   INPUTCLASS 
     Default
   UNITS 
-    Â°F
+    °F
   RESETS
     ResetThisWhenTheFollowingIsModified
       OACtrl:EconoCtrlMthd
