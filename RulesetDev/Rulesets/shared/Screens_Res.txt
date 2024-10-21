@@ -1763,7 +1763,7 @@
    CTRL, "DsgnOccNum",               2010, TDCT_Edit,   635, 370,  25,  50,  1, FNT_STD, "Total Occupants:",                 TA_LEFT,  -100, 4,   1,  TA_LEFT,  4, 4,  None,            DsgnOcc > 0,       0,  0,  ""
 
    CTRL, "",                         3001, TDCT_Line,    10, 400, 990, 400, -1, FNT_STD, "",                                 TA_CENTER,   0, 0,   0,  TA_LEFT,  0, 0,  None,            None,              0,  0,  ""
-   CTRL, "",                         3002, TDCT_Label,   30, 410,  16,  98,  0, FNT_STD, "DHW System:",                      TA_LEFT,     0, 0,   0,  TA_LEFT,  0, 0,  None,  ShowDHWSysAssignment > 0,    0,  0,  ""
+   CTRL, "",                         3002, TDCT_Label,   30, 414,  18,  98,  0, FNT_STD, "DHW System:",                      TA_LEFT,     0, 0,   0,  TA_LEFT,  0, 0,  None,  ShowDHWSysAssignment > 0,    0,  0,  ""
    CTRL, "ozDHWSys",                 3013, TDCT_Combo,  160, 410, 450, 220, 25, FNT_STD, "",                                 TA_LEFT,    -1, 4,   0,  TA_LEFT,  0, 0,  None,  ShowDHWSysAssignment > 0 And DHWSysStatus = 3,                            0,  0,  "New DHW system serving this zone"        ; added disp cond of HasDHWUse - SAC 02/20/23 (tic #3418)
    CTRL, "ozDHWSys",                 3113, TDCT_Button, 385, 410,  22,  22,999, FNT_STD, "...",                              TA_CENTER,   0, 0,   0,  TA_LEFT,  0, 0,  None,  ShowDHWSysAssignment > 0 And DHWSysStatus = 3,                            0,  0,  "Access DHW system by the zone"
    CTRL, "AltDHWSys",                3213, TDCT_Combo,  160, 410, 450, 220, 25, FNT_STD, "",                                 TA_LEFT,    -1, 4,   0,  TA_LEFT,  0, 0,  None,  ShowDHWSysAssignment > 0 And Proj:ResCompOpt > 1 And DHWSysStatus = 2,    0,  0,  "Altered DHW system serving this zone"     ; SAC 06/25/23 (tic #3479)
@@ -4096,7 +4096,7 @@ TAB, "ResOtherZn",  308,      15,    "  Process Loads  "
 	 CTRL, "RecircPumpHP",     30106, TDCT_Edit,   185, 315,  25,  50, 11, FNT_STD, "",                        TA_LEFT,     0, 4,     0, TA_LEFT, 4, 4,  None,       MFamDistType > 0.5 And CentralDHW = 1 And NewCentralElecModel = 0,      0,   0,  "Recirculation pump horse power"
 	 CTRL, "RecircPumpEff",    30108, TDCT_Edit,   365, 315,  25,  65, 11, FNT_STD, "Efficiency:",             TA_LEFT,   -65, 4,     1, TA_LEFT, 4, 4,  None,       MFamDistType > 0.5 And CentralDHW = 1 And NewCentralElecModel = 0,    -67,  50,  "Recirculation pump efficiency (0.0-1.0)"
     ; SAC 10/24/19 - to facilitate testing of new central elec system in CSE
-	 CTRL, "RecircPumpPwr",    31002, TDCT_Edit,   185, 315,  25,  50, 11, FNT_STD, "",                        TA_LEFT,     0, 4,     0, TA_LEFT, 4, 4,  None,       MFamDistType > 0.5 And CentralDHW = 1 And NewCentralElecModel > 0,      0,   0,  "Recirculation pump power"
+	 CTRL, "RecircPumpPwr",    31002, TDCT_Edit,   185, 315,  25,  50, 11, FNT_STD, "",                        TA_LEFT,     0, 4,     0, TA_LEFT, 4, 4,  None,       MFamDistType > 0.5 And CentralDHW = 1 And NewCentralElecModel > 0,      0,   0,  "Recirculation pump power (total across all recirc loops for this DHW system)"   ; updated ToolTip - SAC 10/04/24 (gh support #37)
 	 CTRL, "RecircPumpPwrUnits", 31003, TDCT_Label, 239, 319, 18,  50, -1, FNT_STD, "",                        TA_LEFT,     0, 0,     0, TA_LEFT, 0, 0,  None,       MFamDistType > 0.5 And CentralDHW = 1,      0,   0,  ""
 
 ; 16 December 2013 drh added NonCompliant checkbox
