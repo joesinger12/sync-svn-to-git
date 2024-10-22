@@ -2,8 +2,8 @@ name: Mirror SVN to Git
 
 on:
   workflow_dispatch: # Allows to run manually also
-  schedule:
-    - cron: '0 7 * * *' # Auto run at 3AM ET (7am UTC)
+  #schedule:
+  #  - cron: '0 7 * * *' # Auto run at 3AM ET (7am UTC)
 
 jobs:
   mirrorSVN:
